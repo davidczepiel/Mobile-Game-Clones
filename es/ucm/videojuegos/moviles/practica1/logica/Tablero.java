@@ -61,7 +61,8 @@ public class Tablero {
     		numVacias++;
     		break;
     	case AZUL:
-    		casilla.setTipo(Tipo.ROJO);    		break;
+    		casilla.setTipo(Tipo.ROJO);    		
+    		break;
     	case VACIO:
     		casilla.setTipo(Tipo.AZUL);    		
     		numVacias--;
@@ -131,7 +132,7 @@ public class Tablero {
 		_juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO ||										  	// Si me he encontrado un muro
         _juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.VACIO)											// Si me he encontrado con un vacío
             return 0;
-        return 1 + mirarAlrededorRecursivoEnSolucion(nuevaPos,dir);
+        return 1 + mirarAlrededorRecursivoParcial(nuevaPos,dir);
     }
     /*Mira en el tablero del juego de manera recursiva dada una posicción y una dirección el número de azules.
      * Deja de contar al encontrarse con un rojo
@@ -142,7 +143,7 @@ public class Tablero {
         if( nuevaPos.getX() < 0 || nuevaPos.getX() >= _dimensiones || nuevaPos.getY() < 0 || nuevaPos.getY() >= _dimensiones ||   	//Si me he salido de cualquier limite
 		_juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO)									  	// Si me he encontrado un muro
             return 0;
-        return 1 + mirarAlrededorRecursivoEnSolucion(nuevaPos,dir);
+        return 1 + mirarAlrededorRecursivoEnJuego(nuevaPos,dir);
     }
     /*Escoge de manera aleatoria */
     private void EscogerCasillas(){
