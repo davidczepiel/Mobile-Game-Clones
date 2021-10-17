@@ -27,7 +27,6 @@ public class Pista1 implements Pista {
 			Casilla sospechoso = tablero.buscarPrimerVacio(dir[i], casilla.getPos());
 			if(sospechoso != null && sospechoso.getTipoActual() == Tipo.VACIO) {
 				sospechoso.setTipo(Tipo.ROJO);
-				tablero.modificarVacias(-1);
 			}
 		}
 	}

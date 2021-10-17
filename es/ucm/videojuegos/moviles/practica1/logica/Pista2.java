@@ -28,7 +28,6 @@ public class Pista2 implements Pista{
 	@Override
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
 		vaciaActual.setTipo(Tipo.ROJO);						//Pongo una pared
-		tablero.modificarVacias(-1);
 	}
 
 	@Override

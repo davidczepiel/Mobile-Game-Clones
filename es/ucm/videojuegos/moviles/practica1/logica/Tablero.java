@@ -93,16 +93,16 @@ public class Tablero {
         for(int i=0; i < _dimensiones; i++){
             for(int j=0; j < _dimensiones; j++){
                 
-                _juegoTablero[i][j] = new Casilla(Tipo.VACIO,0,true, new Vector2D(i,j));	//Rellenamos el tablero del juego con vacíos
+                _juegoTablero[i][j] = new Casilla(Tipo.VACIO,0,true, new Vector2D(i,j),this);	//Rellenamos el tablero del juego con vacíos
                 int caso = rand.nextInt(4);
                 //Azul
                 if(caso < 2){
-                    _solucionTablero[i][j] = new Casilla(Tipo.AZUL,0,false, new Vector2D(i,j));		
+                    _solucionTablero[i][j] = new Casilla(Tipo.AZUL,0,false, new Vector2D(i,j),this);		
 
                 }
                 //Rojo
                 else{
-                    _solucionTablero[i][j] = new Casilla(Tipo.ROJO,0,false, new Vector2D(i,j));                      
+                    _solucionTablero[i][j] = new Casilla(Tipo.ROJO,0,false, new Vector2D(i,j),this);                      
                 }
             }
         }

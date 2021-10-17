@@ -35,7 +35,7 @@ public class Pista6 implements Pista{
 
 	@Override
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
-		// No es aplicable
+		casilla.setTipo(Tipo.ROJO);
 	}
 
 	@Override

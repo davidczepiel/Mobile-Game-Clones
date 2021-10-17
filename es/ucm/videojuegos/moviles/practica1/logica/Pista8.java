@@ -2,7 +2,7 @@ package logica;
 
 import logica.Casilla.Tipo;
 
-public class Pista7 implements Pista{
+public class Pista8 implements Pista{
 
 	private boolean mirarPared(Vector2D pos, Vector2D dir, Tablero tablero){
 		Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
@@ -16,7 +16,7 @@ public class Pista7 implements Pista{
     
 	@Override
 	public boolean EsAplicable(Casilla casilla, Tablero tablero) {
-		if( casilla.getNumero() != 0 || (casilla.getTipoActual() != Tipo.AZUL)) return false;
+		if(casilla.getNumero() == 0 || casilla.getTipoActual() != Tipo.AZUL) return false;
 		
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
 		for(int i = 0; i < 4 ; i++) {
