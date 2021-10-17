@@ -11,12 +11,10 @@ public class Pista9 implements Pista{
 		int numVeo = tablero.mirarAlrededor(casilla.getPos(), 1);
 		if(numVeo == casilla.getNumero()) return false;
 		
-		int casillasVisibles = 0;
+		//Miro las casillas que tengo a mi alrededor
+		int casillasVisibles = tablero.mirarAlrededor(casilla.getPos(), 2);
 		
-		for(int i = 0; i < 4 ; ++i) {
-			casillasVisibles += tablero.mirarAlrededor(casilla.getPos(), 2);
-		}
-		
+		//Si las que tengo alrededor JUSTO coincide con las que debería ver esta pista es correcta
 		return casillasVisibles == casilla.getNumero();
 	}
 
