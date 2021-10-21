@@ -26,7 +26,14 @@ public class Pista8 implements Pista{
 
 	@Override
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
-		//Cubierta por pista 3
+		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
+		for(int i = 0; i < dir.length; ++i) {
+			if(contarVacios(casilla.getPos(), dir[i], false, tablero) > 0) {
+				Vector2D nuevaPos = new Vector2D(casilla.getPos().getX()+ dir[i].getX(),
+						casilla.getPos().getY()+ dir[i].getY());
+				tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].setTipo(Tipo.AZUL);
+			}
+		}
 	}
 
 	@Override
@@ -43,6 +50,7 @@ public class Pista8 implements Pista{
 		
 		else if(!contando && tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.AZUL)
 			return contarVacios(nuevaPos, dir, contando, tablero);
+		
 		else if(tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.VACIO) {
 			contando = true;
 			return contarVacios(nuevaPos, dir, contando, tablero) + 1;
