@@ -36,7 +36,6 @@ public class Pista8 implements Pista{
 				aux = tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()];
 			}
 		}
-		System.out.append("Pista 8 aplicada\n");
 	}
 
 	@Override

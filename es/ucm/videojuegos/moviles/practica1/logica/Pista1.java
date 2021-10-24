@@ -28,7 +28,6 @@ public class Pista1 implements Pista {
 				sospechoso.setTipo(Tipo.ROJO);
 			}
 		}
-		System.out.append("Pista 1 aplicada\n");
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package logica;
 public class Test {
 	
 	public static void main(String [] args) {
-		Tablero tablero = new Tablero(4);
+		Tablero tablero = new Tablero(9);
 		Casilla[][] juegoTablero = tablero.getTablero();    
 	}
 	

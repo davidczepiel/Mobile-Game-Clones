@@ -4,6 +4,8 @@ import logica.Casilla.Tipo;
 
 public class Pista3 implements Pista{
 
+	Vector2D _dir;
+	
 	@Override
 	public boolean EsAplicable(Casilla casilla, Tablero tablero) {
 		if(casilla.getNumero() == 0)	return false;
@@ -11,16 +13,23 @@ public class Pista3 implements Pista{
 		int numVeo = tablero.mirarAlrededor(casilla.getPos(), 1);
 		if(numVeo == casilla.getNumero()) return false;
 		
-		
+		System.out.print("Es aplicable pista 3 en " + casilla.getPos().getX() + ", " + casilla.getPos().getY() + "\n");
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
 		int[] vaciosVeo = {0,0,0,0}; 
 		int posibilidades = 0;
-		int faltan = casilla.getNumero()-numVeo;
+		int faltan = casilla.getNumero() - numVeo;
 		
+		int vaciosDisponibles = 0;
 		for(int i = 0; i < 4 ; ++i) {
 			vaciosVeo[i] = contarVacios(casilla.getPos(), dir[i], false, tablero);
-			if(vaciosVeo[i] >= faltan)
+			vaciosDisponibles += vaciosVeo[i];
+		}
+		
+		for(int i = 0; i < dir.length; ++i) {
+			if(vaciosDisponibles - vaciosVeo[i] < faltan) {
 				posibilidades++;
+				_dir = dir[i];
+			}
 		}
 		
 		if(posibilidades == 1)
@@ -32,27 +41,8 @@ public class Pista3 implements Pista{
 	
 	@Override
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
-		
-		int numVeo = tablero.mirarAlrededor(casilla.getPos(), 1);
-		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
-		int[] vaciosVeo = {0,0,0,0}; 
-		int faltan = casilla.getNumero()-numVeo;
-		
-		int i=0;
-		for(i = 0; i < 4 ; ++i) {
-			vaciosVeo[i] = contarVacios(casilla.getPos(), dir[i], false, tablero);
-			if(vaciosVeo[i] >= faltan) {
-				Casilla aux = tablero.buscarPrimerVacio(casilla.getPos(), dir[i]);
-				if(aux != null) {
-					aux.setTipo(Tipo.AZUL);
-					break;
-				}
-				else
-					System.out.append("Soy la pista 3, Casilla= (" +casilla.getPos().getX() + "," +casilla.getPos().getY()+")\n");
-			}
-		}
-		
-		System.out.append("Pista 3 aplicada\n");
+		Casilla aux = tablero.buscarPrimerVacio(_dir, casilla.getPos());
+		aux.setTipo(Tipo.AZUL);
 	}
 	
 	

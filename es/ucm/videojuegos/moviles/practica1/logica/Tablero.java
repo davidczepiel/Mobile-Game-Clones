@@ -14,58 +14,14 @@ public class Tablero {
         _gestorDePistas = new GestorDePistas();
         _numVacias = tam * tam;
         boolean non_zeros;
+        
         do {
         	non_zeros = generarTablero();
-        	for(int i = 0; i < this._dimensiones ; i++) {
-    			for(int j = 0; j < this._dimensiones ; j++) {
-    				switch(this._juegoTablero[i][j].getTipoActual()) {
-	    		    	case ROJO:
-	    		    		System.out.print("X ");
-	    		    		break;
-	    		    	case AZUL:
-	    		    		System.out.print(this._juegoTablero[i][j].getNumero() + " ");
-	    		    		break;
-	    		    	case VACIO:
-	    		    		System.out.print("- ");
-	    		    		break;
-    		    	}			
-    			}
-    			System.out.print("      |      ");
-    			for(int j = 0; j < this._dimensiones ; j++) {
-    				switch(this._solucionTablero[i][j].getTipoActual()) {
-    		    	case ROJO:
-    		    		System.out.print("X ");
-    		    		break;
-    		    	case AZUL:
-    		    		System.out.print("O ");
-    		    		break;
-    		    	case VACIO:
-    		    		System.out.print("- ");
-    		    		break;
-    		    	}
-    				
-    			}
-    			System.out.print("\n");
-        	}     	
-    	} while(!non_zeros || !esValido());        
+        	debugEstadoTableros();
+        } while(!non_zeros || !esValido());        
         
         System.out.print("SOLUCION MARAVILLOSA\n");
-      	for(int i = 0; i < this._dimensiones ; i++) {
-			for(int j = 0; j < this._dimensiones ; j++) {
-				switch(this._juegoTablero[i][j].getTipoActual()) {
-    		    	case ROJO:
-    		    	 	System.out.print("X ");
-    		    		break;
-    		    	case AZUL:
-    		    		System.out.print(this._juegoTablero[i][j].getNumero() + " ");
-    		    		break;
-    		    	case VACIO:
-    		    		System.out.print("- ");
-    		    		break;
-		    	}			
-			}
-			System.out.print("\n");
-      	}
+        debugEstadoTableros();
         limpiarTableroJuego();       
     }
     
@@ -87,6 +43,7 @@ public class Tablero {
         }
         return numVistos;
     }
+    
     /*Mira en el tablero del juego de manera recursiva dada una posicción y una dirección el número de azules.
      * Deja de contar al encontrarse con un rojo o con un vacío
      * @param pos inicial desde la cual se busca
@@ -99,6 +56,7 @@ public class Tablero {
             return 0;
         return 1 + mirarAlrededorRecursivoParcial(nuevaPos,dir);
     }
+    
     /* Dada una dirección, busca el último espacio vacio sin paredes de por medio
 	 * @param dir dirección en la que buscará un sospechoso
 	 * @param tablero (del juego)
@@ -159,6 +117,7 @@ public class Tablero {
 		}    	
     	return true;
     }
+    
     /*Genera un tablero de manera aleatoria. Siendo un 75% azules y un 25% rojos*/
     private boolean generarTablero(){
         Random rand = new Random();
@@ -263,6 +222,44 @@ public class Tablero {
 					this._juegoTablero[i][j].setTipo(Tipo.VACIO);
 			}
 		}    	
+    }
+    
+    public void debugEstadoTableros() {
+    	for(int i = 0; i < this._dimensiones ; i++) {
+			for(int j = 0; j < this._dimensiones ; j++) {
+				switch(this._juegoTablero[i][j].getTipoActual()) {
+    		    	case ROJO:
+    		    		System.out.print("X ");
+    		    		break;
+    		    	case AZUL:
+    		    		System.out.print(this._juegoTablero[i][j].getNumero() + " ");
+    		    		break;
+    		    	case VACIO:
+    		    		System.out.print("- ");
+    		    		break;
+		    	}			
+			}
+			
+			System.out.print("      |      ");
+			
+			for(int j = 0; j < this._dimensiones ; j++) {
+				switch(this._solucionTablero[i][j].getTipoActual()) {
+		    	case ROJO:
+		    		System.out.print("X ");
+		    		break;
+		    	case AZUL:
+		    		System.out.print("O ");
+		    		break;
+		    	case VACIO:
+		    		System.out.print("- ");
+		    		break;
+		    	}
+				
+			}
+			System.out.print("\n");
+    	}
+    	
+    	System.out.print("////////////////////////// \n");
     }
     
     //Dimensiones del tablero 

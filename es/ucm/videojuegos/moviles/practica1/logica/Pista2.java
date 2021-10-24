@@ -27,7 +27,6 @@ public class Pista2 implements Pista{
 	@Override
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
 		vaciaActual.setTipo(Tipo.ROJO);						//Pongo una pared
-		System.out.append("Pista 2 aplicada\n");
 	}
 
 	@Override

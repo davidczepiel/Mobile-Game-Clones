@@ -14,7 +14,6 @@ public class Pista6 implements Pista{
 	@Override
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
 		casilla.setTipo(Tipo.ROJO);
-		System.out.append("Pista 6 aplicada\n");
 	}
 
 	@Override
