@@ -23,10 +23,10 @@ public class Pista3 implements Pista{
 				posibilidades++;
 		}
 		
-		if(posibilidades > 1 || posibilidades < 1)
-			return false;
+		if(posibilidades == 1)
+			return true;
 		
-		return true;
+		return false;
 	}
 
 	
@@ -42,11 +42,17 @@ public class Pista3 implements Pista{
 		for(i = 0; i < 4 ; ++i) {
 			vaciosVeo[i] = contarVacios(casilla.getPos(), dir[i], false, tablero);
 			if(vaciosVeo[i] >= faltan) {
-				break;
+				Casilla aux = tablero.buscarPrimerVacio(casilla.getPos(), dir[i]);
+				if(aux != null) {
+					aux.setTipo(Tipo.AZUL);
+					break;
+				}
+				else
+					System.out.append("Soy la pista 3, Casilla= (" +casilla.getPos().getX() + "," +casilla.getPos().getY()+")\n");
 			}
 		}
 		
-		tablero.buscarPrimerVacio(casilla.getPos(), dir[i]).setTipo(Tipo.AZUL);
+		System.out.append("Pista 3 aplicada\n");
 	}
 	
 	

@@ -32,18 +32,22 @@ public class GestorDePistas {
 		this._pistasAplicables.add(pista);
 		this._pistasInformativas.add(pista);
 		
+		pista = new Pista6();
+		this._pistasInformativas.add(pista);
+		this._pistasAplicables.add(pista);
 		
+		pista = new Pista7();
+		this._pistasInformativas.add(pista);
+		this._pistasAplicables.add(pista);
+		//-----------------------------------
 		pista = new Pista4();
 		this._pistasInformativas.add(pista);
 		
 		pista = new Pista5();
 		this._pistasInformativas.add(pista);
 		
-		pista = new Pista6();
-		this._pistasInformativas.add(pista);
 		
-		pista = new Pista7();
-		this._pistasInformativas.add(pista);
+
 		
 	}
 	
@@ -55,7 +59,26 @@ public class GestorDePistas {
 			for(int i = 0; i < size ; i++) {
 				for(int j = 0; j < size ; j++) {
 					checkPista = pruebaPista(tableroJuego[i][j], tablero);
-					if(checkPista) break;
+					if(checkPista) {
+						for(int x = 0; x < size ; x++) {
+			    			for(int y = 0; y < size ; y++) {
+			    				switch(tablero.getTablero()[x][y].getTipoActual()) {
+				    		    	case ROJO:
+				    		    		System.out.print("X ");
+				    		    		break;
+				    		    	case AZUL:
+				    		    		System.out.print(tablero.getTablero()[x][y].getNumero() + " ");
+				    		    		break;
+				    		    	case VACIO:
+				    		    		System.out.print("- ");
+				    		    		break;
+			    		    	}			
+			    			}
+	    		    		System.out.print("\n");
+						}
+    		    		System.out.print("////////////////////////// \n");
+						break;
+					}
 				}
 				if(checkPista) break;
 			}

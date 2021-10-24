@@ -7,7 +7,6 @@ public class Pista2 implements Pista{
 	Casilla vaciaActual = null;
 	@Override
 	public boolean EsAplicable(Casilla casilla, Tablero tablero) {
-		
 		if(casilla.getNumero() == 0 ) return false;
 		
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
@@ -28,6 +27,7 @@ public class Pista2 implements Pista{
 	@Override
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
 		vaciaActual.setTipo(Tipo.ROJO);						//Pongo una pared
+		System.out.append("Pista 2 aplicada\n");
 	}
 
 	@Override

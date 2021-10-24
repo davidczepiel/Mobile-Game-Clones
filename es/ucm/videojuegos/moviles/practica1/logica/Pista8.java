@@ -28,12 +28,15 @@ public class Pista8 implements Pista{
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
 		for(int i = 0; i < dir.length; ++i) {
-			if(contarVacios(casilla.getPos(), dir[i], false, tablero) > 0) {
-				Vector2D nuevaPos = new Vector2D(casilla.getPos().getX()+ dir[i].getX(),
-						casilla.getPos().getY()+ dir[i].getY());
+			Casilla aux = casilla;
+			while(contarVacios(casilla.getPos(), dir[i], false, tablero) > 0) {
+				Vector2D nuevaPos = new Vector2D(aux.getPos().getX()+ dir[i].getX(),
+						aux.getPos().getY()+ dir[i].getY());
 				tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].setTipo(Tipo.AZUL);
+				aux = tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()];
 			}
 		}
+		System.out.append("Pista 8 aplicada\n");
 	}
 
 	@Override
@@ -44,8 +47,8 @@ public class Pista8 implements Pista{
 	int contarVacios(Vector2D pos,Vector2D dir, boolean contando,  Tablero tablero) {
 		Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
 		if( (nuevaPos.getX() < 0 || nuevaPos.getX() >= tablero.getDimensiones() || nuevaPos.getY() < 0 || nuevaPos.getY() >= tablero.getDimensiones()) ||
-				tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO ||
-				contando  && tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.AZUL )   //Si me he salido de cualquier limite
+			tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO ||
+			(contando  && tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.AZUL))   //Si me he salido de cualquier limite
 			return 0;
 		
 		else if(!contando && tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.AZUL)

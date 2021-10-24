@@ -4,15 +4,6 @@ import logica.Casilla.Tipo;
 
 public class Pista7 implements Pista{
 
-	private boolean mirarPared(Vector2D pos, Vector2D dir, Tablero tablero){
-		Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
-		if( nuevaPos.getX() < 0 || nuevaPos.getX() >= tablero.getDimensiones() || nuevaPos.getY() < 0 || nuevaPos.getY() >= tablero.getDimensiones() ||   	//Si me he salido de cualquier limite
-				tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO)									  	// Si me he encontrado un muro
-			return true;
-		
-		return false;		
-	}
-	
     
 	@Override
 	public boolean EsAplicable(Casilla casilla, Tablero tablero) {
@@ -29,6 +20,7 @@ public class Pista7 implements Pista{
 	@Override
 	public void AplicarPista(Casilla casilla, Tablero tablero) {
 		casilla.setTipo(Tipo.ROJO);
+		System.out.append("¿Pista 7 aplicada\n");
 	}
 
 	@Override
@@ -36,4 +28,13 @@ public class Pista7 implements Pista{
 		return "Hay una celda azul cerrada que no ve ninguna otra azul, lo cual no es posible";
 	}
 
+	private boolean mirarPared(Vector2D pos, Vector2D dir, Tablero tablero){
+		Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
+		if( nuevaPos.getX() < 0 || nuevaPos.getX() >= tablero.getDimensiones() || nuevaPos.getY() < 0 || nuevaPos.getY() >= tablero.getDimensiones() ||   	//Si me he salido de cualquier limite
+				tablero.getTablero()[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO)									  	// Si me he encontrado un muro
+			return true;
+		
+		return false;		
+	}
 }
+

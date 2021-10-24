@@ -13,10 +13,59 @@ public class Tablero {
         _solucionTablero = new Casilla[_dimensiones][_dimensiones];
         _gestorDePistas = new GestorDePistas();
         _numVacias = tam * tam;
+        boolean non_zeros;
         do {
-        	generarTablero();
-    	} while(esValido());
+        	non_zeros = generarTablero();
+        	for(int i = 0; i < this._dimensiones ; i++) {
+    			for(int j = 0; j < this._dimensiones ; j++) {
+    				switch(this._juegoTablero[i][j].getTipoActual()) {
+	    		    	case ROJO:
+	    		    		System.out.print("X ");
+	    		    		break;
+	    		    	case AZUL:
+	    		    		System.out.print(this._juegoTablero[i][j].getNumero() + " ");
+	    		    		break;
+	    		    	case VACIO:
+	    		    		System.out.print("- ");
+	    		    		break;
+    		    	}			
+    			}
+    			System.out.print("      |      ");
+    			for(int j = 0; j < this._dimensiones ; j++) {
+    				switch(this._solucionTablero[i][j].getTipoActual()) {
+    		    	case ROJO:
+    		    		System.out.print("X ");
+    		    		break;
+    		    	case AZUL:
+    		    		System.out.print("O ");
+    		    		break;
+    		    	case VACIO:
+    		    		System.out.print("- ");
+    		    		break;
+    		    	}
+    				
+    			}
+    			System.out.print("\n");
+        	}     	
+    	} while(!non_zeros || !esValido());        
         
+        System.out.print("SOLUCION MARAVILLOSA\n");
+      	for(int i = 0; i < this._dimensiones ; i++) {
+			for(int j = 0; j < this._dimensiones ; j++) {
+				switch(this._juegoTablero[i][j].getTipoActual()) {
+    		    	case ROJO:
+    		    	 	System.out.print("X ");
+    		    		break;
+    		    	case AZUL:
+    		    		System.out.print(this._juegoTablero[i][j].getNumero() + " ");
+    		    		break;
+    		    	case VACIO:
+    		    		System.out.print("- ");
+    		    		break;
+		    	}			
+			}
+			System.out.print("\n");
+      	}
         limpiarTableroJuego();       
     }
     
@@ -104,30 +153,36 @@ public class Tablero {
     	//Vemos si la solución dada se corresponde con el tablero de la solcion
     	for(int i = 0; i < this._dimensiones ; i++) {
 			for(int j = 0; j < this._dimensiones ; j++) {
-				if(this._solucionTablero[i][j] != this._juegoTablero[i][j]) return false;
+				if(this._solucionTablero[i][j].getTipoActual() != this._juegoTablero[i][j].getTipoActual()) 
+					return false;
 			}
 		}    	
     	return true;
     }
     /*Genera un tablero de manera aleatoria. Siendo un 75% azules y un 25% rojos*/
-    private void generarTablero(){
+    private boolean generarTablero(){
         Random rand = new Random();
-                
+        int azules = 0, rojos = 0;
         for(int i=0; i < _dimensiones; i++){
             for(int j=0; j < _dimensiones; j++){
             	//Rellenamos el tablero del juego con vacíos
                 _juegoTablero[i][j] = new Casilla(Tipo.VACIO,0,true, new Vector2D(i,j),this);	
-                int caso = rand.nextInt(4);
+                int caso = rand.nextInt(100);
                 //Azul
-                if(caso < 2)
-                    _solucionTablero[i][j] = new Casilla(Tipo.AZUL,0,false, new Vector2D(i,j),this);		
+                if(caso < 75) {
+                	_solucionTablero[i][j] = new Casilla(Tipo.AZUL,0,false, new Vector2D(i,j),this);		
+            		azules++;
+                }
 
                 //Rojo
-                else
+                else {
+                	rojos++;
                 	_solucionTablero[i][j] = new Casilla(Tipo.ROJO,0,false, new Vector2D(i,j),this);                                    
+                }
             }
         }
-        escogerCasillas();	//Escogemos casillas para ponerlas estáticas
+        //Escogemos casillas para ponerlas estáticas
+        return azules > 0 && rojos > 0 && escogerCasillas(azules, rojos);	
         
     }
     
@@ -156,11 +211,16 @@ public class Tablero {
         return 1 + mirarAlrededorRecursivoEnJuego(nuevaPos,dir);
     }
     /*Escoge de manera aleatoria */
-    private void escogerCasillas(){
+    private boolean escogerCasillas(int limAzules, int limRojos){
     	
         int azules =  _dimensiones*_dimensiones/4;
         int rojos =  _dimensiones*_dimensiones/4;
-           
+        
+        if(azules > limAzules || rojos > limRojos) return false;
+        
+        //Actualizo el valor de las casillas vacías
+        _numVacias = _dimensiones*_dimensiones;
+        
         Random rand = new Random();
         //Mientras que haya azules que posicionar, busco una posición aleatoria
         // y añado al tablero del juego siempre que sea posible
@@ -171,7 +231,9 @@ public class Tablero {
             _juegoTablero[posX][posY].getTipoActual() != Tipo.AZUL){			//Si no he visitado ya esta casilla
                 _juegoTablero[posX][posY].setModificable(false);
                 _juegoTablero[posX][posY].setTipo(Tipo.AZUL);
-                _juegoTablero[posX][posY].setNumero(mirarAlrededor(new Vector2D(posX,posY),0));
+                int numAzules = mirarAlrededor(new Vector2D(posX,posY),0);
+                if(numAzules == 0) return false;
+                _juegoTablero[posX][posY].setNumero(numAzules);
                 azules--;
             }
         }
@@ -187,9 +249,9 @@ public class Tablero {
                 rojos--;
             }
         }
+ 
         
-        //Actualizo el valor de las casillas vacías
-        _numVacias = (_dimensiones*_dimensiones) - rojos - azules; 
+        return true;
     }
 
     /*Vuelve a poner el tablero del juego a su estado original.
