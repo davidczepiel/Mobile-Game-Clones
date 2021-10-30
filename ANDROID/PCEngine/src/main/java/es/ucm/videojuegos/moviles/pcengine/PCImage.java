@@ -17,10 +17,14 @@ public class PCImage implements Image {
     public int getWidth() {
         return this._image.getWidth(null);
     }
-
     @Override
     public int getHeight() {
         return this._image.getHeight(null);
     }
+
+    public java.awt.Image get_image() {
+        return _image;
+    }
+
     private java.awt.Image _image;
 }

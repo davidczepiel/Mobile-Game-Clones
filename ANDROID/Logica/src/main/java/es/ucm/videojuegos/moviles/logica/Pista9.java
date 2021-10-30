@@ -24,7 +24,6 @@ public class Pista9 implements Pista{
         for(int i =0 ;i < 4; i++){
         	mirarAlrededorRecursivoEnJuego(casilla.getPos(),dir[i], tablero);
         }
-		System.out.append("Pista 9 aplicada\n");
 	}
 
 	@Override

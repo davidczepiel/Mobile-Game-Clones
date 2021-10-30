@@ -1,5 +1,4 @@
 package es.ucm.videojuegos.moviles.logica;
-
 import es.ucm.videojuegos.moviles.logica.Casilla.Tipo;
 
 public class Pista1 implements Pista {
@@ -28,7 +27,6 @@ public class Pista1 implements Pista {
 				sospechoso.setTipo(Tipo.ROJO);
 			}
 		}
-		System.out.append("Pista 1 aplicada\n");
 	}
 
 	@Override

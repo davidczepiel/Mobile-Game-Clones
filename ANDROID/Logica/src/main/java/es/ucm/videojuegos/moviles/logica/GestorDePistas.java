@@ -24,10 +24,6 @@ public class GestorDePistas {
 		this._pistasAplicables.add(pista);
 		this._pistasInformativas.add(pista);
 		
-		pista = new Pista10();
-		this._pistasAplicables.add(pista);
-		this._pistasInformativas.add(pista);
-		
 		pista = new Pista3();
 		this._pistasAplicables.add(pista);
 		this._pistasInformativas.add(pista);
@@ -46,9 +42,8 @@ public class GestorDePistas {
 		pista = new Pista5();
 		this._pistasInformativas.add(pista);
 		
-		
-
-		
+		pista = new Pista10();
+		this._pistasInformativas.add(pista);
 	}
 	
 	public boolean esValido(Tablero tablero) {
@@ -60,23 +55,8 @@ public class GestorDePistas {
 				for(int j = 0; j < size ; j++) {
 					checkPista = pruebaPista(tableroJuego[i][j], tablero);
 					if(checkPista) {
-						for(int x = 0; x < size ; x++) {
-			    			for(int y = 0; y < size ; y++) {
-			    				switch(tablero.getTablero()[x][y].getTipoActual()) {
-				    		    	case ROJO:
-				    		    		System.out.print("X ");
-				    		    		break;
-				    		    	case AZUL:
-				    		    		System.out.print(tablero.getTablero()[x][y].getNumero() + " ");
-				    		    		break;
-				    		    	case VACIO:
-				    		    		System.out.print("- ");
-				    		    		break;
-			    		    	}			
-			    			}
-	    		    		System.out.print("\n");
-						}
-    		    		System.out.print("////////////////////////// \n");
+						if(DEBUG)
+							tablero.debugEstadoTableros();
 						break;
 					}
 				}
@@ -101,6 +81,7 @@ public class GestorDePistas {
 		}
 		return null;
 	}
+	
 	private boolean pruebaPista(Casilla casilla, Tablero tablero) {
 		for(Pista pista: this._pistasAplicables) {
 			if(pista.EsAplicable(casilla, tablero)) {
@@ -110,6 +91,8 @@ public class GestorDePistas {
 		}
 		return false;
 	}
+	
 	private ArrayList<Pista> _pistasInformativas;
 	private ArrayList<Pista> _pistasAplicables;
+	private boolean DEBUG = true;
 }

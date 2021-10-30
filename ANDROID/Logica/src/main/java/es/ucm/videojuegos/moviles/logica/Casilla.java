@@ -3,6 +3,7 @@ package es.ucm.videojuegos.moviles.logica;
 
 public class Casilla {
 
+	
     Casilla(Tipo mTipo, int num, boolean modific, Vector2D pos, Tablero tab){
     	_miTipoActual = mTipo;
         _numero =num;
@@ -29,7 +30,7 @@ public class Casilla {
 		_miTipoActual = tipo; 
     	
     }
-
+    
     public boolean esModificable()  { return _modificable;}
     public void setModificable( boolean m) { _modificable = m;}
     
@@ -48,4 +49,6 @@ public class Casilla {
     private boolean _modificable;
     
     private Tablero _tablero;
+    
+
 }

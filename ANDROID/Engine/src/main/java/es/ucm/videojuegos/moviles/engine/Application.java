@@ -1,8 +1,8 @@
 package es.ucm.videojuegos.moviles.engine;
 
 public interface Application {
-    void onInit();
-    void onUpdate(float deltaTime);
+    void onInit(Engine g);
+    void onUpdate(double deltaTime);
     void onDraw(Graphics g);
-    void onEvent(TouchEvent e);
+    String getName();
 }
