@@ -23,5 +23,11 @@ public class PCFont implements Font {
         return _font;
     }
 
+    @Override
+    public void setSize(float size) {
+        //Asignamos tamanio
+        this._font = this._font.deriveFont(size);
+    }
+
     private java.awt.Font _font;
 }

@@ -1,11 +1,17 @@
 package es.ucm.videojuegos.moviles.pcengine;
 
+import java.awt.Graphics2D;
+
 import es.ucm.videojuegos.moviles.engine.AbstractGraphics;
 import es.ucm.videojuegos.moviles.engine.Font;
+import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
 
 public class PCGraphics extends AbstractGraphics {
 
+    //Esta constante se utiliza para solventar el problema de que (0,0) en la ventana del JFrame no coincide
+    //con el borde de la pantalla dibujado en el eje de las X's
+    private static final int OFFSET_JFRAME_X = 7;
     /**
      * Constructor.
      *
@@ -61,12 +67,7 @@ public class PCGraphics extends AbstractGraphics {
     @Override
     public void drawImage(Image image, int x, int y) {
         PCImage pcImage = (PCImage)image;
-        this._graphics.drawImage(pcImage.get_image(),
-                (x * this._canvasSizeX / this._originalWidth + this._x),       //posicionX
-                (y * this._canvasSizeY / this._originalHeight + this._y),      //posicionY
-                (int)(pcImage.getWidth() * this._scale),    //escalaX
-                (int)(pcImage.getHeight() * this._scale),   //escalaY
-                null);
+        this._graphics.drawImage(pcImage.get_image(), x, y, pcImage.getWidth(),pcImage.getHeight(),null);
     }
 
     @Override
@@ -77,31 +78,29 @@ public class PCGraphics extends AbstractGraphics {
     @Override
     public void setFont(Font font) {
         PCFont pcFont = (PCFont)font;
-        this._graphics.setFont(pcFont.get_font().deriveFont(pcFont.get_font().getSize() * this._scale));
+        this._graphics.setFont(pcFont.get_font());
     }
 
     @Override
     public void fillCircle(int cx, int cy, int radius) {
-        this._graphics.fillOval((cx * this._canvasSizeX / this._originalWidth + this._x),       //posicionX
-                                (cy * this._canvasSizeY / this._originalHeight + this._y),      //posicionY
-                                (int)(radius * this._scale),(int)(radius * this._scale));
+        Graphics2D g = (Graphics2D)this._graphics;
+        this._graphics.fillOval(cx - radius, cy - radius, radius * 2, radius * 2);
     }
 
     @Override
     public void drawText(String text, int x, int y) {
-        this._graphics.drawString(text,
-                                 (x * this._canvasSizeX / this._originalWidth + this._x),       //posicionX
-                                 (y * this._canvasSizeY / this._originalHeight + this._y));      //posicionY
+        this._graphics.drawString(text, x, y);
     }
 
     @Override
     public int getWidth() {
-        return this._originalWidth;
+        return this._window.getWidth();
     }
 
     @Override
     public int getHeigth() {
-        return this._originalHeight;
+
+        return this._window.getHeight();
     }
     //+-----------------------------------------------------------------------------------+
     //|                 METODOS AUXILIARES PARA BUFFER                                    |
@@ -110,9 +109,11 @@ public class PCGraphics extends AbstractGraphics {
     /*Prepara el frame para cada plataforma*/
     public void prepareFrame(){
         this._graphics = this._bufferStrategy.getDrawGraphics();
-        scale();
-         translate();
+        clear(0xffffffff);
+        translate(OFFSET_JFRAME_X, 0);
+        super.prepareFrame();
     }
+
     @Override
     /* Deja de utilizar el motor de render de cada plataforma*/
     public void show(){
@@ -132,56 +133,34 @@ public class PCGraphics extends AbstractGraphics {
     }
 
     //+-----------------------------------------------------------------------------------+
-    //|                           METODOS PRIVADOS                                        |
+    //|             METODOS CALCULAR POSICION Y ESCALADO                                  |
     //+-----------------------------------------------------------------------------------+
     @Override
-    public void translate() {
-        float auxHeight = this._originalHeight * this._window.getWidth() / this._originalWidth;
-        if(auxHeight > this._window.getHeight()){
-            //poner bandas laterales
-            this._canvasSizeX = this._originalWidth * this._window.getHeight() / this._originalHeight;
-            this._canvasSizeY = this._window.getHeight();
-            this._x = (this._window.getWidth() - (int)(_canvasSizeX))/2;
-            this._y = 0;
-        }
-        else{
-           //poner bandas arriba y abajo
-            this._canvasSizeX = this._window.getWidth();
-            this._canvasSizeY = (int)auxHeight;
-            this._x = 0;
-            this._y = (this._window.getHeight() - (int)(this._canvasSizeY))/2;;
-        }
+    public void translate(int x, int y) {
+        Graphics2D g = (Graphics2D)this._graphics;
+        g.translate(x,y);
     }
 
     @Override
-    public void scale() {
-        /*if(this._window.getHeight() < this._window.getWidth())
-            this._scale = this._window.getHeight() / (float)this._originalHeight;
-        else
-            this._scale = this._window.getWidth() / (float)this._originalWidth;*/
-
-        if(this._canvasSizeY < this._canvasSizeX)
-            this._scale = this._canvasSizeY / (float)this._originalHeight;
-        else
-            this._scale = this._canvasSizeX / (float)this._originalWidth;
-
+    public void scale(double x, double y) {
+        Graphics2D g = (Graphics2D)this._graphics;
+        g.scale(x,y);
     }
 
     @Override
     public void save() {
-        //
+        Graphics2D g = (Graphics2D)this._graphics;
+        this._transformationMatrix = g.getTransform();
     }
 
     @Override
     public void restore() {
-        //
+        Graphics2D g = (Graphics2D)this._graphics;
+        g.setTransform(this._transformationMatrix);
     }
 
-    private java.awt.Graphics _graphics;
-    private Window _window;
     private java.awt.image.BufferStrategy _bufferStrategy;
-    private int _x,  _y;                            // Posicion desde la cual se empieza a pintar el canvas
-    private float _scale;                           // Factor de escalado
-    private int _canvasSizeX, _canvasSizeY;         //El tamanio de la parte pintable del juego que es relacion a 2/3
-    private int _originalWidth, _originalHeight;    //El tamanio original desde el que se inicia la app
+    private java.awt.Graphics _graphics;
+    private java.awt.geom.AffineTransform _transformationMatrix;
+    private Window _window;
 }

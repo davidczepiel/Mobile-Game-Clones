@@ -11,7 +11,9 @@ public class PCEngine implements Engine {
         Window window = new Window(application.getName());
         window.init(400,600);
         this._graphics = new PCGraphics(window);
+        this._input = new PCInput(this._graphics);
         this._app = application;
+        window.addMouseListener(this._input);
         application.onInit(this);
     }
 
@@ -43,8 +45,7 @@ public class PCEngine implements Engine {
                 do {
                     this._graphics.prepareFrame();
                     try {
-                        this._graphics.clear(0xffffffff);
-                        this._app.onDraw(this._graphics);
+                        this._app.onDraw();
                     } finally {
                         this._graphics.closeGraphics();
                     }
@@ -61,12 +62,12 @@ public class PCEngine implements Engine {
 
     @Override
     public Input getInput() {
-        return null;
+        return this._input;
     }
 
     Application _app;
     PCGraphics _graphics;
-    // _input;
+    PCInput _input;
 
 
 }

@@ -20,11 +20,6 @@ public class Window extends JFrame {
      * Se configura el tamaño de la ventana, se habilita el cierre de la
      * aplicación al cerrar la ventana, y se carga la fuente que se usará
      * en la ventana.
-     *
-     * Debe ser llamado antes de mostrar la ventana (con setVisible()).
-     *
-     * @return Cierto si todo fue bien y falso en otro caso (se escribe una
-     * descripción del problema en la salida de error).
      */
     public void init(int width, int height) {
 

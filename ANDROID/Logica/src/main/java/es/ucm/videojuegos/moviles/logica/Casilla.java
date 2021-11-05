@@ -3,7 +3,7 @@ package es.ucm.videojuegos.moviles.logica;
 
 public class Casilla {
 
-	
+	/*Constructora de la clase*/
     Casilla(Tipo mTipo, int num, boolean modific, Vector2D pos, Tablero tab){
     	_miTipoActual = mTipo;
         _numero =num;

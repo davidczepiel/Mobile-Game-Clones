@@ -13,6 +13,7 @@ public class PCImage implements Image {
             e.printStackTrace();
         }
     }
+
     @Override
     public int getWidth() {
         return this._image.getWidth(null);

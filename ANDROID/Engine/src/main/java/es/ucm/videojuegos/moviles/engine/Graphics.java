@@ -8,9 +8,9 @@ public interface Graphics {
     // Pinta toda la pantalla del color dado
     void clear(int color);
     //Translada el canvas
-    void translate();
+    void translate(int x, int y);
     // Escala el canvas
-    void scale();
+    void scale(double x, double y);
     // Captura de imagen
     void save();
     // Vuelve el formato nativo del sistema de coordenadas y escalado
@@ -29,7 +29,17 @@ public interface Graphics {
     void fillCircle(int cx, int cy, int radius);
     // Escribe el texto con la fuente y color activos
     void drawText(String text, int x, int y);
-    // tamaño de la ventana
+
+    // tamanio de la ventana
     int getWidth();
     int getHeigth();
+    /***********************************************************************************/
+    // tamanio del canvas nativo
+    int getWidthNativeCanvas();
+    int getHeigthNativeCanvas();
+
+    //tamanio del canvas logico
+    int getLogicCanvasWidth();
+    int getLogicCanvasHeight();
+
 }

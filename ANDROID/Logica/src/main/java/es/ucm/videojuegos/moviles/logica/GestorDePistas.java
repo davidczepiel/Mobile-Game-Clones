@@ -45,12 +45,12 @@ public class GestorDePistas {
 		pista = new Pista10();
 		this._pistasInformativas.add(pista);
 	}
-	
+	/* Comprueba si el tablero dado es válido y jugable dadas las pistas existentes*/
 	public boolean esValido(Tablero tablero) {
 		Casilla[][] tableroJuego = tablero.getTablero();
 		int size = tablero.getDimensiones();
 		while(tablero.getNumVacias() > 0) {
-			boolean checkPista = false;
+			boolean checkPista = false;	//si se ha realizado una pista en ela iteraccion actual
 			for(int i = 0; i < size ; i++) {
 				for(int j = 0; j < size ; j++) {
 					checkPista = pruebaPista(tableroJuego[i][j], tablero);
@@ -62,12 +62,12 @@ public class GestorDePistas {
 				}
 				if(checkPista) break;
 			}
-			if(!checkPista) return false;
+			if(!checkPista) return false;	//si no se ha realizado una pista el tablero no es jugable
 			
 		}
 		return true;
 	}
-	
+	/* Devuelve una pista escrita dado el estado actual del tablero de juego*/
 	public String damePista(Tablero tablero) {
 		Casilla[][] tableroJuego = tablero.getTablero();
 		int size = tablero.getDimensiones();
@@ -81,7 +81,7 @@ public class GestorDePistas {
 		}
 		return null;
 	}
-	
+	/*Prueba las pistas disponibles dada la casilla y el tablero*/
 	private boolean pruebaPista(Casilla casilla, Tablero tablero) {
 		for(Pista pista: this._pistasAplicables) {
 			if(pista.EsAplicable(casilla, tablero)) {
@@ -92,7 +92,7 @@ public class GestorDePistas {
 		return false;
 	}
 	
-	private ArrayList<Pista> _pistasInformativas;
-	private ArrayList<Pista> _pistasAplicables;
+	private ArrayList<Pista> _pistasInformativas;	//Lista con las pistas informativas para el jugador
+	private ArrayList<Pista> _pistasAplicables;		//Lista con las pistas utiles para la generacin del tablero
 	private boolean DEBUG = true;
 }

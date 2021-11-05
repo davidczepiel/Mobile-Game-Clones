@@ -24,71 +24,34 @@ public class Tablero {
         debugEstadoTableros();
         limpiarTableroJuego();       
     }
-    
-    /* Miramos cuantos azules hay alrededor de una casilla hasta encontrar una pared
-	 * @param pos (actual desde la cual se mira en el tablero)
-	 * @param tablero 0 indica que miran azules utilizando el tablerode la solucion;
-	 * 1 indica que se mira en el tablero del juego y se cuentan azules teniendo en cuenta los vacios;
-	 * y diferente a 0 y 1 que se mira en el juego sin importar los vacios*/
-    public int mirarAlrededor(Vector2D pos, int tablero){
-        Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
-        int numVistos =0;
-        for(int i =0 ;i < 4; i++){
-        	if(tablero == 0)
-        		numVistos += mirarAlrededorRecursivoEnSolucion(pos,dir[i]);
-        	else if(tablero == 1)
-        		numVistos += mirarAlrededorRecursivoParcial(pos,dir[i]);
-        	else 
-        		numVistos += mirarAlrededorRecursivoEnJuego(pos,dir[i]);
+
+    public boolean esCorrecto(){
+        //Vemos si la solucion dada se corresponde con el tablero de la solcion
+        for(int i = 0; i < this._dimensiones ; i++) {
+            for(int j = 0; j < this._dimensiones ; j++) {
+                if(this._solucionTablero[i][j].getTipoActual() != this._juegoTablero[i][j].getTipoActual())
+                    return false;
+            }
         }
-        return numVistos;
+        return true;
     }
-    
-    /*Mira en el tablero del juego de manera recursiva dada una posicci�n y una direcci�n el n�mero de azules.
-     * Deja de contar al encontrarse con un rojo o con un vac�o
-     * @param pos inicial desde la cual se busca
-     * @param dir en la que se buscan azules*/
-    public int mirarAlrededorRecursivoParcial(Vector2D pos, Vector2D dir){
-        Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
-        if( nuevaPos.getX() < 0 || nuevaPos.getX() >= _dimensiones || nuevaPos.getY() < 0 || nuevaPos.getY() >= _dimensiones ||   	//Si me he salido de cualquier limite
-		_juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO ||										  	// Si me he encontrado un muro
-        _juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.VACIO)											// Si me he encontrado con un vac�o
-            return 0;
-        return 1 + mirarAlrededorRecursivoParcial(nuevaPos,dir);
+
+    public String damePista(){
+        return this._gestorDePistas.damePista(this);
     }
-    
-    /* Dada una direcci�n, busca el �ltimo espacio vacio sin paredes de por medio
-	 * @param dir direcci�n en la que buscar� un sospechoso
-	 * @param tablero (del juego)
-	 * @param pos posici�n de la casilla desde la que partir */
-	public Casilla buscarPrimerVacio(Vector2D dir, Vector2D pos) {
-	    Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
-	    
-	    if( nuevaPos.getX() < 0 || nuevaPos.getX() >= _dimensiones ||  						//Si me he salido por las X's
-		nuevaPos.getY() < 0 || nuevaPos.getY() >= _dimensiones ||   						//Si me he salido por las Y's
-		_juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO)			//La siguiente es roja
-		  return null;
-		
-	    else if (_juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.AZUL)	//La siguiente es azul
-	    	return buscarPrimerVacio(dir, nuevaPos);
-	    else	
-	    	return _juegoTablero[nuevaPos.getX()][nuevaPos.getY()];
-	}
-    
+
     /* Modifica el tipo de la casilla dado su tipo actual
 	 * @param casilla que se modifica*/
     public void modificarCasilla(Casilla casilla) {
     	switch(casilla.getTipoActual()) {
     	case ROJO:
     		casilla.setTipo(Tipo.VACIO); 	
-    		_numVacias++;
     		break;
     	case AZUL:
     		casilla.setTipo(Tipo.ROJO);    		
     		break;
     	case VACIO:
     		casilla.setTipo(Tipo.AZUL);    		
-    		_numVacias--;
     		break;
 
     	}
@@ -102,20 +65,62 @@ public class Tablero {
     public int getDimensiones() { return _dimensiones;}
     /*Obtiene el tablero de juego*/
     public Casilla[][] getTablero() {return _juegoTablero;}
-    
+
+    /* Miramos cuantos azules hay alrededor de una casilla hasta encontrar una pared
+     * @param pos (actual desde la cual se mira en el tablero)
+     * @param tablero 0 indica que miran azules utilizando el tablerode la solucion;
+     * 1 indica que se mira en el tablero del juego y se cuentan azules teniendo en cuenta los vacios;
+     * y diferente a 0 y 1 que se mira en el juego sin importar los vacios*/
+    protected int mirarAlrededor(Vector2D pos, int tablero){
+        Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
+        int numVistos =0;
+        for(int i =0 ;i < 4; i++){
+            if(tablero == 0)
+                numVistos += mirarAlrededorRecursivoEnSolucion(pos,dir[i]);
+            else if(tablero == 1)
+                numVistos += mirarAlrededorRecursivoParcial(pos,dir[i]);
+            else
+                numVistos += mirarAlrededorRecursivoEnJuego(pos,dir[i]);
+        }
+        return numVistos;
+    }
+
+    /*Mira en el tablero del juego de manera recursiva dada una posicci�n y una direcci�n el n�mero de azules.
+     * Deja de contar al encontrarse con un rojo o con un vac�o
+     * @param pos inicial desde la cual se busca
+     * @param dir en la que se buscan azules*/
+    protected int mirarAlrededorRecursivoParcial(Vector2D pos, Vector2D dir){
+        Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
+        if( nuevaPos.getX() < 0 || nuevaPos.getX() >= _dimensiones || nuevaPos.getY() < 0 || nuevaPos.getY() >= _dimensiones ||   	//Si me he salido de cualquier limite
+                _juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO ||										  	// Si me he encontrado un muro
+                _juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.VACIO)											// Si me he encontrado con un vac�o
+            return 0;
+        return 1 + mirarAlrededorRecursivoParcial(nuevaPos,dir);
+    }
+
+    /* Dada una direcci�n, busca el �ltimo espacio vacio sin paredes de por medio
+     * @param dir direcci�n en la que buscar� un sospechoso
+     * @param tablero (del juego)
+     * @param pos posici�n de la casilla desde la que partir */
+    protected Casilla buscarPrimerVacio(Vector2D dir, Vector2D pos) {
+        Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
+
+        if( nuevaPos.getX() < 0 || nuevaPos.getX() >= _dimensiones ||  						//Si me he salido por las X's
+                nuevaPos.getY() < 0 || nuevaPos.getY() >= _dimensiones ||   						//Si me he salido por las Y's
+                _juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.ROJO)			//La siguiente es roja
+            return null;
+
+        else if (_juegoTablero[nuevaPos.getX()][nuevaPos.getY()].getTipoActual() == Tipo.AZUL)	//La siguiente es azul
+            return buscarPrimerVacio(dir, nuevaPos);
+        else
+            return _juegoTablero[nuevaPos.getX()][nuevaPos.getY()];
+    }
     /*Comprueba si el tablero generado es resoluble dadas las pistas
      * que proporciona el juego */
     private boolean esValido(){
     	if(!this._gestorDePistas.esValido(this))
     		return false;
-    	//Vemos si la soluci�n dada se corresponde con el tablero de la solcion
-    	for(int i = 0; i < this._dimensiones ; i++) {
-			for(int j = 0; j < this._dimensiones ; j++) {
-				if(this._solucionTablero[i][j].getTipoActual() != this._juegoTablero[i][j].getTipoActual()) 
-					return false;
-			}
-		}    	
-    	return true;
+        return esCorrecto();
     }
     
     /*Genera un tablero de manera aleatoria. Siendo un 75% azules y un 25% rojos*/
@@ -214,7 +219,7 @@ public class Tablero {
     }
 
     /*Vuelve a poner el tablero del juego a su estado original.
-     *Este m�todo se llama despu�s de comprobar que el tablero funcione. */
+     *Este metodo se llama despues de comprobar que el tablero funcione. */
     private void limpiarTableroJuego() {
     	for(int i = 0; i < this._dimensiones ; i++) {
 			for(int j = 0; j < this._dimensiones ; j++) {
@@ -223,7 +228,7 @@ public class Tablero {
 			}
 		}    	
     }
-    
+    /*Pinta el tablero*/
     public void debugEstadoTableros() {
     	for(int i = 0; i < this._dimensiones ; i++) {
 			for(int j = 0; j < this._dimensiones ; j++) {
