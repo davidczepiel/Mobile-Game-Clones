@@ -13,6 +13,10 @@ import es.ucm.videojuegos.moviles.engine.Graphics;
 
 public class PCInput implements Input, MouseListener{
 
+    //Esta constante se utiliza para solventar el problema de que (0,0) en la ventana del JFrame no coincide
+    //con el borde de la pantalla dibujado en el eje de las X's
+    private static final int OFFSET_JFRAME_X = 7;
+
     //Numero de listas que usa el input para almacenar los eventos y hacer swap cada vez que la logica pida una lista de eventos (siempre 2)
     private static final int numLists = 2;
 
@@ -81,7 +85,7 @@ public class PCInput implements Input, MouseListener{
         int nativeY = _graphics.getHeigthNativeCanvas() * (e.getY() - yLogicCanvas) / _graphics.getLogicCanvasHeight();
 
         //Incorporamos el evento a la lista
-        event.set_x(nativeX);
+        event.set_x(nativeX - OFFSET_JFRAME_X);
         event.set_y(nativeY);
         addEvent(event);
     }

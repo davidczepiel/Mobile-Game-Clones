@@ -1,7 +1,5 @@
 package es.ucm.videojuegos.moviles.logica;
 
-
-
 import java.util.List;
 import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
@@ -61,7 +59,7 @@ public class OhNoGame implements Application {
         if(debugClick) {
             this._engine.getGraphics().restore();
             this._engine.getGraphics().setColor(0xff00ff00);
-            this._engine.getGraphics().fillCircle(this.debugClickX - 7, this.debugClickY, 5);
+            this._engine.getGraphics().fillCircle(this.debugClickX, this.debugClickY, 5);
         }
     }
 
@@ -74,14 +72,15 @@ public class OhNoGame implements Application {
     /*Dibuja el tablero del juego*/
     private void drawBoard(Graphics g) {
         //radio de cada circulo
-        int diametro = (int)Math.floor((g.getWidthNativeCanvas() - 7) / this._boardSize);
+        int diametro = (int)Math.floor((g.getWidthNativeCanvas()) / this._boardSize);
         int radius = (int)Math.ceil((diametro * 0.5f) * 0.75f);
         //Dalculamos el offset entre cada circulo
         int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
+
+
         //Situamos l x e y para pintar el tablero
         g.restore();
         g.setColor(0xffffffff);
-        // La pantalla de JFrame empieza a pintarse tras 7 pixeles
         g.translate(0,g.getHeigthNativeCanvas() / 4);
 
 
@@ -95,8 +94,8 @@ public class OhNoGame implements Application {
                     case ROJO:  g.setColor(0xfffa4848);     break;
                     case VACIO: g.setColor(0xffdfdfdf);     break;
                 }
-                int x = (int)(diametro) * j + radius + offseBetween/2;
-                int y = (int)(diametro) * i + radius + offseBetween/2;
+                int x = diametro * j + radius + offseBetween/2;
+                int y = diametro * i + radius + offseBetween/2;
                 //pintamos
                 g.fillCircle(x, y, (int)radius);
                 if(!casilla.esModificable()){
@@ -116,6 +115,7 @@ public class OhNoGame implements Application {
             }
         }
     }
+
     /*Dibuja el texto situado encima del tablero*/
     private void drawText(Graphics g){
         g.restore();
@@ -136,13 +136,14 @@ public class OhNoGame implements Application {
             }
         }
     }
+
     /* Dibuja los iconos de interfaz situados debajo del tablero*/
     private void drawUI(Graphics g){
         //Dibuja iconos Pista/Deshacer/Rendirse
         g.restore();
-        g.translate(0,g.getHeigthNativeCanvas()-(g.getHeigthNativeCanvas()/9));
+        g.translate(0,(int)(g.getHeigthNativeCanvas() * 0.90));
 
-        float scale = 0.5f;
+        float scale = 0.6f;
         float inverseScale = 1/scale;
 
         g.scale(scale,scale);
@@ -150,7 +151,7 @@ public class OhNoGame implements Application {
         int size = this._closeImage.getWidth()/2;
         g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.33 * inverseScale) - size, 0);
         g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0);
-        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.66 * inverseScale) -size,0 );
+        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.66 * inverseScale) - size,0 );
     }
     /*Comprueba si el numero de casillas del tablero es 0
      *En caso de ser 0 comprueba si es correcto o no y notifica al jugador.*/
@@ -164,22 +165,24 @@ public class OhNoGame implements Application {
                 System.out.println("Ereh un pringao y lo has hecho mal");
         }
     }
+
     /*Comprueba dado un x,y del input si corresponde a alguno de los circulos del tablero*/
     private void checkCircles(int x, int y){
-
         //distancia con el texto de arriba
         int offsetText = _engine.getGraphics().getHeigthNativeCanvas() / 4;
+        //Diametro logico de los circulos
+        int diametro = (int)Math.floor((_engine.getGraphics().getWidthNativeCanvas()) / this._boardSize);
         //radio de cada circulo
-        int radius = (int)(this._engine.getGraphics().getWidthNativeCanvas() / (this._boardSize * 1.5));
+        int radius = (int)Math.ceil((diametro * 0.5f) * 0.75f);
         //calculamos el offset entre cada circulo
-        float offseBetween = (this._engine.getGraphics().getWidthNativeCanvas() - radius * this._boardSize)/(float)(this._boardSize + 1);
+        int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
 
         //Recorremos cada casilla del tablero
         for(int i = 0; i< this._boardSize; i++){
             for(int j = 0; j< this._boardSize; j++){
                 Casilla casilla = this._tablero.getTablero()[i][j];
-                int cx = (int)offseBetween + radius/(this._boardSize + 1) + (int)(radius+offseBetween) * j;
-                int cy = (int)(radius+offseBetween) * i + offsetText;
+                int cx = diametro * j + radius + offseBetween/2;
+                int cy = offsetText + diametro * i + radius + offseBetween/2;
                 //calculamos catetos
                 int deltaX = Math.abs(cx-x);
                 int deltaY = Math.abs(cy-y);
@@ -206,8 +209,9 @@ public class OhNoGame implements Application {
     private void checkUI(int x, int y){
         Graphics g = this._engine.getGraphics();
 
-        int posY = g.getHeigthNativeCanvas()-(g.getHeigthNativeCanvas()/7);
-        int posX = g.getWidthNativeCanvas()/4 - g.getWidthNativeCanvas()/8;
+        int size = this._closeImage.getWidth()/2;
+        int posY = (int)(g.getHeigthNativeCanvas() * 0.90);
+        int posX = (int)(g.getWidthNativeCanvas() * 0.33) - size;
         if(x > posX && x < posX + this._closeImage.getWidth() &&
                 y > posY && y < posY + this._closeImage.getHeight()){
             System.out.println("Close image");

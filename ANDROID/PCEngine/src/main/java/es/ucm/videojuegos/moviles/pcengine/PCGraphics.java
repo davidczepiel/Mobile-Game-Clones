@@ -110,10 +110,7 @@ public class PCGraphics extends AbstractGraphics {
     }
 
     @Override
-    public int getHeigth() {
-
-        return this._window.getHeight();
-    }
+    public int getHeigth() { return this._window.getHeight(); }
     //+-----------------------------------------------------------------------------------+
     //|                 METODOS AUXILIARES PARA BUFFER                                    |
     //+-----------------------------------------------------------------------------------+
