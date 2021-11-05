@@ -28,8 +28,8 @@ public class Pista9 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "Un numero no esta cerrado y tiene varias direcciones, pero la suma alcanzable es el\r\n"
-				+ "valor que hay que conseguir ";
+		return "Un numero no esta cerrado y- tiene varias direcciones,- pero la suma alcanzable es el"
+				+ "-valor que hay que conseguir ";
 	}
 	
     private int mirarAlrededorRecursivoEnJuego(Vector2D pos, Vector2D dir, Tablero tablero){

@@ -49,7 +49,7 @@ public class Pista3 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "Si no se coloca un azul en una posicion vac�a no es posible alcanzar el n�mero de azules visibles";
+		return "Si no se coloca un azul en -una posicion vacia no es -posible alcanzar el numero- de azules visibles";
 	}
 	
 	int contarVacios(Vector2D pos,Vector2D dir, boolean contando,  Tablero tablero) {

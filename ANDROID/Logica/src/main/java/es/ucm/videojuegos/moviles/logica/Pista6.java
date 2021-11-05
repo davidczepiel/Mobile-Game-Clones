@@ -18,7 +18,7 @@ public class Pista6 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "Hay una celda vacia que no ve ninguna azul, por lo que deber�a ser una pared";
+		return "Hay una celda vacia que no -ve ninguna azul, por lo que- deberia ser una pared";
 	}
 	
 	private Casilla buscaAzulNoModRec(Vector2D pos, Vector2D dir, Tablero tablero){

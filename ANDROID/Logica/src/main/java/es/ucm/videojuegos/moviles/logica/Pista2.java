@@ -15,7 +15,7 @@ public class Pista2 implements Pista{
 			Casilla vacio = tablero.buscarPrimerVacio(dir[i], casilla.getPos());		
 			if(vacio != null) {
 				int veVacio = tablero.mirarAlrededorRecursivoParcial(vacio.getPos(), dir[i]);
-				if (numAzules + veVacio > casilla.getNumero()) {	//Si supero el n�mero establecido por la casilla
+				if (numAzules + veVacio > casilla.getNumero()) {	//Si supero el numero establecido por la casilla
 					vaciaActual = vacio;
 					return true;									//Significa que puedo poner una pared
 				}
@@ -31,8 +31,8 @@ public class Pista2 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "Si pusieramos un punto azul en una celda vac�a superar�amos el"
-				+ " n�mero de visibles del n�mero y por tanto debe ser una pared";
+		return "Si pusieramos un punto azul| en una celda vacia superariamos el"
+				+ " numero de- visibles del numero y por- tanto debe ser una pared";
 	}
 
 }

@@ -17,7 +17,7 @@ public class Pista4 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "Esta casilla tiene m�s casillas azules visibles de las que deber�a";
+		return "Esta casilla tiene mas- casillas azules visibles- de las que deberia";
 	}
 	
 }

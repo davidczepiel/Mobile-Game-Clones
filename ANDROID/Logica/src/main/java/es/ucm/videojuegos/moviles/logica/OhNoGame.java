@@ -1,7 +1,8 @@
 package es.ucm.videojuegos.moviles.logica;
 
-import java.util.List;
 
+
+import java.util.List;
 import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
@@ -15,6 +16,7 @@ public class OhNoGame implements Application {
     @Override
     public void onInit(Engine g) {
         //Atributos de la clase
+
         this._boardSize = 5;
         this._engine = g;
         this._isLocked = false;
@@ -104,7 +106,7 @@ public class OhNoGame implements Application {
                         this._font.setSize(radius);     //Cambiamos el tamanio de letra
                         g.setFont(this._font);          //Asignamos la fuente
                         String text = "" + casilla.getNumero();
-                        g.drawText(text, x - (int)radius/4, y +(int)radius/4);
+                        g.drawText(text, x , y +(int)radius/4);
                     }
                     //Si la casilla es roja y esta activado el lock pintamos el candado
                     /*else if(this._lo && this._isLocked){
@@ -117,23 +119,38 @@ public class OhNoGame implements Application {
     /*Dibuja el texto situado encima del tablero*/
     private void drawText(Graphics g){
         g.restore();
-        this._font.setSize(70);     //Asignamos tamanio de fuente
-        g.setFont(this._font);      //Asignamos la fuente;
+        String text = "";
         g.setColor(0xff000000);     //Color a negro
-        String text = this._boardSize + "x" + this._boardSize;
-        g.drawText(text, g.getWidthNativeCanvas()/3,g.getHeigthNativeCanvas() / 5);
-        //TODO: Pintar pistas
+        if(!this._isAnyHelp){
+            this._font.setSize(70);     //Asignamos tamanio de fuente
+            g.setFont(this._font);      //Asignamos la fuente;
+            text = this._boardSize + " " + this._boardSize;
+            g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeigthNativeCanvas() / 5);
+        }else{
+            this._font.setSize(20);     //Asignamos tamanio de fuente
+            g.setFont(this._font);      //Asignamos la fuente;
+
+            String[] paragraph = this._helpString.split("-");   //Separamos las cadenas
+            for (int i = 0; i < paragraph.length ;++i) {
+                g.drawText(paragraph[i], g.getWidthNativeCanvas()/2 ,g.getHeigthNativeCanvas() / 10 + 20*i);
+            }
+        }
     }
     /* Dibuja los iconos de interfaz situados debajo del tablero*/
     private void drawUI(Graphics g){
         //Dibuja iconos Pista/Deshacer/Rendirse
         g.restore();
-        g.translate(0,g.getHeigthNativeCanvas()-(g.getHeigthNativeCanvas()/8));
-        g.scale(0.8,0.8);
+        g.translate(0,g.getHeigthNativeCanvas()-(g.getHeigthNativeCanvas()/9));
 
-        g.drawImage(this._closeImage,g.getWidthNativeCanvas()/4, 0);
-        g.drawImage(this._rewindImage,g.getWidthNativeCanvas()/2, 0);
-        g.drawImage(this._helpImage,g.getWidthNativeCanvas()*3/4,0 );
+        float scale = 0.5f;
+        float inverseScale = 1/scale;
+
+        g.scale(scale,scale);
+
+        int size = this._closeImage.getWidth()/2;
+        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.33 * inverseScale) - size, 0);
+        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0);
+        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.66 * inverseScale) -size,0 );
     }
     /*Comprueba si el numero de casillas del tablero es 0
      *En caso de ser 0 comprueba si es correcto o no y notifica al jugador.*/
@@ -205,8 +222,8 @@ public class OhNoGame implements Application {
         posX = g.getWidthNativeCanvas()*3/4 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
                 y > posY && y < posY + this._helpImage.getHeight()){
-            System.out.println(this._tablero.damePista());
-            //TODO: Que escriba esto en la parte de arriba
+            _helpString = this._tablero.damePista();
+            this._isAnyHelp = true;
         }
 
     }
@@ -217,9 +234,15 @@ public class OhNoGame implements Application {
     private Font _font;         //fuente
 
     private int _boardSize;         //tamanio del tablero de juego
+
     private int _xLock, _yLock;     //posicion x,y de la casilla con el simbolo de block
     private boolean _isLocked;      //si el usuario ha clicado en una casilla no modificable
 
+
     private int debugClickX, debugClickY;
     private boolean debugClick;
+
+    private boolean _isAnyHelp;     //si el usuario ha pedido una pista
+    private String _helpString;     //cadena de texto donde se guarda la pista
+
 }

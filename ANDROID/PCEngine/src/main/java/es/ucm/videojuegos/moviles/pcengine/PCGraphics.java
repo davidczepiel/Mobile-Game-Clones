@@ -1,6 +1,9 @@
 package es.ucm.videojuegos.moviles.pcengine;
 
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+
+import javax.swing.JLabel;
 
 import es.ucm.videojuegos.moviles.engine.AbstractGraphics;
 import es.ucm.videojuegos.moviles.engine.Font;
@@ -87,11 +90,20 @@ public class PCGraphics extends AbstractGraphics {
         this._graphics.fillOval(cx - radius, cy - radius, radius * 2, radius * 2);
     }
 
+    /*
+    * Dibuja un texto en la posicion x e y dada. El pivote queda situado en la parte superior
+    * central del texto.
+    * */
     @Override
     public void drawText(String text, int x, int y) {
-        this._graphics.drawString(text, x, y);
-    }
+        //Recogemos que metricas utiliza y calculamos el tamanio asignado en pixeles para el texto
+        FontMetrics metrics = this._graphics.getFontMetrics(this._graphics.getFont());
+        int sizeX = metrics.stringWidth(text);
+        //Se realiza la resta a la hora de dibujar para que el pivote quede situado en el centro del texto
+        //en la x
+        this._graphics.drawString(text, x - sizeX/2,  y);
 
+    }
     @Override
     public int getWidth() {
         return this._window.getWidth();

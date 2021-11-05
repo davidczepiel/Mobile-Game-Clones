@@ -17,18 +17,18 @@ public interface Graphics {
     void restore();
     // Pinta una imagen en la poscicion x y de la pantalla
     void drawImage(Image image, int x, int y);
+    /* Dibuja un círculo relleno del color activo
+    ** @param cx posicion en X del centro del circulo
+    ** @param cy posicion en Y del centro del circulo
+    ** @param radius radio de la circunferencia */
+    void fillCircle(int cx, int cy, int radius);
+    /* Escribe el texto con la fuente y color activos */
+    void drawText(String text, int x, int y);
     // Establece el color a utilizar en las operaciones de
     //dibujado posteriores.
     void setColor(int color);
     // Establece la fuente activa
     void setFont(Font font);
-    // dibuja un círculo relleno del color activo
-    // @param cx posicion en X del centro del circulo
-    // @param cy posicion en Y del centro del circulo
-    // @param radius radio de la circunferencia
-    void fillCircle(int cx, int cy, int radius);
-    // Escribe el texto con la fuente y color activos
-    void drawText(String text, int x, int y);
 
     // tamanio de la ventana
     int getWidth();

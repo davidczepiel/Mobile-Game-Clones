@@ -40,7 +40,7 @@ public class Pista8 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "Un numero que no ve suficientes puntos no esta cerrado aun y solo tiene abierta una direccion";
+		return "Un numero que no ve suficientes- puntos no esta cerrado aun y- solo tiene abierta una direccion";
 	}
 	
 	int contarVacios(Vector2D pos,Vector2D dir, boolean contando,  Tablero tablero) {

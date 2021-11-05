@@ -11,7 +11,7 @@ public class PCFont implements Font {
             this._font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is);
             //Asignamos tamanio
             this._font = this._font.deriveFont(size);
-            //Comprovanis su es negrita
+            //Comprobamos si es negrita
             if(isBold)
                 this._font = this._font.deriveFont(java.awt.Font.BOLD);  //Asignamos negrita
         }

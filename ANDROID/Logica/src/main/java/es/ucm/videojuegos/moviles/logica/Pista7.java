@@ -24,7 +24,7 @@ public class Pista7 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "Hay una celda azul cerrada que no ve ninguna otra azul, lo cual no es posible";
+		return "Hay una celda azul cerrada -que no ve ninguna otra azul,- lo cual no es posible";
 	}
 
 	private boolean mirarPared(Vector2D pos, Vector2D dir, Tablero tablero){

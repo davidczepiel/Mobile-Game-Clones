@@ -37,7 +37,7 @@ public class Pista10 implements Pista{
 	
 	@Override
 	public String GenerarAyuda() {
-		return "Un numero no esta cerrado y tiene varias direcciones, pero la suma alcanzable es el\r\n"
-				+ "valor que hay que conseguir ";
+		return "Un numero no esta cerrado- y tiene varias direcciones-, pero la suma alcanzable no es el"
+				+ "-valor que hay que conseguir ";
 	}
 }

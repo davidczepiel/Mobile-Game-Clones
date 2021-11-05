@@ -42,7 +42,7 @@ public class Pista5 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "El n�mero tiene una cantidad insuficiente de casillas azules visibles y sin embargo est� cerrado.";
+		return "El numero tiene una cantidad insuficiente- de casillas azules visibles y- sin embargo esta cerrado.";
 	}
 
 }
