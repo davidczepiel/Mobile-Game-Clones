@@ -16,7 +16,6 @@ public class OhNoGame implements Application {
     @Override
     public void onInit(Engine g) {
         //Atributos de la clase
-
         this._boardSize = 5;
         this._engine = g;
         this._isLocked = false;
@@ -29,6 +28,9 @@ public class OhNoGame implements Application {
         this._blockImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/lock.png");
         //Guardamos las fuentes
         this._font = g.getGraphics().newFont("PCGame/src/main/assets/fonts/JosefinSans-Bold.ttf", 70, false);
+
+        //Creamos la cola de casillas pre-modificadas
+        this._restoreManager = new RestoreManager();
 
         //DebugClicks
         this.debugClick = true;
@@ -74,7 +76,7 @@ public class OhNoGame implements Application {
     /*Dibuja el tablero del juego*/
     private void drawBoard(Graphics g) {
         //radio de cada circulo
-        int diametro = (int)Math.floor((g.getWidthNativeCanvas() - 7) / this._boardSize);
+        int diametro = (int)Math.floor((g.getWidthNativeCanvas()) / this._boardSize);
         int radius = (int)Math.ceil((diametro * 0.5f) * 0.75f);
         //Dalculamos el offset entre cada circulo
         int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
@@ -124,7 +126,7 @@ public class OhNoGame implements Application {
         if(!this._isAnyHelp){
             this._font.setSize(70);     //Asignamos tamanio de fuente
             g.setFont(this._font);      //Asignamos la fuente;
-            text = this._boardSize + " " + this._boardSize;
+            text = this._boardSize + "X" + this._boardSize;
             g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeigthNativeCanvas() / 5);
         }else{
             this._font.setSize(20);     //Asignamos tamanio de fuente
@@ -132,7 +134,7 @@ public class OhNoGame implements Application {
 
             String[] paragraph = this._helpString.split("-");   //Separamos las cadenas
             for (int i = 0; i < paragraph.length ;++i) {
-                g.drawText(paragraph[i], g.getWidthNativeCanvas()/2 ,g.getHeigthNativeCanvas() / 10 + 20*i);
+                g.drawText(paragraph[i], g.getWidthNativeCanvas() /2 ,g.getHeigthNativeCanvas() / 10 + 20*i);
             }
         }
     }
@@ -188,15 +190,18 @@ public class OhNoGame implements Application {
                 //comprobamos si se está clicando
                 if(distance <= radius){
                     if(!casilla.esModificable()){
-                        if(casilla.getTipoActual() == Casilla.Tipo.ROJO){
+                        if(casilla.getTipoActual() == Casilla.Tipo.ROJO){  //Ponemos un lock en la casilla actual
                             this._xLock = cx; this._yLock = cy;
                             this._isLocked = true;
                         }
                     }
                     else{
-                        _tablero.modificarCasilla(casilla);
+                        //aniadimos la casilla antes de modificarla
+                        this._restoreManager.addCasilla(casilla);
+                        //modifiamos el tipo de la casilla actual
+                        this._tablero.modificarCasilla(casilla);
                     }
-                    return;
+                    return; //ya hemos comprobado que el click ha sido en una de las casillas
                 }
             }
         }
@@ -217,7 +222,8 @@ public class OhNoGame implements Application {
         if(x > posX && x < posX + this._rewindImage.getWidth() &&
                 y > posY && y < posY + this._rewindImage.getHeight()){
             System.out.println("Rewind image");
-            //TODO: Hacer paso atras
+            RestoreCasilla aux = this._restoreManager.getLastCasilla();
+            this._tablero.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
         }
         posX = g.getWidthNativeCanvas()*3/4 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
@@ -232,6 +238,7 @@ public class OhNoGame implements Application {
     private Engine _engine;     //engine
     private Image _closeImage, _rewindImage, _helpImage, _blockImage;   //imagenes de iconos
     private Font _font;         //fuente
+    private RestoreManager _restoreManager;     //guarda la cola de casillas pre-modificadas
 
     private int _boardSize;         //tamanio del tablero de juego
 
