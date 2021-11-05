@@ -86,7 +86,7 @@ public class OhNoGame implements Application {
         //Situamos l x e y para pintar el tablero
         g.restore();
         g.setColor(0xffffffff);
-        g.translate(0,g.getHeigthNativeCanvas() / 4);
+        g.translate(0,g.getHeightNativeCanvas() / 4);
 
 
         //Recorremos cada casilla del tablero
@@ -114,9 +114,9 @@ public class OhNoGame implements Application {
                     }
                     //Si la casilla es roja y esta activado el lock pintamos el candado
                     else if(this._isLocked && casilla.getTipoActual() == Casilla.Tipo.ROJO){
-                        int lockX = x - this._blockImage.getWidth()/2;
-                        int lockY = y - this._blockImage.getHeight()/2;
-                        g.drawImage(this._blockImage, lockX, lockY);
+                        int lockX = x - (int)(radius * 0.5f);
+                        int lockY = y - (int)(radius * 0.5f);
+                        g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f));
                     }
                 }
             }
@@ -132,14 +132,14 @@ public class OhNoGame implements Application {
             this._font.setSize(70);     //Asignamos tamanio de fuente
             g.setFont(this._font);      //Asignamos la fuente;
             text = this._boardSize + "X" + this._boardSize;
-            g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeigthNativeCanvas() / 5);
+            g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5);
         }else{
             this._font.setSize(20);     //Asignamos tamanio de fuente
             g.setFont(this._font);      //Asignamos la fuente;
 
             String[] paragraph = this._helpString.split("-");   //Separamos las cadenas
             for (int i = 0; i < paragraph.length ;++i) {
-                g.drawText(paragraph[i], g.getWidthNativeCanvas() /2 ,g.getHeigthNativeCanvas() / 10 + 20*i);
+                g.drawText(paragraph[i], g.getWidthNativeCanvas() /2 ,g.getHeightNativeCanvas() / 10 + 20*i);
             }
         }
     }
@@ -148,7 +148,7 @@ public class OhNoGame implements Application {
     private void drawUI(Graphics g){
         //Dibuja iconos Pista/Deshacer/Rendirse
         g.restore();
-        g.translate(0,(int)(g.getHeigthNativeCanvas() * 0.90));
+        g.translate(0,(int)(g.getHeightNativeCanvas() * 0.90));
 
         float scale = 0.6f;
         float inverseScale = 1/scale;
@@ -176,7 +176,7 @@ public class OhNoGame implements Application {
     /*Comprueba dado un x,y del input si corresponde a alguno de los circulos del tablero*/
     private void checkCircles(int x, int y){
         //distancia con el texto de arriba
-        int offsetText = _engine.getGraphics().getHeigthNativeCanvas() / 4;
+        int offsetText = _engine.getGraphics().getHeightNativeCanvas() / 4;
         //Diametro logico de los circulos
         int diametro = (int)Math.floor((_engine.getGraphics().getWidthNativeCanvas()) / this._boardSize);
         //radio de cada circulo
@@ -219,7 +219,7 @@ public class OhNoGame implements Application {
         Graphics g = this._engine.getGraphics();
 
         int size = this._closeImage.getWidth()/2;
-        int posY = (int)(g.getHeigthNativeCanvas() * 0.90);
+        int posY = (int)(g.getHeightNativeCanvas() * 0.90);
         int posX = (int)(g.getWidthNativeCanvas() * 0.33) - size;
         if(x > posX && x < posX + this._closeImage.getWidth() &&
                 y > posY && y < posY + this._closeImage.getHeight()){

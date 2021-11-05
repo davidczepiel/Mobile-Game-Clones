@@ -74,6 +74,12 @@ public class PCGraphics extends AbstractGraphics {
     }
 
     @Override
+    public void drawImage(Image image, int x, int y, int width, int height){
+        PCImage pcImage = (PCImage)image;
+        this._graphics.drawImage(pcImage.get_image(), x, y, width, height, null);
+    }
+
+    @Override
     public void setColor(int color) {
         this._graphics.setColor(new java.awt.Color(color));
     }

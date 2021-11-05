@@ -30,6 +30,9 @@ public class AbstractGraphics implements Graphics{
     public void drawImage(Image image, int x, int y) {    }
 
     @Override
+    public void drawImage(Image image, int x, int y, int width, int height) {    }
+
+    @Override
     public void setColor(int color) {    }
 
     @Override
@@ -57,7 +60,7 @@ public class AbstractGraphics implements Graphics{
     }
 
     @Override
-    public int getHeigthNativeCanvas() {
+    public int getHeightNativeCanvas() {
         return this._originalHeight;
     }
 

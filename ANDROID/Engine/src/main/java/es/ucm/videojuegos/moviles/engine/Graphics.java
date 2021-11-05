@@ -17,6 +17,8 @@ public interface Graphics {
     void restore();
     // Pinta una imagen en la poscicion x y de la pantalla
     void drawImage(Image image, int x, int y);
+    //Pinta una imagen en la posicion x y escalandola para el ancho y alto dado
+    void drawImage(Image image, int x, int y, int width, int height);
     /* Dibuja un círculo relleno del color activo
     ** @param cx posicion en X del centro del circulo
     ** @param cy posicion en Y del centro del circulo
@@ -36,7 +38,7 @@ public interface Graphics {
     /***********************************************************************************/
     // tamanio del canvas nativo
     int getWidthNativeCanvas();
-    int getHeigthNativeCanvas();
+    int getHeightNativeCanvas();
 
     //tamanio del canvas logico
     int getLogicCanvasWidth();
