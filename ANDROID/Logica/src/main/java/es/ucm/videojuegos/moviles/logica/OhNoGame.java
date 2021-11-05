@@ -110,9 +110,11 @@ public class OhNoGame implements Application {
                         g.drawText(text, x , y +(int)radius/4);
                     }
                     //Si la casilla es roja y esta activado el lock pintamos el candado
-                    /*else if(this._lo && this._isLocked){
-                        g.drawImage(this._blockImage, this._xLock, this._yLock);
-                    }*/
+                    else if(this._isLocked && casilla.getTipoActual() == Casilla.Tipo.ROJO){
+                        int lockX = x - this._blockImage.getWidth()/2;
+                        int lockY = y - this._blockImage.getHeight()/2;
+                        g.drawImage(this._blockImage, lockX, lockY);
+                    }
                 }
             }
         }
@@ -194,8 +196,7 @@ public class OhNoGame implements Application {
                 if(distance <= radius){
                     if(!casilla.esModificable()){
                         if(casilla.getTipoActual() == Casilla.Tipo.ROJO){  //Ponemos un lock en la casilla actual
-                            this._xLock = cx; this._yLock = cy;
-                            this._isLocked = true;
+                            this._isLocked = !this._isLocked;
                         }
                     }
                     else{
@@ -246,9 +247,7 @@ public class OhNoGame implements Application {
 
     private int _boardSize;         //tamanio del tablero de juego
 
-    private int _xLock, _yLock;     //posicion x,y de la casilla con el simbolo de block
     private boolean _isLocked;      //si el usuario ha clicado en una casilla no modificable
-
 
     private int debugClickX, debugClickY;
     private boolean debugClick;
