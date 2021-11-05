@@ -1,13 +1,13 @@
 package es.ucm.videojuegos.moviles.logica;
 
-
+/*Clase que guarda la informacion de una casilla del tablero*/
 public class Casilla {
 
 	/*Constructora de la clase*/
-    Casilla(Tipo mTipo, int num, boolean modific, Vector2D pos, Tablero tab){
+    Casilla(Tipo mTipo, int num, boolean modificable, Vector2D pos, Tablero tab){
     	_miTipoActual = mTipo;
         _numero =num;
-        _modificable = modific;
+        _modificable = modificable;
         _posicion = pos;
         _tablero = tab;
 
@@ -20,6 +20,8 @@ public class Casilla {
     public void setPos( Vector2D nuevaPos) { _posicion = nuevaPos;}
     
     public Tipo getTipoActual() { return _miTipoActual;}
+    /*Modifica el tipo de la casilla actual y actualiza el numero de vacias del tablero
+    * si su tipo es vacio o su tipo ya modificado tambien lo es*/
     public void setTipo(Tipo tipo) 
     {
     	if(_miTipoActual == Tipo.VACIO && tipo != Tipo.VACIO)

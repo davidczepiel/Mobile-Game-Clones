@@ -1,7 +1,10 @@
 package es.ucm.videojuegos.moviles.logica;
 
 import java.util.ArrayList;
-
+/*Clase que gestiona las pistas desde su creación hasta su almacenamiento.
+ *Contiene metodos para comprobar si dado un tablero este es valido además de
+ * proporcionar una pista al jugador dado un tablero actual.
+ */
 public class GestorDePistas {
 
 	public GestorDePistas() {

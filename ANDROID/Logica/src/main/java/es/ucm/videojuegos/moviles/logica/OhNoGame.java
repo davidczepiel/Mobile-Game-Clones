@@ -8,7 +8,7 @@ import es.ucm.videojuegos.moviles.engine.Image;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
-
+/*Clase que implementa el juego*/
 public class OhNoGame implements Application {
     /*Crea los recursos que va a necesitar a lo largo de la aplicacion*/
     @Override
@@ -34,6 +34,7 @@ public class OhNoGame implements Application {
         this.debugClick = true;
      }
 
+     /*Recoge los eventos y los procesa*/
     @Override
     public void onUpdate(double deltaTime) {
         //Recogemos input
@@ -76,18 +77,28 @@ public class OhNoGame implements Application {
 
     /*Dibuja el tablero del juego*/
     private void drawBoard(Graphics g) {
+        /*+-----------------------------------------------------------------+--------
+        * |                             _________                           |
+        * |                          *             *                        |
+        * |                        *                 *                      |
+        * |                      **                   **                    |  
+        * |<--offsetBetween-->  **         .<-radius-> **<--offsetBetween-->|
+        * |                      **                   **                    |
+        * |                        *                 *                      |
+        * |                          *             *                        |
+        * |                             _________                           |
+         */
+
         //radio de cada circulo
         int diametro = (int)Math.floor((g.getWidthNativeCanvas()) / this._boardSize);
         int radius = (int)Math.ceil((diametro * 0.5f) * 0.75f);
         //Dalculamos el offset entre cada circulo
         int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
 
-
         //Situamos l x e y para pintar el tablero
         g.restore();
         g.setColor(0xffffffff);
         g.translate(0,g.getHeightNativeCanvas() / 4);
-
 
         //Recorremos cada casilla del tablero
         for(int i = 0; i< this._boardSize; i++){

@@ -6,7 +6,7 @@ import java.util.Queue;
 
 import es.ucm.videojuegos.moviles.engine.TouchEvent.TouchEventType;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
-
+/*Clase que implementa las una pool de TouchEvent*/
 public class Pool {
     /*Constructora de la clase
     * @params num numero de elementos que tiene la pool
