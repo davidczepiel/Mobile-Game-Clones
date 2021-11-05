@@ -87,7 +87,7 @@ public class OhNoGame implements Application {
         * |                        *                 *                      |
         * |                          *             *                        |
         * |                             _________                           |
-         */
+        * +-----------------------------------------------------------------+*/
 
         //radio de cada circulo
         int diametro = (int)Math.floor((g.getWidthNativeCanvas()) / this._boardSize);
