@@ -2,13 +2,14 @@ package es.ucm.videojuegos.moviles.logica;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.Stack;
 
 /*Clase encargada de guardar las casillas que han sido modificadas antes de su modificacion,
 * con el fin de devolver el último cambio realizado*/
 public class RestoreManager {
 
     public RestoreManager() {
-        casillaQueue = new ArrayDeque<>();
+        casillaQueue = new Stack<>();
     };
     /*Aniade a la cola de casillas la casilla dada*/
     public void addCasilla(Casilla casilla){
@@ -18,7 +19,7 @@ public class RestoreManager {
     /*Devuelve la ultima casilla antes de haber sido modificada
     * En caso de no haber cambios devuelve null*/
     public RestoreCasilla getLastCasilla(){
-        return casillaQueue.poll();
+        return casillaQueue.pop();
     }
-    private Queue<RestoreCasilla> casillaQueue; //cola de casillas que han sido modificadas
+    private Stack<RestoreCasilla> casillaQueue; //cola de casillas que han sido modificadas
 }

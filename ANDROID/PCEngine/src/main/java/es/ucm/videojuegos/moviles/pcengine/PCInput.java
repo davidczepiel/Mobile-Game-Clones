@@ -2,16 +2,18 @@ package es.ucm.videojuegos.moviles.pcengine;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.ucm.videojuegos.moviles.engine.Input;
+import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.engine.Pool;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 import es.ucm.videojuegos.moviles.engine.TouchEvent.TouchEventType;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 
-public class PCInput implements Input, MouseListener{
+public class PCInput implements Input, MouseListener, MouseMotionListener {
 
     //Esta constante se utiliza para solventar el problema de que (0,0) en la ventana del JFrame no coincide
     //con el borde de la pantalla dibujado en el eje de las X's
@@ -61,32 +63,29 @@ public class PCInput implements Input, MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //
+        TouchEvent event = _pool.getTouchEvent();
+        if(event == null) return;
+        //Definimos el tipo del TouchEvent
+        event.set_type(TouchEventType.pulsar);
+
+        Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
+        //Incorporamos el evento a la lista
+        event.set_x(pair.getLeft() - OFFSET_JFRAME_X);
+        event.set_y(pair.getRight());
+        addEvent(event);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         TouchEvent event = _pool.getTouchEvent();
         if(event == null) return;
-
-        //Calculo de la posicion x e y donde empieza el canvas logico
-        int xLogicCanvas = (_graphics.getWidth() - _graphics.getLogicCanvasWidth()) / 2;
-        int yLogicCanvas = (_graphics.getHeigth() - _graphics.getLogicCanvasHeight()) / 2;
-
-        //No procesamos el evento si esta fuera del canvas logico
-        if(e.getX() < xLogicCanvas || e.getX() > xLogicCanvas + _graphics.getLogicCanvasWidth() ||
-                e.getY() < yLogicCanvas || e.getY() > yLogicCanvas + _graphics.getLogicCanvasHeight()) return;
-
         //Definimos el tipo del TouchEvent
-        event.set_type(TouchEventType.pulsar);
+        event.set_type(TouchEventType.liberar);
 
-        //Calculamos las coordenadas en nativo de la pulsacion
-        int nativeX = _graphics.getWidthNativeCanvas() * (e.getX() - xLogicCanvas) / _graphics.getLogicCanvasWidth();
-        int nativeY = _graphics.getHeigthNativeCanvas() * (e.getY() - yLogicCanvas) / _graphics.getLogicCanvasHeight();
-
+        Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
         //Incorporamos el evento a la lista
-        event.set_x(nativeX - OFFSET_JFRAME_X);
-        event.set_y(nativeY);
+        event.set_x(pair.getLeft() - OFFSET_JFRAME_X);
+        event.set_y(pair.getRight());
         addEvent(event);
     }
 
@@ -100,9 +99,48 @@ public class PCInput implements Input, MouseListener{
         //
     }
 
-    protected Pool _pool;
-    protected List<List<TouchEvent>> _lists;
-    protected int _activeListIndex;
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        TouchEvent event = _pool.getTouchEvent();
+        if(event == null) return;
+        //Definimos el tipo del TouchEvent
+        event.set_type(TouchEventType.desplazar);
+
+        Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
+        //Incorporamos el evento a la lista
+        event.set_x(pair.getLeft() - OFFSET_JFRAME_X);
+        event.set_y(pair.getRight());
+        addEvent(event);
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        //
+    }
+
+    /*Devuelve un Pair(x,y) con las posiciones de raton transformadas a coordenadas nativas*/
+    private Pair transformateCoord(int x, int y){
+
+        //Calculo de la posicion x e y donde empieza el canvas logico
+        int xLogicCanvas = (_graphics.getWidth() - _graphics.getLogicCanvasWidth()) / 2;
+        int yLogicCanvas = (_graphics.getHeigth() - _graphics.getLogicCanvasHeight()) / 2;
+
+        //No procesamos el evento si esta fuera del canvas logico
+        if(x < xLogicCanvas || x > xLogicCanvas + _graphics.getLogicCanvasWidth() ||
+                y < yLogicCanvas || y > yLogicCanvas + _graphics.getLogicCanvasHeight())
+            return null;
+        //Calculamos las coordenadas en nativo de la pulsacion
+        int nativeX = _graphics.getWidthNativeCanvas() * (x - xLogicCanvas) / _graphics.getLogicCanvasWidth();
+        int nativeY = _graphics.getHeigthNativeCanvas() * (y - yLogicCanvas) / _graphics.getLogicCanvasHeight();
+
+        return new Pair<Integer,Integer>(nativeX,nativeY);
+    }
+
+
+    protected Pool _pool;                           //pool
+    protected List<List<TouchEvent>> _lists;        //listas de eventos una sera la que se recoja y otra la que se procesa
+    protected int _activeListIndex;                 //indice de la lista activa
 
     private Graphics _graphics;
+
 }

@@ -40,8 +40,11 @@ public class OhNoGame implements Application {
         List<TouchEvent> list = this._engine.getInput().getTouchEvents();
         //Procesamos el input
         for (TouchEvent e: list) {
-            checkCircles(e.get_x(),e.get_y());
-            checkUI(e.get_x(),e.get_y());
+            //Solo comprobamos eventos cuando sean pulsados
+            if(e.get_type() == TouchEvent.TouchEventType.pulsar){
+                checkCircles(e.get_x(),e.get_y());
+                checkUI(e.get_x(),e.get_y());
+            }
             //Debug clicks
             this.debugClickX = e.get_x();
             this.debugClickY = e.get_y();
@@ -228,7 +231,7 @@ public class OhNoGame implements Application {
                 y > posY && y < posY + this._rewindImage.getHeight()){
             System.out.println("Rewind image");
             RestoreCasilla aux = this._restoreManager.getLastCasilla();
-            this._tablero.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
+               this._tablero.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
         }
         posX = g.getWidthNativeCanvas()*3/4 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
