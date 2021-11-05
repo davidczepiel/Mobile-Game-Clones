@@ -7,6 +7,4 @@ public interface Input {
     List<TouchEvent> getTouchEvents();
     /*Aniade un evento a la lista*/
     void addEvent(TouchEvent e);
-    /*Limpia la lista de eventos. Debe hacerse una vez los eventos han sido procesados*/
-    void clearEvents(List<TouchEvent> l);
 }

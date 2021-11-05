@@ -1,7 +1,6 @@
 package es.ucm.videojuegos.moviles.engine;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -13,14 +12,13 @@ public class Pool {
     * @params num numero de elementos que tiene la pool
     */
     public Pool(int num){
-        _pool = new ArrayList<>();
         _notUsed = new ArrayDeque<>();
         for(int i = 0; i< num; ++i){
             TouchEvent e = new TouchEvent(TouchEventType.desplazar,0,0,0,0,0);
-            this._pool.add(e);
             this._notUsed.add(e);
         }
     }
+
     /*Devuelve un evento que no esté siendo utilizado*/
     synchronized public TouchEvent getTouchEvent() {
         if(!this._notUsed.isEmpty()){
@@ -29,6 +27,7 @@ public class Pool {
         }
         return null;
     }
+
     /* Aniade a la pool la lista dada
     * @params list lista de eventos.
     * */
@@ -38,9 +37,5 @@ public class Pool {
         }
     }
 
-    public List<TouchEvent> get_pool() {
-        return _pool;
-    }
     private Queue<TouchEvent> _notUsed;
-    private List<TouchEvent> _pool;
 }

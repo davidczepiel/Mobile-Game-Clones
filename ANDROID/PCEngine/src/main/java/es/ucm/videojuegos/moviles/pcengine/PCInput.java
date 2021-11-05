@@ -12,31 +12,40 @@ import es.ucm.videojuegos.moviles.engine.TouchEvent.TouchEventType;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 
 public class PCInput implements Input, MouseListener{
+
+    //Numero de listas que usa el input para almacenar los eventos y hacer swap cada vez que la logica pida una lista de eventos (siempre 2)
+    private static final int numLists = 2;
+
     public PCInput(Graphics g){
-        this._list = new ArrayList<>();
-        this._pool = new Pool(30);
+        this._lists = new ArrayList<>();
+
+        //Creamos las listas que haran swap en ejecucion
+        for(int i = 0; i < numLists; ++i){
+            this._lists.add(new ArrayList<TouchEvent>());
+        }
+        this._activeListIndex = 0;
+
+        this._pool = new Pool(40);
         this._graphics = g;
     }
+
     @Override
     synchronized public List<TouchEvent> getTouchEvents() {
-        List<TouchEvent> l = new ArrayList<>();
-        for (TouchEvent e: this._list) {
-            l.add(e);
-        }
-        this._list.clear();
+        List<TouchEvent> l = this._lists.get(this._activeListIndex);
+
+        //Cambiamos la lista activa a la siguiente
+        this._activeListIndex = (this._activeListIndex + 1) % numLists;
+        //Devolvemos todos los eventos de la anterior lista a la pool
+        this._pool.setNotUsed(this._lists.get(this._activeListIndex));
+        this._lists.get(this._activeListIndex).clear();
+
         return l;
     }
 
     @Override
     synchronized public void addEvent(TouchEvent e) {
-        _list.add(e);
+        _lists.get(this._activeListIndex).add(e);
     }
-
-    @Override
-    public void clearEvents(List<TouchEvent> l) {
-        _pool.setNotUsed(l);
-    }
-
 
     //+-----------------------------------------------------------------------+
     //|                       Interfaz Mouse Listener                         |
@@ -67,9 +76,11 @@ public class PCInput implements Input, MouseListener{
         //Definimos el tipo del TouchEvent
         event.set_type(TouchEventType.pulsar);
 
+        //Calculamos las coordenadas en nativo de la pulsacion
         int nativeX = _graphics.getWidthNativeCanvas() * (e.getX() - xLogicCanvas) / _graphics.getLogicCanvasWidth();
         int nativeY = _graphics.getHeigthNativeCanvas() * (e.getY() - yLogicCanvas) / _graphics.getLogicCanvasHeight();
 
+        //Incorporamos el evento a la lista
         event.set_x(nativeX);
         event.set_y(nativeY);
         addEvent(event);
@@ -86,7 +97,8 @@ public class PCInput implements Input, MouseListener{
     }
 
     protected Pool _pool;
-    protected List<TouchEvent> _list;
+    protected List<List<TouchEvent>> _lists;
+    protected int _activeListIndex;
 
     private Graphics _graphics;
 }

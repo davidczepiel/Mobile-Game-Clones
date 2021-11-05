@@ -1,6 +1,5 @@
 package es.ucm.videojuegos.moviles.logica;
 
-import java.awt.Color;
 import java.util.List;
 
 import es.ucm.videojuegos.moviles.engine.Application;
@@ -16,7 +15,7 @@ public class OhNoGame implements Application {
     @Override
     public void onInit(Engine g) {
         //Atributos de la clase
-        this._boardSize = 7;
+        this._boardSize = 5;
         this._engine = g;
         this._isLocked = false;
         //Creamos el tablero
@@ -28,6 +27,9 @@ public class OhNoGame implements Application {
         this._blockImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/lock.png");
         //Guardamos las fuentes
         this._font = g.getGraphics().newFont("PCGame/src/main/assets/fonts/JosefinSans-Bold.ttf", 70, false);
+
+        //DebugClicks
+        this.debugClick = true;
      }
 
     @Override
@@ -38,9 +40,10 @@ public class OhNoGame implements Application {
         for (TouchEvent e: list) {
             checkCircles(e.get_x(),e.get_y());
             checkUI(e.get_x(),e.get_y());
+            //Debug clicks
+            this.debugClickX = e.get_x();
+            this.debugClickY = e.get_y();
         }
-        //Limpiamos la lista de eventos
-        this._engine.getInput().clearEvents(list);
 
         //Comprobamos si se ha terminado el juego
         checkEndedGame();
@@ -52,6 +55,12 @@ public class OhNoGame implements Application {
         drawText(this._engine.getGraphics());
         drawBoard(this._engine.getGraphics());
         drawUI(this._engine.getGraphics());
+
+        if(debugClick) {
+            this._engine.getGraphics().restore();
+            this._engine.getGraphics().setColor(0xff00ff00);
+            this._engine.getGraphics().fillCircle(this.debugClickX - 7, this.debugClickY, 5);
+        }
     }
 
     /*Devuelve el nombre de la aplicacion*/
@@ -62,17 +71,16 @@ public class OhNoGame implements Application {
 
     /*Dibuja el tablero del juego*/
     private void drawBoard(Graphics g) {
-
         //radio de cada circulo
-        float diametro = (g.getWidthNativeCanvas() / (this._boardSize + 1));
-        float radius = diametro * 0.8f * 0.5f;
+        int diametro = (int)Math.floor((g.getWidthNativeCanvas() - 7) / this._boardSize);
+        int radius = (int)Math.ceil((diametro * 0.5f) * 0.75f);
         //Dalculamos el offset entre cada circulo
-        float offseBetween = diametro * 0.2f;
+        int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
         //Situamos l x e y para pintar el tablero
         g.restore();
         g.setColor(0xffffffff);
         // La pantalla de JFrame empieza a pintarse tras 7 pixeles
-        g.translate((int)offseBetween/2,g.getHeigthNativeCanvas() / 4);
+        g.translate(0,g.getHeigthNativeCanvas() / 4);
 
 
         //Recorremos cada casilla del tablero
@@ -85,10 +93,10 @@ public class OhNoGame implements Application {
                     case ROJO:  g.setColor(0xfffa4848);     break;
                     case VACIO: g.setColor(0xffdfdfdf);     break;
                 }
-                int x = (int)(diametro+offseBetween/2) * j + (int)radius;
-                int y = (int)(diametro+offseBetween/2) * i + (int)radius;
+                int x = (int)(diametro) * j + radius + offseBetween/2;
+                int y = (int)(diametro) * i + radius + offseBetween/2;
                 //pintamos
-                g.fillCircle(x,y, (int)radius);
+                g.fillCircle(x, y, (int)radius);
                 if(!casilla.esModificable()){
                     //Si es azul no modificable ponemos el numero
                     if(casilla.getTipoActual() == Casilla.Tipo.AZUL){
@@ -211,4 +219,7 @@ public class OhNoGame implements Application {
     private int _boardSize;         //tamanio del tablero de juego
     private int _xLock, _yLock;     //posicion x,y de la casilla con el simbolo de block
     private boolean _isLocked;      //si el usuario ha clicado en una casilla no modificable
+
+    private int debugClickX, debugClickY;
+    private boolean debugClick;
 }
