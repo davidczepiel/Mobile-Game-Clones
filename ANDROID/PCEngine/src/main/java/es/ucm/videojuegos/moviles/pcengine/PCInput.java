@@ -131,7 +131,7 @@ public class PCInput implements Input, MouseListener, MouseMotionListener {
             return null;
         //Calculamos las coordenadas en nativo de la pulsacion
         int nativeX = _graphics.getWidthNativeCanvas() * (x - xLogicCanvas) / _graphics.getLogicCanvasWidth();
-        int nativeY = _graphics.getHeigthNativeCanvas() * (y - yLogicCanvas) / _graphics.getLogicCanvasHeight();
+        int nativeY = _graphics.getHeightNativeCanvas() * (y - yLogicCanvas) / _graphics.getLogicCanvasHeight();
 
         return new Pair<Integer,Integer>(nativeX,nativeY);
     }

@@ -19,6 +19,7 @@ public class RestoreManager {
     /*Devuelve la ultima casilla antes de haber sido modificada
     * En caso de no haber cambios devuelve null*/
     public RestoreCasilla getLastCasilla(){
+        if(casillaQueue.empty()) return null;
         return casillaQueue.pop();
     }
     private Stack<RestoreCasilla> casillaQueue; //cola de casillas que han sido modificadas

@@ -242,6 +242,7 @@ public class OhNoGame implements Application {
                 y > posY && y < posY + this._rewindImage.getHeight()){
             System.out.println("Rewind image");
             RestoreCasilla aux = this._restoreManager.getLastCasilla();
+            if(aux != null)
                this._tablero.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
         }
         posX = g.getWidthNativeCanvas()*3/4 - g.getWidthNativeCanvas()/8;
