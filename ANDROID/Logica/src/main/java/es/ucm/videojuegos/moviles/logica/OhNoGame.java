@@ -15,7 +15,7 @@ public class OhNoGame implements Application {
     @Override
     public void onInit(Engine g) {
         //Atributos de la clase
-        this._boardSize = 5;
+        this._boardSize = 7;
         this._engine = g;
         this._isLocked = false;
         this._isAnyHelp = false;
@@ -162,9 +162,9 @@ public class OhNoGame implements Application {
         g.scale(scale,scale);
 
         int size = this._closeImage.getWidth()/2;
-        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.33 * inverseScale) - size, 0, 1f);
-        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0, 1f);
-        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.66 * inverseScale) - size,0, 1f);
+        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.35 * inverseScale) - size, 0, 0.6f);
+        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0, 0.6f);
+        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.65 * inverseScale) - size,0, 0.6f);
     }
     /*Comprueba si el numero de casillas del tablero es 0
      *En caso de ser 0 comprueba si es correcto o no y notifica al jugador.*/

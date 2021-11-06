@@ -197,7 +197,7 @@ public class Tablero {
                 _juegoTablero[posX][posY].setModificable(false);
                 _juegoTablero[posX][posY].setTipo(Tipo.AZUL);
                 int numAzules = mirarAlrededor(new Vector2D(posX,posY),0);
-                if(numAzules == 0) return false;
+                if(numAzules == 0 || numAzules>this._dimensiones) return false;
                 _juegoTablero[posX][posY].setNumero(numAzules);
                 azules--;
             }
