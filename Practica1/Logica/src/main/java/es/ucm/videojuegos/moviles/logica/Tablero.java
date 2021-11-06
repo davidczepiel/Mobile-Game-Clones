@@ -8,7 +8,6 @@ import es.ucm.videojuegos.moviles.logica.Casilla.Tipo;
 public class Tablero {
 
     public Tablero(int tam){
-
         _dimensiones = tam;
         _juegoTablero = new Casilla[_dimensiones][_dimensiones];
         _solucionTablero = new Casilla[_dimensiones][_dimensiones];
@@ -18,11 +17,8 @@ public class Tablero {
         
         do {
         	non_zeros = generarTablero();
-        	//debugEstadoTableros();
         } while(!non_zeros || !esValido());        
-        
-        System.out.print("SOLUCION MARAVILLOSA\n");
-        debugEstadoTableros();
+
         limpiarTableroJuego();       
     }
 
@@ -229,6 +225,7 @@ public class Tablero {
 			}
 		}    	
     }
+
     /*Pinta el tablero*/
     public void debugEstadoTableros() {
     	for(int i = 0; i < this._dimensiones ; i++) {

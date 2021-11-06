@@ -13,7 +13,7 @@ public class Pista3 implements Pista{
 		int numVeo = tablero.mirarAlrededor(casilla.getPos(), 1);
 		if(numVeo == casilla.getNumero()) return false;
 		
-		System.out.print("Es aplicable pista 3 en " + casilla.getPos().getX() + ", " + casilla.getPos().getY() + "\n");
+		//System.out.print("Es aplicable pista 3 en " + casilla.getPos().getX() + ", " + casilla.getPos().getY() + "\n");
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
 		int[] vaciosVeo = {0,0,0,0}; 
 		int posibilidades = 0;

@@ -34,7 +34,7 @@ public class OhNoGame implements Application {
         this._restoreManager = new RestoreManager();
 
         this._myTimer = new Timer(0.15);
-        this._animacion = new Pair<Casilla, Timer>(null,this._myTimer);
+        this._animacion = new Pair<Casilla, Timer>(_tablero.getTablero()[0][0],this._myTimer);
 
      }
 

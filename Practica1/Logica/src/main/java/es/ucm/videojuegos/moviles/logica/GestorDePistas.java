@@ -103,5 +103,5 @@ public class GestorDePistas {
 	
 	private ArrayList<Pista> _pistasInformativas;	//Lista con las pistas informativas para el jugador
 	private ArrayList<Pista> _pistasAplicables;		//Lista con las pistas utiles para la generacin del tablero
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 }

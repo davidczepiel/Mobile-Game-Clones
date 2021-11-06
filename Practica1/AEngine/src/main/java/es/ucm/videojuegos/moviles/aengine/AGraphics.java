@@ -8,7 +8,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -30,12 +32,12 @@ public class AGraphics extends AbstractGraphics {
         this._context = c;
         this._paint = new Paint();
         //Recogemos el display para calcular el tamanio del movil
-        WindowManager windowmanager = (WindowManager) c.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowmanager.getDefaultDisplay();
-        //Asignamos valores
-        this._originalWidth = this._canvasSizeX = display.getWidth();
-        this._originalHeight = display.getHeight();
-        this._canvasSizeX = this._canvasSizeY = _canvas.getWidth();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((AppCompatActivity)c).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        this._originalWidth = this._canvasSizeX = height;
+        this._originalHeight = this._canvasSizeY = width;
     }
     @Override
     public Image newImage(String name) {

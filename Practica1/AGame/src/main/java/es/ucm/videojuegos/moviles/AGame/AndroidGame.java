@@ -16,6 +16,7 @@ public class AndroidGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this._engine = new AEngine(new OhNoGame(), this);
+        this._engine.run();
     }
 
 

@@ -14,6 +14,7 @@ public class AEngine implements Engine , Runnable {
         this._graphics = new AGraphics(context);
         this._application = app;
         this._input = new AInput(this._graphics);
+        this._application.onInit(this);
     }
 
     @Override
@@ -98,7 +99,6 @@ public class AEngine implements Engine , Runnable {
             // Pintamos el frame
             while (!this._graphics.isValid());
 
-             //prepareFrame();
             this._graphics.prepareFrame();
             this._application.onDraw();
             this._graphics.unlockCanvas();
