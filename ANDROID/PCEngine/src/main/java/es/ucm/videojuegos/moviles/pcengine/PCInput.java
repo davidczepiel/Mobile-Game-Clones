@@ -12,7 +12,9 @@ import es.ucm.videojuegos.moviles.engine.Pool;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 import es.ucm.videojuegos.moviles.engine.TouchEvent.TouchEventType;
 import es.ucm.videojuegos.moviles.engine.Graphics;
-
+/*Clase que implementa el input para PC. Obtiene el input gracias a implementar las Interfaces de Mouse
+* Listener y MouseMotion Listener. Contiene un buffer de la lista de eventos y una pool. Hace la transformacion
+* de coordenadas a nativas.*/
 public class PCInput implements Input, MouseListener, MouseMotionListener {
 
     //Esta constante se utiliza para solventar el problema de que (0,0) en la ventana del JFrame no coincide
@@ -34,7 +36,7 @@ public class PCInput implements Input, MouseListener, MouseMotionListener {
         this._pool = new Pool(40);
         this._graphics = g;
     }
-
+    /*Devuelve la lista de eventos sin procesar*/
     @Override
     synchronized public List<TouchEvent> getTouchEvents() {
         List<TouchEvent> l = this._lists.get(this._activeListIndex);
@@ -47,7 +49,7 @@ public class PCInput implements Input, MouseListener, MouseMotionListener {
 
         return l;
     }
-
+    /*Aniade un evento a la lista de eventos sin procesar*/
     @Override
     synchronized public void addEvent(TouchEvent e) {
         _lists.get(this._activeListIndex).add(e);
@@ -138,7 +140,7 @@ public class PCInput implements Input, MouseListener, MouseMotionListener {
 
 
     protected Pool _pool;                           //pool
-    protected List<List<TouchEvent>> _lists;        //listas de eventos una sera la que se recoja y otra la que se procesa
+    protected List<List<TouchEvent>> _lists;        //listas de eventos: una sera la que se recoja evetos y otra la que se procesa
     protected int _activeListIndex;                 //indice de la lista activa
 
     private Graphics _graphics;

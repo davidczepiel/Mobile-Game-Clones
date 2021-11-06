@@ -1,5 +1,5 @@
 package es.ucm.videojuegos.moviles.engine;
-
+/*Interfaz de la aplicacion*/
 public interface Application {
     /*Realiza la inicialización del objeto (inicialización en dos pasos).*/
     void onInit(Engine g);
