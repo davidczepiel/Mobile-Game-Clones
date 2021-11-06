@@ -25,6 +25,7 @@ public class PCGraphics extends AbstractGraphics {
      */
     public PCGraphics(Window p){
         this._window = p;
+
         // Intentamos crear el buffer strategy con 2 buffers.
         int intentos = 100;
         while(intentos-- > 0) {
@@ -35,6 +36,7 @@ public class PCGraphics extends AbstractGraphics {
             catch(Exception e) {
             }
         } // while pidiendo la creación de la buffeStrategy
+
         if (intentos == 0) {
             System.err.println("No pude crear la BufferStrategy");
             return;
@@ -53,6 +55,8 @@ public class PCGraphics extends AbstractGraphics {
         this._originalWidth = this._canvasSizeX = this._window.getWidth();
         this._originalHeight = this._canvasSizeY =this._window.getHeight();
         this._scale = 1;
+        //Indicamos a AbstarctGraphics que tenga en cuenta los 7 pixeles que no tenemos en PC a la izquierda de la pantalla
+        this._offsetX = OFFSET_JFRAME_X;
     }
     /*Crea una imagen dada la ruta de la misma
     * @params name ruta de la imagen
