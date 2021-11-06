@@ -6,11 +6,11 @@ import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Input;
 
 
-public class AEngine implements Engine , Runnable {
+public class AFont implements Engine , Runnable {
 
 
 
-    public AEngine(Application app) {
+    public AFont(Application app) {
         this._application = app;
     }
 

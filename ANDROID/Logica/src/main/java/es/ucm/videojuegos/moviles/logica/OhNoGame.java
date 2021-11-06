@@ -36,8 +36,6 @@ public class OhNoGame implements Application {
         this._myTimer = new Timer(0.15);
         this._animacion = new Pair<Casilla, Timer>(null,this._myTimer);
 
-        //DebugClicks
-        this.debugClick = true;
      }
 
      /*Recoge los eventos y los procesa*/
