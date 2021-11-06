@@ -1,6 +1,7 @@
 package es.ucm.videojuegos.moviles.pcengine;
 
 import java.awt.BasicStroke;
+import java.awt.AlphaComposite;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
@@ -78,16 +79,24 @@ public class PCGraphics extends AbstractGraphics {
     /*Dibuja una imagen en el x y sin escalado. El pivote de la imagen se
     * encuentra en la parte superior izquierda*/
     @Override
-    public void drawImage(Image image, int x, int y) {
+    public void drawImage(Image image, int x, int y, float alpha) {
         PCImage pcImage = (PCImage)image;
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        Graphics2D g2d = (Graphics2D)this._graphics;
+        g2d.setComposite(ac);
         this._graphics.drawImage(pcImage.get_image(), x, y, pcImage.getWidth(),pcImage.getHeight(),null);
     }
     /*Dibuja una imagen en el x y con escalado escalado. El pivote de la imagen se
      * encuentra en la parte superior izquierda*/
     @Override
-    public void drawImage(Image image, int x, int y, int width, int height){
+    public void drawImage(Image image, int x, int y, int width, int height, float alpha){
         PCImage pcImage = (PCImage)image;
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        Graphics2D g2d = (Graphics2D)this._graphics;
+        g2d.setComposite(ac);
         this._graphics.drawImage(pcImage.get_image(), x, y, width, height, null);
+        ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        g2d.setComposite(ac);
     }
     /*Pone el color de dibujado al que se aplicara en todas las operaciones de dibujado tras llamar
     * al metodo*/

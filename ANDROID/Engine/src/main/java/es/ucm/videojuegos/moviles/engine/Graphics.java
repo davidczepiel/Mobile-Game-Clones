@@ -16,10 +16,10 @@ public interface Graphics {
     // Vuelve el formato nativo del sistema de coordenadas y escalado
     void restore();
     // Pinta una imagen en la poscicion x y de la pantalla
-    void drawImage(Image image, int x, int y);
+    void drawImage(Image image, int x, int y, float alpha);
     //Pinta una imagen en la posicion x y escalandola para el ancho y alto dado
-    void drawImage(Image image, int x, int y, int width, int height);
-    /* Dibuja un círculo relleno del color activo desde la posicion X e Y
+    void drawImage(Image image, int x, int y, int width, int height, float alpha);
+    /* Dibuja un círculo relleno del color activo
     ** @param cx posicion en X del centro del circulo
     ** @param cy posicion en Y del centro del circulo
     ** @param radius radio de la circunferencia */
