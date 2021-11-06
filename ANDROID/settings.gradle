@@ -1,7 +1,0 @@
-rootProject.name = "AGame"
-include ':AGame'
-include ':PCGame'
-include ':Engine'
-include ':PCEngine'
-include ':AEngine'
-include ':Logica'
