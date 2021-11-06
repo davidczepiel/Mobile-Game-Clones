@@ -23,12 +23,12 @@ public class OhNoGame implements Application {
         //Creamos el tablero
         this._tablero = new Tablero(this._boardSize);
         //Guardamos las imagenes
-        this._closeImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/close.png");
+       /* this._closeImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/close.png");
         this._rewindImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/history.png");
         this._helpImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/eye.png");
         this._blockImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/lock.png");
         //Guardamos las fuentes
-        this._font = g.getGraphics().newFont("PCGame/src/main/assets/fonts/JosefinSans-Bold.ttf", 70, false);
+        this._font = g.getGraphics().newFont("PCGame/src/main/assets/fonts/JosefinSans-Bold.ttf", 70, false);*/
 
         //Creamos la cola de casillas pre-modificadas
         this._restoreManager = new RestoreManager();
@@ -61,9 +61,9 @@ public class OhNoGame implements Application {
     /*Dibuja el estado del juego*/
     @Override
     public void onDraw() {
-        drawText(this._engine.getGraphics());
+        //drawText(this._engine.getGraphics());
         drawBoard(this._engine.getGraphics());
-        drawUI(this._engine.getGraphics());
+        //drawUI(this._engine.getGraphics());
     }
 
     /*Devuelve el nombre de la aplicacion*/
@@ -126,7 +126,7 @@ public class OhNoGame implements Application {
                 else
                     g.fillCircle(x, y, (int) radius);
 
-                if(!casilla.esModificable()){
+                /*if(!casilla.esModificable()){
                     //Si es azul no modificable ponemos el numero
                     if(casilla.getTipoActual() == Casilla.Tipo.AZUL){
                         g.setColor(0xffffffff);         //Asignamos el color blanco
@@ -145,7 +145,7 @@ public class OhNoGame implements Application {
                 if(this._isAnyHelp && casilla.getPos() == this._posHelp){
                     g.setColor(0xff000000);
                     g.drawCircle(x, y, (int)radius, 3);
-                }
+                }*/
             }
         }
     }

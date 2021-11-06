@@ -34,10 +34,12 @@ public class AGraphics extends AbstractGraphics {
         //Recogemos el display para calcular el tamanio del movil
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((AppCompatActivity)c).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
-        int width = displayMetrics.widthPixels;
-        this._originalWidth = this._canvasSizeX = height;
-        this._originalHeight = this._canvasSizeY = width;
+        this._height = displayMetrics.heightPixels;
+        this._width = displayMetrics.widthPixels;
+        this._originalWidth =  this._canvasSizeX = 400;
+        this._originalHeight = this._canvasSizeY = 600;
+        this._y = 0; this._x = 0;
+        this._scale = 1;
     }
     @Override
     public Image newImage(String name) {
@@ -127,7 +129,15 @@ public class AGraphics extends AbstractGraphics {
     public SurfaceHolder get_holder(){
         return this._holder;
     }
+    @Override
+    public int getWidth() {
+        return this._width;
+    }
 
+    @Override
+    public int getHeigth() {
+        return this._height;
+    }
     //+-----------------------------------------------------------------------------------+
     //|                 METODOS AUXILIARES PARA BUFFER                                    |
     //+-----------------------------------------------------------------------------------+
@@ -151,6 +161,8 @@ public class AGraphics extends AbstractGraphics {
     SurfaceHolder _holder;      //Encargado del swap del canvas
     Context _context;           //Aplicacion
     Paint _paint;               //Se encarga de la geomeria, estilo y color de los textos y BitMap
+
+    int _height, _width;
 
 
 }
