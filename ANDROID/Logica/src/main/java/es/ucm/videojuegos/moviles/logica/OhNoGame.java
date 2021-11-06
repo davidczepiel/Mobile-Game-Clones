@@ -209,9 +209,7 @@ public class OhNoGame implements Application {
                 //comprobamos si se está clicando
                 if(distance <= radius){
                     if(!casilla.esModificable()){
-                        if(casilla.getTipoActual() == Casilla.Tipo.ROJO){  //Ponemos un lock en la casilla actual
                             this._isLocked = !this._isLocked;
-                        }
                     }
                     else{
                         //aniadimos la casilla antes de modificarla
