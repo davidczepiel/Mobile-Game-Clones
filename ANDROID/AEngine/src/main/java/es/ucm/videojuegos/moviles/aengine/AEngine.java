@@ -1,5 +1,7 @@
 package es.ucm.videojuegos.moviles.aengine;
 
+import android.content.Context;
+
 import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Graphics;
@@ -8,20 +10,20 @@ import es.ucm.videojuegos.moviles.engine.Input;
 
 public class AEngine implements Engine , Runnable {
 
-
-
-    public AEngine(Application app) {
+    public AEngine(Application app, Context context ) {
+        this._graphics = new AGraphics(context);
         this._application = app;
+        this._input = new AInput(this._graphics);
     }
 
     @Override
     public Graphics getGraphics() {
-        return null;
+        return this._graphics;
     }
 
     @Override
     public Input getInput() {
-        return null;
+        return this._input;
     }
 
     /**
@@ -74,6 +76,41 @@ public class AEngine implements Engine , Runnable {
     @Override
     public void run() {
 
+        long lastFrameTime =0;
+        // Bucle principal.
+        while(_running) {
+
+            long currentTime = System.nanoTime();
+            long nanoElapsedTime = currentTime - lastFrameTime;
+            lastFrameTime = currentTime;
+            double elapsedTime = (double) nanoElapsedTime / 1.0E9;
+            this._application.onUpdate(elapsedTime);
+            // Informe de FPS
+            //if (currentTime - informePrevio > 1000000000l) {
+            //    long fps = frames * 1000000000l / (currentTime - informePrevio);
+            //    System.out.println("" + fps + " fps");
+            //    frames = 0;
+            //    informePrevio = currentTime;
+            //}
+            //++frames;
+
+
+            // Pintamos el frame
+            while (!this._graphics.isValid());
+
+             //prepareFrame();
+            this._graphics.prepareFrame();
+            this._application.onDraw();
+            this._graphics.unlockCanvas();
+                /*
+                // Posibilidad: cedemos algo de tiempo. es una medida conflictiva...
+                try {
+                    Thread.sleep(1);
+                }
+                catch(Exception e) {}
+    			*/
+
+        } // while
     }
 
     /**
@@ -96,5 +133,7 @@ public class AEngine implements Engine , Runnable {
     private volatile boolean _running = false;
 
     private Application _application;
+    private AGraphics _graphics;
+    private AInput _input;
 
 }

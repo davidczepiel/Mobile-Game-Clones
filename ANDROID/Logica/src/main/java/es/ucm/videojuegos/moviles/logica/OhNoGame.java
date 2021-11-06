@@ -41,9 +41,10 @@ public class OhNoGame implements Application {
      /*Recoge los eventos y los procesa*/
     @Override
     public void onUpdate(double deltaTime) {
+        _animacion.getRight().tick(deltaTime);
+
         //Recogemos input
         List<TouchEvent> list = this._engine.getInput().getTouchEvents();
-        _animacion.getRight().tick(deltaTime);
         //Procesamos el input
         for (TouchEvent e: list) {
             //Solo comprobamos eventos cuando sean pulsados
