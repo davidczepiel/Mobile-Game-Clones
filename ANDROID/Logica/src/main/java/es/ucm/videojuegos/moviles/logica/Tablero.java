@@ -2,6 +2,7 @@ package es.ucm.videojuegos.moviles.logica;
 
 import java.util.Random;
 
+import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.logica.Casilla.Tipo;
 
 public class Tablero {
@@ -36,7 +37,7 @@ public class Tablero {
         return true;
     }
 
-    public String damePista(){
+    public Pair<String,Vector2D> damePista(){
         return this._gestorDePistas.damePista(this);
     }
 
@@ -196,7 +197,7 @@ public class Tablero {
                 _juegoTablero[posX][posY].setModificable(false);
                 _juegoTablero[posX][posY].setTipo(Tipo.AZUL);
                 int numAzules = mirarAlrededor(new Vector2D(posX,posY),0);
-                if(numAzules == 0) return false;
+                if(numAzules == 0 || numAzules>this._dimensiones) return false;
                 _juegoTablero[posX][posY].setNumero(numAzules);
                 azules--;
             }

@@ -16,9 +16,10 @@ public class OhNoGame implements Application {
     @Override
     public void onInit(Engine g) {
         //Atributos de la clase
-        this._boardSize = 5;
+        this._boardSize = 7;
         this._engine = g;
         this._isLocked = false;
+        this._isAnyHelp = false;
         //Creamos el tablero
         this._tablero = new Tablero(this._boardSize);
         //Guardamos las imagenes
@@ -52,9 +53,6 @@ public class OhNoGame implements Application {
                 checkCircles(e.get_x(),e.get_y());
                 checkUI(e.get_x(),e.get_y());
             }
-            //Debug clicks
-            this.debugClickX = e.get_x();
-            this.debugClickY = e.get_y();
         }
 
         //Comprobamos si se ha terminado el juego
@@ -67,12 +65,6 @@ public class OhNoGame implements Application {
         drawText(this._engine.getGraphics());
         drawBoard(this._engine.getGraphics());
         drawUI(this._engine.getGraphics());
-
-        if(debugClick) {
-            this._engine.getGraphics().restore();
-            this._engine.getGraphics().setColor(0xff00ff00);
-            this._engine.getGraphics().fillCircle(this.debugClickX, this.debugClickY, 5);
-        }
     }
 
     /*Devuelve el nombre de la aplicacion*/
@@ -93,11 +85,12 @@ public class OhNoGame implements Application {
         * |                        *                 *                      |
         * |                          *             *                        |
         * |                             _________                           |
+        * |<-----------diametro------------>                                |
         * +-----------------------------------------------------------------+*/
 
         //radio de cada circulo
-        int diametro = (int)Math.floor((g.getWidthNativeCanvas()) / this._boardSize);
-        int radius = (int)Math.ceil((diametro * 0.5f) * 0.75f);
+        int diametro = (int)Math.floor((g.getWidthNativeCanvas() - 7) / this._boardSize);
+        int radius = (int)Math.floor((diametro * 0.5f) * 0.75f);
         //Dalculamos el offset entre cada circulo
         int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
 
@@ -116,8 +109,9 @@ public class OhNoGame implements Application {
                     case ROJO:  g.setColor(0xfffa4848);     break;
                     case VACIO: g.setColor(0xffdfdfdf);     break;
                 }
-                int x = diametro * j + radius + offseBetween/2;
-                int y = diametro * i + radius + offseBetween/2;
+
+                int x = diametro * j + diametro/2;
+                int y = diametro * i + diametro/2;
 
                 //En caso de que el timer de la animcion este contando, miramos si estamos dibujando la casilla que tiene que ser animado
                 //y en casoo de serlo alteramos su tamaño dependiendo del tiempo que le quede al timer
@@ -146,8 +140,12 @@ public class OhNoGame implements Application {
                     else if(this._isLocked && casilla.getTipoActual() == Casilla.Tipo.ROJO){
                         int lockX = x - (int)(radius * 0.5f);
                         int lockY = y - (int)(radius * 0.5f);
-                        g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f));
+                        g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f), 0.3f);
                     }
+                }
+                if(this._isAnyHelp && casilla.getPos() == this._posHelp){
+                    g.setColor(0xff000000);
+                    g.drawCircle(x, y, (int)radius, 3);
                 }
             }
         }
@@ -161,7 +159,7 @@ public class OhNoGame implements Application {
         if(!this._isAnyHelp){
             this._font.setSize(70);     //Asignamos tamanio de fuente
             g.setFont(this._font);      //Asignamos la fuente;
-            text = this._boardSize + "X" + this._boardSize;
+            text = this._boardSize + "x" + this._boardSize;
             g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5);
         }else{
             this._font.setSize(20);     //Asignamos tamanio de fuente
@@ -186,9 +184,9 @@ public class OhNoGame implements Application {
         g.scale(scale,scale);
 
         int size = this._closeImage.getWidth()/2;
-        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.33 * inverseScale) - size, 0);
-        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0);
-        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.66 * inverseScale) - size,0 );
+        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.35 * inverseScale) - size, 0, 0.6f);
+        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0, 0.6f);
+        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.65 * inverseScale) - size,0, 0.6f);
     }
     /*Comprueba si el numero de casillas del tablero es 0
      *En caso de ser 0 comprueba si es correcto o no y notifica al jugador.*/
@@ -261,7 +259,6 @@ public class OhNoGame implements Application {
         posX = g.getWidthNativeCanvas()/2 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._rewindImage.getWidth() &&
                 y > posY && y < posY + this._rewindImage.getHeight()){
-            System.out.println("Rewind image");
             RestoreCasilla aux = this._restoreManager.getLastCasilla();
             if(aux != null)
                this._tablero.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
@@ -269,8 +266,10 @@ public class OhNoGame implements Application {
         posX = g.getWidthNativeCanvas()*3/4 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
                 y > posY && y < posY + this._helpImage.getHeight()){
-            _helpString = this._tablero.damePista();
-            this._isAnyHelp = true;
+            Pair aux = this._tablero.damePista();
+            this._helpString = (String)aux.getLeft();
+            this._posHelp = (Vector2D)aux.getRight();
+            this._isAnyHelp = !this._isAnyHelp;
         }
 
     }
@@ -285,11 +284,9 @@ public class OhNoGame implements Application {
 
     private boolean _isLocked;      //si el usuario ha clicado en una casilla no modificable
 
-    private int debugClickX, debugClickY;
-    private boolean debugClick;
-
     private boolean _isAnyHelp;     //si el usuario ha pedido una pista
     private String _helpString;     //cadena de texto donde se guarda la pista
+    private Vector2D _posHelp;      //Guarda la posicion de la casilla donde se da la pista
 
 
     private Timer _myTimer;         //Timer utilizado para controlar las animaciones de las casillas que no se pueden modificar

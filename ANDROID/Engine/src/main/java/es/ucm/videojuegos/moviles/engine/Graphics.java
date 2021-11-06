@@ -15,15 +15,30 @@ public interface Graphics {
     void save();
     // Vuelve el formato nativo del sistema de coordenadas y escalado
     void restore();
-    // Pinta una imagen en la poscicion x y de la pantalla
-    void drawImage(Image image, int x, int y);
-    //Pinta una imagen en la posicion x y escalandola para el ancho y alto dado
-    void drawImage(Image image, int x, int y, int width, int height);
+    /*Pinta una imagen en la posicion x e y para el ancho y alto dado
+     * @param image imagen que quiere ser pintada
+     * @param x posicion x desde ser quiere pintar
+     * @param y posicion y desde la que se quiere pintar
+     * @param alpha alpha de la imagen. Valor comprendido entre 0 y 1  */
+    void drawImage(Image image, int x, int y, float alpha);
+    /*Pinta una imagen en la posicion x y escalandola para el ancho y alto dado
+    * @param image imagen que quiere ser pintada
+    * @param x posicion x desde ser quiere pintar
+    * @param y posicion y desde la que se quiere pintar
+    * @param width escala en x
+    * @param height escala en y
+    * @param alpha alpha de la imagen. Valor comprendido entre 0 y 1  */
+    void drawImage(Image image, int x, int y, int width, int height, float alpha);
     /* Dibuja un círculo relleno del color activo
     ** @param cx posicion en X del centro del circulo
     ** @param cy posicion en Y del centro del circulo
     ** @param radius radio de la circunferencia */
     void fillCircle(int cx, int cy, int radius);
+    /* Dibuja una circunferencia del color activo desde la posicion X e Y
+     ** @param cx posicion en X del centro del circulo
+     ** @param cy posicion en Y del centro del circulo
+     ** @param radius radio de la circunferencia */
+    void drawCircle(int cx, int cy, int radius, int widthStroke);
     /* Escribe el texto con la fuente y color activos */
     void drawText(String text, int x, int y);
     // Establece el color a utilizar en las operaciones de

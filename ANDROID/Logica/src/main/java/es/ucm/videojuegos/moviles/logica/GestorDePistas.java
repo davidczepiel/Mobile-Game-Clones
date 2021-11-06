@@ -1,6 +1,9 @@
 package es.ucm.videojuegos.moviles.logica;
 
 import java.util.ArrayList;
+
+import es.ucm.videojuegos.moviles.engine.Pair;
+
 /*Clase que gestiona las pistas desde su creación hasta su almacenamiento.
  *Contiene metodos para comprobar si dado un tablero este es valido además de
  * proporcionar una pista al jugador dado un tablero actual.
@@ -71,14 +74,14 @@ public class GestorDePistas {
 		return true;
 	}
 	/* Devuelve una pista escrita dado el estado actual del tablero de juego*/
-	public String damePista(Tablero tablero) {
+	public Pair<String,Vector2D> damePista(Tablero tablero) {
 		Casilla[][] tableroJuego = tablero.getTablero();
 		int size = tablero.getDimensiones();
 		for(int i = 0; i < size ; i++) {
 			for(int j = 0; j < size ; j++) {
 				for(Pista pista: this._pistasInformativas) {
 					if(pista.EsAplicable(tableroJuego[i][j], tablero))
-						return pista.GenerarAyuda();
+						return new Pair(pista.GenerarAyuda(),tableroJuego[i][j].getPos());
 				}
 			}
 		}
