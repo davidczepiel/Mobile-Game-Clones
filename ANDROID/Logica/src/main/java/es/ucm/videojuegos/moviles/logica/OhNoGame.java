@@ -81,8 +81,8 @@ public class OhNoGame implements Application {
         * +-----------------------------------------------------------------+*/
 
         //radio de cada circulo
-        int diametro = (int)Math.floor((g.getWidthNativeCanvas()) / this._boardSize);
-        int radius = (int)Math.ceil((diametro * 0.5f) * 0.75f);
+        int diametro = (int)Math.floor((g.getWidthNativeCanvas() - 7) / this._boardSize);
+        int radius = (int)Math.floor((diametro * 0.5f) * 0.75f);
         //Dalculamos el offset entre cada circulo
         int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
 
@@ -101,8 +101,8 @@ public class OhNoGame implements Application {
                     case ROJO:  g.setColor(0xfffa4848);     break;
                     case VACIO: g.setColor(0xffdfdfdf);     break;
                 }
-                int x = diametro * j + radius + offseBetween/2;
-                int y = diametro * i + radius + offseBetween/2;
+                int x = diametro * j + diametro/2;
+                int y = diametro * i + diametro/2;
                 //pintamos
                 g.fillCircle(x, y, (int)radius);
                 if(!casilla.esModificable()){
@@ -137,7 +137,7 @@ public class OhNoGame implements Application {
         if(!this._isAnyHelp){
             this._font.setSize(70);     //Asignamos tamanio de fuente
             g.setFont(this._font);      //Asignamos la fuente;
-            text = this._boardSize + "X" + this._boardSize;
+            text = this._boardSize + "x" + this._boardSize;
             g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5);
         }else{
             this._font.setSize(20);     //Asignamos tamanio de fuente

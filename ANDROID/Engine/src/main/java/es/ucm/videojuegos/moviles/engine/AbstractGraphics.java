@@ -106,7 +106,7 @@ public class AbstractGraphics implements Graphics{
         if(this._canvasSizeY < this._canvasSizeX)
             this._scale = this._canvasSizeY / (float)this._originalHeight;
         else
-            this._scale = this._canvasSizeX / (float)this._originalWidth;
+            this._scale = (this._canvasSizeX - _offsetX) / (float)this._originalWidth;
 
         //translate(this._canvasSizeX / this._originalWidth + this._x, this._canvasSizeY / this._originalHeight + this._y);
         translate(this._x, this._y);
@@ -122,4 +122,5 @@ public class AbstractGraphics implements Graphics{
     protected double _scale;                           // Factor de escalado
     protected int _canvasSizeX, _canvasSizeY;         //El tamanio de la parte pintable del juego que es relacion a 2/3
     protected int _originalWidth, _originalHeight;    //El tamanio original desde el que se inicia la app
+    protected int _offsetX;                           //Offset en el eje x a tener en cuenta al calcular las relaciones de pantalla
 }
