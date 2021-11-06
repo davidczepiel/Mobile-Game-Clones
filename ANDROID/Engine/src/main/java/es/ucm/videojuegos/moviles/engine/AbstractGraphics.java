@@ -27,10 +27,10 @@ public class AbstractGraphics implements Graphics{
     public void restore() {    }
 
     @Override
-    public void drawImage(Image image, int x, int y) {    }
+    public void drawImage(Image image, int x, int y, float alpha) {    }
 
     @Override
-    public void drawImage(Image image, int x, int y, int width, int height) {    }
+    public void drawImage(Image image, int x, int y, int width, int height, float alpha) {    }
 
     @Override
     public void setColor(int color) {    }

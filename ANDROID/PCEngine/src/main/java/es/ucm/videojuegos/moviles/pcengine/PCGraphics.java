@@ -1,5 +1,6 @@
 package es.ucm.videojuegos.moviles.pcengine;
 
+import java.awt.AlphaComposite;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
@@ -68,15 +69,23 @@ public class PCGraphics extends AbstractGraphics {
         this._graphics.fillRect(0, 0, this._window.getWidth(), this._window.getHeight());
     }
     @Override
-    public void drawImage(Image image, int x, int y) {
+    public void drawImage(Image image, int x, int y, float alpha) {
         PCImage pcImage = (PCImage)image;
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        Graphics2D g2d = (Graphics2D)this._graphics;
+        g2d.setComposite(ac);
         this._graphics.drawImage(pcImage.get_image(), x, y, pcImage.getWidth(),pcImage.getHeight(),null);
     }
 
     @Override
-    public void drawImage(Image image, int x, int y, int width, int height){
+    public void drawImage(Image image, int x, int y, int width, int height, float alpha){
         PCImage pcImage = (PCImage)image;
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        Graphics2D g2d = (Graphics2D)this._graphics;
+        g2d.setComposite(ac);
         this._graphics.drawImage(pcImage.get_image(), x, y, width, height, null);
+        ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        g2d.setComposite(ac);
     }
 
     @Override

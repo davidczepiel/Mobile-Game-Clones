@@ -29,9 +29,6 @@ public class OhNoGame implements Application {
 
         //Creamos la cola de casillas pre-modificadas
         this._restoreManager = new RestoreManager();
-
-        //DebugClicks
-        this.debugClick = true;
      }
 
      /*Recoge los eventos y los procesa*/
@@ -46,9 +43,6 @@ public class OhNoGame implements Application {
                 checkCircles(e.get_x(),e.get_y());
                 checkUI(e.get_x(),e.get_y());
             }
-            //Debug clicks
-            this.debugClickX = e.get_x();
-            this.debugClickY = e.get_y();
         }
 
         //Comprobamos si se ha terminado el juego
@@ -61,12 +55,6 @@ public class OhNoGame implements Application {
         drawText(this._engine.getGraphics());
         drawBoard(this._engine.getGraphics());
         drawUI(this._engine.getGraphics());
-
-        if(debugClick) {
-            this._engine.getGraphics().restore();
-            this._engine.getGraphics().setColor(0xff00ff00);
-            this._engine.getGraphics().fillCircle(this.debugClickX, this.debugClickY, 5);
-        }
     }
 
     /*Devuelve el nombre de la aplicacion*/
@@ -87,6 +75,7 @@ public class OhNoGame implements Application {
         * |                        *                 *                      |
         * |                          *             *                        |
         * |                             _________                           |
+        * |<-----------diametro------------>                                |
         * +-----------------------------------------------------------------+*/
 
         //radio de cada circulo
@@ -127,7 +116,7 @@ public class OhNoGame implements Application {
                     else if(this._isLocked && casilla.getTipoActual() == Casilla.Tipo.ROJO){
                         int lockX = x - (int)(radius * 0.5f);
                         int lockY = y - (int)(radius * 0.5f);
-                        g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f));
+                        g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f), 0.3f);
                     }
                 }
             }
@@ -167,9 +156,9 @@ public class OhNoGame implements Application {
         g.scale(scale,scale);
 
         int size = this._closeImage.getWidth()/2;
-        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.33 * inverseScale) - size, 0);
-        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0);
-        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.66 * inverseScale) - size,0 );
+        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.33 * inverseScale) - size, 0, 1f);
+        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0, 1f);
+        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.66 * inverseScale) - size,0, 1f);
     }
     /*Comprueba si el numero de casillas del tablero es 0
      *En caso de ser 0 comprueba si es correcto o no y notifica al jugador.*/
@@ -261,9 +250,6 @@ public class OhNoGame implements Application {
     private int _boardSize;         //tamanio del tablero de juego
 
     private boolean _isLocked;      //si el usuario ha clicado en una casilla no modificable
-
-    private int debugClickX, debugClickY;
-    private boolean debugClick;
 
     private boolean _isAnyHelp;     //si el usuario ha pedido una pista
     private String _helpString;     //cadena de texto donde se guarda la pista
