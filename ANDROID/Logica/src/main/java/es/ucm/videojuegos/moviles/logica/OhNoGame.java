@@ -6,7 +6,9 @@ import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Image;
 import es.ucm.videojuegos.moviles.engine.Graphics;
+import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
+import es.ucm.videojuegos.moviles.logica.Timer;
 
 /*Clase que implementa el juego*/
 public class OhNoGame implements Application {
@@ -30,6 +32,9 @@ public class OhNoGame implements Application {
         //Creamos la cola de casillas pre-modificadas
         this._restoreManager = new RestoreManager();
 
+        this._myTimer = new Timer(0.15);
+        this._animacion = new Pair<Casilla, Timer>(null,this._myTimer);
+
         //DebugClicks
         this.debugClick = true;
      }
@@ -39,6 +44,7 @@ public class OhNoGame implements Application {
     public void onUpdate(double deltaTime) {
         //Recogemos input
         List<TouchEvent> list = this._engine.getInput().getTouchEvents();
+        _animacion.getRight().tick(deltaTime);
         //Procesamos el input
         for (TouchEvent e: list) {
             //Solo comprobamos eventos cuando sean pulsados
@@ -112,8 +118,21 @@ public class OhNoGame implements Application {
                 }
                 int x = diametro * j + radius + offseBetween/2;
                 int y = diametro * i + radius + offseBetween/2;
-                //pintamos
-                g.fillCircle(x, y, (int)radius);
+
+                //En caso de que el timer de la animcion este contando, miramos si estamos dibujando la casilla que tiene que ser animado
+                //y en casoo de serlo alteramos su tamaño dependiendo del tiempo que le quede al timer
+                //La animacion consiste en que el circulo empieza siendo un 10% más grande de lo normal y conforme se acaba el timer
+                //Va volviendo a su tamanio original
+                if((this._animacion.getRight().is_Started() && !this._animacion.getRight().is_finished()) &&
+                        (i == this._animacion.getLeft().getPos().getX() && j == this._animacion.getLeft().getPos().getY())){
+                    //Calculamos el porcentaje de incremento que le corresponde agrandarse y se lo aplicamos a su radio original
+                    double percentage = this._animacion.getRight().get_time() / this._animacion.getRight().get_timerTime();
+                    g.fillCircle(x, y, (int) radius + ((int)(Math.ceil((double)radius*0.1*percentage))));
+                }
+                //En caso de que estemos dibujando un circulo sin animacion
+                else
+                    g.fillCircle(x, y, (int) radius);
+
                 if(!casilla.esModificable()){
                     //Si es azul no modificable ponemos el numero
                     if(casilla.getTipoActual() == Casilla.Tipo.AZUL){
@@ -209,7 +228,11 @@ public class OhNoGame implements Application {
                 //comprobamos si se está clicando
                 if(distance <= radius){
                     if(!casilla.esModificable()){
-                            this._isLocked = !this._isLocked;
+                        this._isLocked = !this._isLocked;
+
+                        //Relacionamos la casilla a animar con el timer que controlara su animacion e indicamos que la animacion acaba de empezar
+                        this._animacion = new Pair<Casilla, Timer>(casilla,this._myTimer);
+                        this._animacion.getRight().start();
                     }
                     else{
                         //aniadimos la casilla antes de modificarla
@@ -268,4 +291,7 @@ public class OhNoGame implements Application {
     private boolean _isAnyHelp;     //si el usuario ha pedido una pista
     private String _helpString;     //cadena de texto donde se guarda la pista
 
+
+    private Timer _myTimer;         //Timer utilizado para controlar las animaciones de las casillas que no se pueden modificar
+    private Pair<Casilla, Timer> _animacion; //Pareja  que permite relacionar la casilla que tenemos que animar con el tiempo restante de la animacion
 }
