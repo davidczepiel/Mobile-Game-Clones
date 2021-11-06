@@ -2,6 +2,7 @@ package es.ucm.videojuegos.moviles.logica;
 
 import java.util.Random;
 
+import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.logica.Casilla.Tipo;
 
 public class Tablero {
@@ -36,7 +37,7 @@ public class Tablero {
         return true;
     }
 
-    public String damePista(){
+    public Pair<String,Vector2D> damePista(){
         return this._gestorDePistas.damePista(this);
     }
 

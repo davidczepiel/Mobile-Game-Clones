@@ -6,6 +6,7 @@ import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Image;
 import es.ucm.videojuegos.moviles.engine.Graphics;
+import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
 /*Clase que implementa el juego*/
@@ -17,6 +18,7 @@ public class OhNoGame implements Application {
         this._boardSize = 5;
         this._engine = g;
         this._isLocked = false;
+        this._isAnyHelp = false;
         //Creamos el tablero
         this._tablero = new Tablero(this._boardSize);
         //Guardamos las imagenes
@@ -130,6 +132,10 @@ public class OhNoGame implements Application {
                         g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f));
                     }
                 }
+                if(this._isAnyHelp && casilla.getPos() == this._posHelp){
+                    g.setColor(0xff000000);
+                    g.drawCircle(x, y, (int)radius, 3);
+                }
             }
         }
     }
@@ -238,7 +244,6 @@ public class OhNoGame implements Application {
         posX = g.getWidthNativeCanvas()/2 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._rewindImage.getWidth() &&
                 y > posY && y < posY + this._rewindImage.getHeight()){
-            System.out.println("Rewind image");
             RestoreCasilla aux = this._restoreManager.getLastCasilla();
             if(aux != null)
                this._tablero.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
@@ -246,8 +251,10 @@ public class OhNoGame implements Application {
         posX = g.getWidthNativeCanvas()*3/4 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
                 y > posY && y < posY + this._helpImage.getHeight()){
-            _helpString = this._tablero.damePista();
-            this._isAnyHelp = true;
+            Pair aux = this._tablero.damePista();
+            this._helpString = (String)aux.getLeft();
+            this._posHelp = (Vector2D)aux.getRight();
+            this._isAnyHelp = !this._isAnyHelp;
         }
 
     }
@@ -267,5 +274,6 @@ public class OhNoGame implements Application {
 
     private boolean _isAnyHelp;     //si el usuario ha pedido una pista
     private String _helpString;     //cadena de texto donde se guarda la pista
+    private Vector2D _posHelp;      //Guarda la posicion de la casilla donde se da la pista
 
 }
