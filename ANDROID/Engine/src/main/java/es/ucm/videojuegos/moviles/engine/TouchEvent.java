@@ -1,8 +1,13 @@
 package es.ucm.videojuegos.moviles.engine;
-
+/*Clase que implementa los los eventos. Guarda informacion del tipo de evento que ha
+ * sido capturado, en que posicion y con que id. Ademas contiene metodos para modificar y
+ * obtener los valores de estas variables
+ */
 public class TouchEvent {
 
-    public enum TouchEventType { pulsar, liberar, desplazar}
+    public enum TouchEventType { pulsar,    //cuando se clica
+                                liberar,    //cuando se libera el dedo/click
+                                desplazar}  //cuando ha habido un desplazamiento
     /* Constructora de la clase
      * @param x posicion en X
      * @param y posicion en y
