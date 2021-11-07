@@ -136,19 +136,13 @@ public class AGraphics extends AbstractGraphics {
 
     @Override
     public int getWidth() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getRealMetrics(this._displayMetrics);
-        else
-            ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getMetrics(this._displayMetrics);
+        ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getMetrics(this._displayMetrics);
         return this._displayMetrics.widthPixels;
     }
 
     @Override
     public int getHeigth() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getRealMetrics(this._displayMetrics);
-        else
-            ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getMetrics(this._displayMetrics);
+        ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getMetrics(this._displayMetrics);
         return this._displayMetrics.heightPixels - getNavigationBarHeight((AppCompatActivity)this._context);
     }
     //+-----------------------------------------------------------------------------------+
