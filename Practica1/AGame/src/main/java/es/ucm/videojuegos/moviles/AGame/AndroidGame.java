@@ -19,7 +19,6 @@ public class AndroidGame extends AppCompatActivity {
         this._engine.run();
     }
 
-
     /**
      * Método llamado por Android como parte del ciclo de vida de la
      * actividad. Notifica que la actividad va a pasar a primer plano,
@@ -36,7 +35,6 @@ public class AndroidGame extends AppCompatActivity {
         // de lo que está pasando.
         super.onResume();
         this._engine.resume();
-
     } // onResume
 
 
@@ -48,13 +46,10 @@ public class AndroidGame extends AppCompatActivity {
      */
     @Override
     protected void onPause() {
-
         // Avisamos a la vista (que es la encargada del active render)
         // de lo que está pasando.
         super.onPause();
         this._engine.pause();
-
-
     } // onPause
 
 

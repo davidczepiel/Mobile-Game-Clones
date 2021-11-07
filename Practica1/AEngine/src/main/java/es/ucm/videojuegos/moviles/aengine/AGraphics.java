@@ -10,12 +10,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -31,16 +33,18 @@ public class AGraphics extends AbstractGraphics {
         this._holder = surfaceView.getHolder();
         this._context = c;
         this._paint = new Paint();
+
         //Recogemos el display para calcular el tamanio del movil
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((AppCompatActivity)c).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        this._height = displayMetrics.heightPixels;
-        this._width = displayMetrics.widthPixels;
+        this._displayMetrics = new DisplayMetrics();
+
+        //tamanio nativo
         this._originalWidth =  this._canvasSizeX = 400;
         this._originalHeight = this._canvasSizeY = 600;
+
         this._y = 0; this._x = 0;
         this._scale = 1;
     }
+
     @Override
     public Image newImage(String name) {
         return new AImage(name, this._context);
@@ -112,8 +116,8 @@ public class AGraphics extends AbstractGraphics {
 
     @Override
     public void drawText(String text, int x, int y) {
-        this._paint.setTextAlign(Paint.Align.LEFT);
-        this._canvas.drawText(text,x,y,this._paint);
+        int sizeX = this.getTextWidth(text);
+        this._canvas.drawText(text,x-sizeX/2,y,this._paint);
     }
 
     @Override
@@ -129,14 +133,23 @@ public class AGraphics extends AbstractGraphics {
     public SurfaceHolder get_holder(){
         return this._holder;
     }
+
     @Override
     public int getWidth() {
-        return this._width;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getRealMetrics(this._displayMetrics);
+        else
+            ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getMetrics(this._displayMetrics);
+        return this._displayMetrics.widthPixels;
     }
 
     @Override
     public int getHeigth() {
-        return this._height;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getRealMetrics(this._displayMetrics);
+        else
+            ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getMetrics(this._displayMetrics);
+        return this._displayMetrics.heightPixels - getNavigationBarHeight((AppCompatActivity)this._context);
     }
     //+-----------------------------------------------------------------------------------+
     //|                 METODOS AUXILIARES PARA BUFFER                                    |
@@ -156,13 +169,43 @@ public class AGraphics extends AbstractGraphics {
     public  boolean isValid(){
         return this._holder.getSurface().isValid();
     }
+    //+-----------------------------------------------------------------------------------+
+    //|                           METODOS PRIVADOS                                        |
+    //+-----------------------------------------------------------------------------------+
+    /*Calcula el tamanio del texto*/
+    private int getTextWidth(String str) {
+        int iRet = 0;
+        if (str != null && str.length() > 0) {
+            int len = str.length();
+            float[] widths = new float[len];
+            this._paint.getTextWidths(str, widths);
+            for (int j = 0; j < len; j++) {
+                iRet += (int) Math.ceil(widths[j]);
+            }
+        }
+        return iRet;
+    }
 
-    Canvas _canvas;             //Contiene los metodos de dibujado
-    SurfaceHolder _holder;      //Encargado del swap del canvas
-    Context _context;           //Aplicacion
-    Paint _paint;               //Se encarga de la geomeria, estilo y color de los textos y BitMap
+    /*Devuelve el tamanio de la barra de navegacion*/
+    private int getNavigationBarHeight(AppCompatActivity app) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            app.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int usableHeight = metrics.heightPixels;
+            app.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            int realHeight = metrics.heightPixels;
+            if (realHeight > usableHeight)
+                return realHeight - usableHeight;
+            else
+                return 0;
+        }
+        return 0;
+    }
 
-    int _height, _width;
-
+    Canvas _canvas;                 //Contiene los metodos de dibujado
+    SurfaceHolder _holder;          //Encargado del swap del canvas
+    Context _context;               //Aplicacion
+    Paint _paint;                   //Se encarga de la geomeria, estilo y color de los textos y BitMap
+    DisplayMetrics _displayMetrics; //Encargado de saber las metricas de la pantalla
 
 }

@@ -16,19 +16,19 @@ public class OhNoGame implements Application {
     @Override
     public void onInit(Engine g) {
         //Atributos de la clase
-        this._boardSize = 7;
+        this._boardSize = 5;
         this._engine = g;
         this._isLocked = false;
         this._isAnyHelp = false;
         //Creamos el tablero
         this._tablero = new Tablero(this._boardSize);
         //Guardamos las imagenes
-       /* this._closeImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/close.png");
-        this._rewindImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/history.png");
-        this._helpImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/eye.png");
-        this._blockImage = g.getGraphics().newImage("PCGame/src/main/assets/sprites/lock.png");
+        this._closeImage = g.getGraphics().newImage("assets/sprites/close.png");
+        this._rewindImage = g.getGraphics().newImage("assets/sprites/history.png");
+        this._helpImage = g.getGraphics().newImage("assets/sprites/eye.png");
+        this._blockImage = g.getGraphics().newImage("assets/sprites/lock.png");
         //Guardamos las fuentes
-        this._font = g.getGraphics().newFont("PCGame/src/main/assets/fonts/JosefinSans-Bold.ttf", 70, false);*/
+        this._font = g.getGraphics().newFont("assets/fonts/JosefinSans-Bold.ttf", 70, false);
 
         //Creamos la cola de casillas pre-modificadas
         this._restoreManager = new RestoreManager();
@@ -61,9 +61,9 @@ public class OhNoGame implements Application {
     /*Dibuja el estado del juego*/
     @Override
     public void onDraw() {
-        //drawText(this._engine.getGraphics());
+        drawText(this._engine.getGraphics());
         drawBoard(this._engine.getGraphics());
-        //drawUI(this._engine.getGraphics());
+        drawUI(this._engine.getGraphics());
     }
 
     /*Devuelve el nombre de la aplicacion*/
@@ -93,8 +93,10 @@ public class OhNoGame implements Application {
         //Dalculamos el offset entre cada circulo
         int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
 
-        //Situamos l x e y para pintar el tablero
+        //Volvemos al estado de inicio y guardamos el valor (para la pila)
         g.restore();
+        g.save();
+        //Situamos l x e y para pintar el tablero
         g.setColor(0xffffffff);
         g.translate(0,g.getHeightNativeCanvas() / 4);
 
@@ -126,7 +128,7 @@ public class OhNoGame implements Application {
                 else
                     g.fillCircle(x, y, (int) radius);
 
-                /*if(!casilla.esModificable()){
+                if(!casilla.esModificable()){
                     //Si es azul no modificable ponemos el numero
                     if(casilla.getTipoActual() == Casilla.Tipo.AZUL){
                         g.setColor(0xffffffff);         //Asignamos el color blanco
@@ -145,7 +147,7 @@ public class OhNoGame implements Application {
                 if(this._isAnyHelp && casilla.getPos() == this._posHelp){
                     g.setColor(0xff000000);
                     g.drawCircle(x, y, (int)radius, 3);
-                }*/
+                }
             }
         }
     }
@@ -153,6 +155,7 @@ public class OhNoGame implements Application {
     /*Dibuja el texto situado encima del tablero*/
     private void drawText(Graphics g){
         g.restore();
+        g.save();
         String text = "";
         g.setColor(0xff000000);     //Color a negro
         if(!this._isAnyHelp){
@@ -175,6 +178,7 @@ public class OhNoGame implements Application {
     private void drawUI(Graphics g){
         //Dibuja iconos Pista/Deshacer/Rendirse
         g.restore();
+        g.save();
         g.translate(0,(int)(g.getHeightNativeCanvas() * 0.90));
 
         float scale = 0.6f;

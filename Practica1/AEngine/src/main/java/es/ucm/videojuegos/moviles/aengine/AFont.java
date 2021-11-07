@@ -10,7 +10,7 @@ import es.ucm.videojuegos.moviles.engine.Font;
 public class AFont implements Font {
 
     public AFont(String name, Context context, Paint p, boolean isBold){
-        this._font = Typeface.createFromAsset(context.getAssets(), "Bangers-Regular.ttf");
+        this._font = Typeface.createFromAsset(context.getAssets(), name);
         this._paint = p;
         if(isBold)
             this._paint.setFakeBoldText(true);
