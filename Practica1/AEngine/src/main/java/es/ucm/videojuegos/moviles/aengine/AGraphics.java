@@ -26,11 +26,11 @@ public class AGraphics extends AbstractGraphics {
 
     public AGraphics(Context c){
         //Creamos la surface view y se la pasamos a la actividad
-        SurfaceView surfaceView = new SurfaceView(c);
-        ((AppCompatActivity)c).setContentView(surfaceView);
+        this._view = new SurfaceView(c);
+        ((AppCompatActivity)c).setContentView(this._view);
         //Inicializacion de variables de clase
         this._canvas = null;
-        this._holder = surfaceView.getHolder();
+        this._holder = this._view.getHolder();
         this._context = c;
         this._paint = new Paint();
 
@@ -136,14 +136,12 @@ public class AGraphics extends AbstractGraphics {
 
     @Override
     public int getWidth() {
-        ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getMetrics(this._displayMetrics);
-        return this._displayMetrics.widthPixels;
+        return this._view.getWidth();
     }
 
     @Override
     public int getHeigth() {
-        ((AppCompatActivity)this._context).getWindowManager().getDefaultDisplay().getMetrics(this._displayMetrics);
-        return this._displayMetrics.heightPixels - getNavigationBarHeight((AppCompatActivity)this._context);
+        return this._view.getHeight();
     }
     //+-----------------------------------------------------------------------------------+
     //|                 METODOS AUXILIARES PARA BUFFER                                    |
@@ -201,5 +199,6 @@ public class AGraphics extends AbstractGraphics {
     Context _context;               //Aplicacion
     Paint _paint;                   //Se encarga de la geomeria, estilo y color de los textos y BitMap
     DisplayMetrics _displayMetrics; //Encargado de saber las metricas de la pantalla
+    SurfaceView _view;
 
 }
