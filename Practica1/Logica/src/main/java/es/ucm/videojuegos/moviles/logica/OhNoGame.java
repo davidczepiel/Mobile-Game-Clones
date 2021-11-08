@@ -12,7 +12,8 @@ import es.ucm.videojuegos.moviles.logica.Timer;
 
 /*Clase que implementa el juego*/
 public class OhNoGame implements Application {
-    /*Crea los recursos que va a necesitar a lo largo de la aplicacion*/
+    /*Crea los recursos que va a necesitar a lo largo de la aplicacion
+    * @param g Motor que va a sostener el juego*/
     @Override
     public void onInit(Engine g) {
         //Atributos de la clase
@@ -38,7 +39,8 @@ public class OhNoGame implements Application {
 
      }
 
-     /*Recoge los eventos y los procesa*/
+     /*Recoge los eventos y los procesa
+     * @param deltaTime Tiempo transcurrido desde la ultima iteracion*/
     @Override
     public void onUpdate(double deltaTime) {
         _animacion.getRight().tick(deltaTime);
@@ -66,13 +68,15 @@ public class OhNoGame implements Application {
         drawUI(this._engine.getGraphics());
     }
 
-    /*Devuelve el nombre de la aplicacion*/
+    /*Devuelve el nombre de la aplicacion
+    * @return nombre del juego*/
     @Override
     public String getName() {
         return "OhNoGame";
     }
 
-    /*Dibuja el tablero del juego*/
+    /*Dibuja el tablero del juego
+    * @param g Manager de graficos al que le vamos a pedir ayuda para dibujar el juego*/
     private void drawBoard(Graphics g) {
         /*+-----------------------------------------------------------------+--------
         * |                             _________                           |
@@ -152,7 +156,8 @@ public class OhNoGame implements Application {
         }
     }
 
-    /*Dibuja el texto situado encima del tablero*/
+    /*Dibuja el texto situado encima del tablero
+    * @param g Encargado de graficos*/
     private void drawText(Graphics g){
         g.restore();
         g.save();
@@ -174,7 +179,8 @@ public class OhNoGame implements Application {
         }
     }
 
-    /* Dibuja los iconos de interfaz situados debajo del tablero*/
+    /* Dibuja los iconos de interfaz situados debajo del tablero
+    * @param g Manager de lo relacionado con graficos*/
     private void drawUI(Graphics g){
         //Dibuja iconos Pista/Deshacer/Rendirse
         g.restore();
@@ -191,6 +197,7 @@ public class OhNoGame implements Application {
         g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0, 0.6f);
         g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.65 * inverseScale) - size,0, 0.6f);
     }
+    
     /*Comprueba si el numero de casillas del tablero es 0
      *En caso de ser 0 comprueba si es correcto o no y notifica al jugador.*/
     private void checkEndedGame(){
@@ -204,7 +211,9 @@ public class OhNoGame implements Application {
         }
     }
 
-    /*Comprueba dado un x,y del input si corresponde a alguno de los circulos del tablero*/
+    /*Comprueba dado un x,y del input si corresponde a alguno de los circulos del tablero
+    * @param x Posicion en el eje X donde se ha producido el input
+    * @param y Posicion en el eje Y donde se ha producido el input*/
     private void checkCircles(int x, int y){
         //distancia con el texto de arriba
         int offsetText = _engine.getGraphics().getHeightNativeCanvas() / 4;
@@ -247,7 +256,9 @@ public class OhNoGame implements Application {
         }
     }
 
-    /*Comprueba dado un x,y del input si corresponde a alguno de los iconos*/
+    /*Comprueba dado un x,y del input si corresponde a alguno de los iconos
+    * @param x Posicion en el eje X donde se ha producido el input
+    * @param y Posicion en el eje Y donde se ha producido el input*/
     private void checkUI(int x, int y){
         Graphics g = this._engine.getGraphics();
 

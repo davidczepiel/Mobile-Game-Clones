@@ -15,13 +15,19 @@ public class AEngine implements Engine , Runnable {
         this._application = app;
         this._input = new AInput(this._graphics);
         this._application.onInit(this);
+
+        this._graphics.getSurfaceView().setOnTouchListener(this._input);
     }
 
+    /*MEtodo que permite obtener el manager de Graphics de android
+    * @return manager de lo grafico en android*/
     @Override
     public Graphics getGraphics() {
         return this._graphics;
     }
 
+    /* Metodo que permite obtener el manager de Input de android
+    * @return manager del input en android*/
     @Override
     public Input getInput() {
         return this._input;

@@ -26,11 +26,16 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
     //+-----------------------------------------------------------------------+
     //|                       Interfaz Mouse Listener                         |
     //+-----------------------------------------------------------------------+
+
+    /*Metodo de PC que obtiene un evento cuando el mouse presiona y libera el boton en cualquier lado de la pantalla
+    * @param e Clase que almacena la informacion del evento que ha ocurrido*/
     @Override
     public void mouseClicked(MouseEvent e) {
 
     }
 
+    /*Metodo de PC que obtiene un evento cuando el mouse presiona en cualquier lado de la pantalla
+    * @param e Clase que almacena la informacion del evento que ha ocurrido*/
     @Override
     public void mousePressed(MouseEvent e) {
         TouchEvent event = _pool.getTouchEvent();
@@ -45,6 +50,8 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
         addEvent(event);
     }
 
+    /*Metodo de PC que obtiene un evento cuando el mouse libera el boton en cualquier lado de la pantalla
+    * @param e Clase que almacena la informacion del evento que ha ocurrido*/
     @Override
     public void mouseReleased(MouseEvent e) {
         TouchEvent event = _pool.getTouchEvent();
@@ -59,16 +66,24 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
         addEvent(event);
     }
 
+
+    /*Metodo de PC que obtiene un evento cuando el mouse ha entrado en la pantalla
+    * @param e Clase que almacena la informacion del evento que ha ocurrido*/
     @Override
     public void mouseEntered(MouseEvent e) {
         //
     }
 
+    /*Metodo de PC que obtiene un evento cuando el mouse ha salido de la pantalla
+    * @param e Clase que almacena la informacion del evento que ha ocurrido*/
     @Override
     public void mouseExited(MouseEvent e) {
         //
     }
 
+    /*Metodo de PC que obtiene un evento cuando el mouse esta presionando y moviendose a la vez
+     * en cualquier lado de la pantalla
+     * @param e Clase que almacena la informacion del evento que ha ocurrido*/
     @Override
     public void mouseDragged(MouseEvent e) {
         TouchEvent event = _pool.getTouchEvent();
@@ -83,6 +98,8 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
         addEvent(event);
     }
 
+    /*Metodo de PC que obtiene un evento cuando el mouse se ha movido dentro de la pantalla
+    * @param e Clase que almacena la informacion del evento que ha ocurrido*/
     @Override
     public void mouseMoved(MouseEvent e) {
         //

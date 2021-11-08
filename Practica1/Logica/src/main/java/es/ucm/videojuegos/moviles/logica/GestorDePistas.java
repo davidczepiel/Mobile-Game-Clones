@@ -51,7 +51,10 @@ public class GestorDePistas {
 		pista = new Pista10();
 		this._pistasInformativas.add(pista);
 	}
-	/* Comprueba si el tablero dado es válido y jugable dadas las pistas existentes*/
+
+	/* Comprueba si el tablero dado es válido y jugable dadas las pistas existentes
+	* @param tablero Tablero que se va a comprobar
+	* @return boolean que reperesenta si el tablero que se ha pasado es apto para ser juagado*/
 	public boolean esValido(Tablero tablero) {
 		Casilla[][] tableroJuego = tablero.getTablero();
 		int size = tablero.getDimensiones();
@@ -73,7 +76,10 @@ public class GestorDePistas {
 		}
 		return true;
 	}
-	/* Devuelve una pista escrita dado el estado actual del tablero de juego*/
+
+	/* Devuelve una pista escrita dado el estado actual del tablero de juego
+	* @param tablero Tablero que vamos a analizar para conseguir una pista
+	* @return pareja que incluye tanto la pista a data como la casilla sobre la que se aplica*/
 	public Pair<String,Vector2D> damePista(Tablero tablero) {
 		Casilla[][] tableroJuego = tablero.getTablero();
 		int size = tablero.getDimensiones();
@@ -90,7 +96,11 @@ public class GestorDePistas {
 		}
 		return null;
 	}
-	/*Prueba las pistas disponibles dada la casilla y el tablero*/
+
+	/*Prueba las pistas disponibles dada la casilla y el tablero
+	* @param casilla Casilla sobre la que se van a probar las pistas
+	* @param tablero Tablero del juego
+	* @return boolean que representa si se ha podido aplicar alguna pista o no*/
 	private boolean pruebaPista(Casilla casilla, Tablero tablero) {
 		for(Pista pista: this._pistasAplicables) {
 			if(pista.EsAplicable(casilla, tablero)) {

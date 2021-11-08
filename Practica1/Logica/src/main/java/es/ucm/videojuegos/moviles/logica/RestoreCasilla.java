@@ -9,10 +9,14 @@ public class RestoreCasilla {
         this._position = pos;
     }
 
+    /*Devuelve la posicion de la casilla de la que estamos almacenando informacion
+    * @return Posicion de la casilla en cuestion*/
     public Vector2D get_position() {
         return _position;
     }
 
+    /*Devuelve el estado de la casilla que hemos almacenado
+    * @return Estado de la casilla*/
     public Casilla.Tipo get_currentType() {
         return _currentType;
     }

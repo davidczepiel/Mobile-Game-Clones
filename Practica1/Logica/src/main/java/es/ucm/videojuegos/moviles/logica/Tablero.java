@@ -22,6 +22,8 @@ public class Tablero {
         limpiarTableroJuego();       
     }
 
+    /*Metodo que devuelve si el tablero que se ha resuelto es igual al de la solucion
+    * @return Boolean de si la solucion obtenida es correcta*/
     public boolean esCorrecto(){
         //Vemos si la solucion dada se corresponde con el tablero de la solcion
         for(int i = 0; i < this._dimensiones ; i++) {
@@ -33,6 +35,8 @@ public class Tablero {
         return true;
     }
 
+    /*Metodo que devuelve una pareja que almacena una pista y la posicion de la casilla sobre la que se aplica
+    * @return Pareja pista/posicion*/
     public Pair<String,Vector2D> damePista(){
         return this._gestorDePistas.damePista(this);
     }
@@ -53,21 +57,29 @@ public class Tablero {
 
     	}
     }
+
     /* Suma el valor de vac�as al actual valor
 	 * @param mod modificador que se suma. Si es negativo se resta*/
     public void modificarVacias(int mod) { _numVacias+=mod;}
-    /*Obtiene el n�mero actual de casillas vac�as en el tablero*/
+
+    /*Obtiene el n�mero actual de casillas vac�as en el tablero
+    * @return Numero de casillas del tablero*/
     public int getNumVacias() { return _numVacias;}
-    /*Obtiene la dimensi�n del tablero*/
+
+    /*Obtiene la dimensi�n del tablero
+    * @return dimensiones del tablero*/
     public int getDimensiones() { return _dimensiones;}
-    /*Obtiene el tablero de juego*/
+
+    /*Obtiene el tablero de juego
+    * @return Array que contiene todas las casillas del tablero*/
     public Casilla[][] getTablero() {return _juegoTablero;}
 
     /* Miramos cuantos azules hay alrededor de una casilla hasta encontrar una pared
      * @param pos (actual desde la cual se mira en el tablero)
      * @param tablero 0 indica que miran azules utilizando el tablerode la solucion;
      * 1 indica que se mira en el tablero del juego y se cuentan azules teniendo en cuenta los vacios;
-     * y diferente a 0 y 1 que se mira en el juego sin importar los vacios*/
+     * y diferente a 0 y 1 que se mira en el juego sin importar los vacios
+     * @return numero de casillas que se han encontrado*/
     protected int mirarAlrededor(Vector2D pos, int tablero){
         Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
         int numVistos =0;
@@ -85,7 +97,8 @@ public class Tablero {
     /*Mira en el tablero del juego de manera recursiva dada una posicci�n y una direcci�n el n�mero de azules.
      * Deja de contar al encontrarse con un rojo o con un vac�o
      * @param pos inicial desde la cual se busca
-     * @param dir en la que se buscan azules*/
+     * @param dir en la que se buscan azules
+     * @return numero de casillas que se han encontrado*/
     protected int mirarAlrededorRecursivoParcial(Vector2D pos, Vector2D dir){
         Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
         if( nuevaPos.getX() < 0 || nuevaPos.getX() >= _dimensiones || nuevaPos.getY() < 0 || nuevaPos.getY() >= _dimensiones ||   	//Si me he salido de cualquier limite
@@ -98,7 +111,8 @@ public class Tablero {
     /* Dada una direcci�n, busca el �ltimo espacio vacio sin paredes de por medio
      * @param dir direcci�n en la que buscar� un sospechoso
      * @param tablero (del juego)
-     * @param pos posici�n de la casilla desde la que partir */
+     * @param pos posici�n de la casilla desde la que partir
+     * @return Casilla vacia encontrada o null en caso de que no existiera ninguna*/
     protected Casilla buscarPrimerVacio(Vector2D dir, Vector2D pos) {
         Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
 
@@ -113,14 +127,16 @@ public class Tablero {
             return _juegoTablero[nuevaPos.getX()][nuevaPos.getY()];
     }
     /*Comprueba si el tablero generado es resoluble dadas las pistas
-     * que proporciona el juego */
+     * que proporciona el juego
+     * @return Boolean que indica si el tablero es valido*/
     private boolean esValido(){
     	if(!this._gestorDePistas.esValido(this))
     		return false;
         return esCorrecto();
     }
     
-    /*Genera un tablero de manera aleatoria. Siendo un 75% azules y un 25% rojos*/
+    /*Genera un tablero de manera aleatoria. Siendo un 75% azules y un 25% rojos
+    * @return boolean que indica si es posible generar un tablero valido a partir de la configuracion actual*/
     private boolean generarTablero(){
         Random rand = new Random();
         int azules = 0, rojos = 0;
@@ -151,7 +167,8 @@ public class Tablero {
      * Usado para calcular el n�mero en los no modificables a la hora de generar el tablero
      * Deja de contar al encontrarse con un rojo
      * @param pos inicial desde la cual se busca
-     * @param dir en la que se buscan azules*/
+     * @param dir en la que se buscan azules
+     * @return contador de casillas interesantes hasta llegar a una roja o salirnos del tablero*/
     private int mirarAlrededorRecursivoEnSolucion(Vector2D pos, Vector2D dir){
         Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
         if( nuevaPos.getX() < 0 || nuevaPos.getX() >= _dimensiones || nuevaPos.getY() < 0 || nuevaPos.getY() >= _dimensiones ||   //Si me he salido de cualquier limite
@@ -163,7 +180,8 @@ public class Tablero {
     /*Mira en el tablero del juego de manera recursiva dada una posicci�n y una direcci�n el n�mero de azules.
      * Deja de contar al encontrarse con un rojo
      * @param pos inicial desde la cual se busca
-     * @param dir en la que se buscan azules*/
+     * @param dir en la que se buscan azules
+     * @return contador de caillas azules o vacias hasta encontrar una roja o salirnos del tablero*/
     private int mirarAlrededorRecursivoEnJuego(Vector2D pos, Vector2D dir){
         Vector2D nuevaPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
         if( nuevaPos.getX() < 0 || nuevaPos.getX() >= _dimensiones || nuevaPos.getY() < 0 || nuevaPos.getY() >= _dimensiones ||   	//Si me he salido de cualquier limite
@@ -171,7 +189,12 @@ public class Tablero {
             return 0;
         return 1 + mirarAlrededorRecursivoEnJuego(nuevaPos,dir);
     }
-    /*Escoge de manera aleatoria */
+
+
+    /*Escoge de manera aleatoria
+    * @param limAzules Numero maximo de azules a escoger
+    * @param limRojos Numero maximo de rojos a escoger
+    * @return Boolean que indica si ha sido posible escoger las casillas*/
     private boolean escogerCasillas(int limAzules, int limRojos){
     	
         int azules =  _dimensiones*_dimensiones/4;

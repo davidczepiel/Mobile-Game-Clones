@@ -39,16 +39,20 @@ public class Timer {
         this._time = this._timerTime;
     }
 
-    /*Metodo que devuelve si el timer ha empezado a contar*/
+    /*Metodo que devuelve si el timer ha empezado a contar
+    * @return Boolean de si ha empezado el contador o no*/
     public boolean is_Started(){return this._started;}
 
-    /*Metodo que devuelve si el timer ha terminado*/
+    /*Metodo que devuelve si el timer ha terminado
+    * @return Boolean de si ha terminado el contador*/
     public boolean is_finished() {return this._finished;}
 
-    /*Metodo que devuelve el tiempo que le queda al timer para terminar*/
+    /*Metodo que devuelve el tiempo que le queda al timer para terminar
+    * @return Tiempo restante en el contador*/
     public double get_time(){return this._time;}
 
-    /*Metodo que devuelve el tiempo que tarda el timer en hacer una cuenta atras*/
+    /*Metodo que devuelve el tiempo que tarda el timer en hacer una cuenta atras
+    * @return Tiempo que el contador se pone cada vez que empieza a contar*/
     public double get_timerTime(){return this._timerTime;}
 
     //Numero que representa el tiempo que queda para que el temporizador acabe
