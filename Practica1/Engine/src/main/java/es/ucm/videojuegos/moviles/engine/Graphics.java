@@ -33,7 +33,7 @@ public interface Graphics {
     ** @param cx posicion en X del centro del circulo
     ** @param cy posicion en Y del centro del circulo
     ** @param radius radio de la circunferencia */
-    void fillCircle(int cx, int cy, int radius);
+    void fillCircle(int cx, int cy, int radius, float alpha);
     /* Dibuja una circunferencia del color activo desde la posicion X e Y
      ** @param cx posicion en X del centro del circulo
      ** @param cy posicion en Y del centro del circulo
@@ -44,7 +44,7 @@ public interface Graphics {
     void fillRect(int x, int y, int w, int h, int color);
 
     /* Escribe el texto con la fuente y color activos */
-    void drawText(String text, int x, int y);
+    void drawText(String text, int x, int y, float alpha);
     // Establece el color a utilizar en las operaciones de
     //dibujado posteriores.
     void setColor(int color);

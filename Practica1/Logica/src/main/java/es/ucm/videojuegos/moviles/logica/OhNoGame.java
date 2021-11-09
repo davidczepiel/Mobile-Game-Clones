@@ -27,6 +27,8 @@ public class OhNoGame implements Application {
         this._isAnyHelp = false;
         //Creamos el tablero
         this._tablero = new Tablero(this._boardSize);
+
+        this._fadingManager = new FadingManager(this._tablero);
         //Guardamos las imagenes
         this._closeImage = g.getGraphics().newImage("assets/sprites/close.png");
         this._rewindImage = g.getGraphics().newImage("assets/sprites/history.png");
@@ -41,6 +43,10 @@ public class OhNoGame implements Application {
         this._myTimer = new Timer(0.15);
         this._animacion = new Pair<Casilla, Timer>(_tablero.getTablero()[0][0],this._myTimer);
 
+        this._helpString = " ";
+        //Comenzamos mostrando el texto del tamanio del tablero
+        this._textFadingVelocity = 2f;
+        this._boardSizeTextAlpha = 1f;
      }
 
      /*Recoge los eventos y los procesa
@@ -48,6 +54,13 @@ public class OhNoGame implements Application {
     @Override
     public void onUpdate(double deltaTime) {
         _animacion.getRight().tick(deltaTime);
+        this._fadingManager.updateFadings(deltaTime);
+
+        //Cambiar el alpha de los textos superiores para mostrar pista o mostrar el tamanio del tablero
+        if(this._isAnyHelp)
+            this._boardSizeTextAlpha = Math.min(Math.max(this._boardSizeTextAlpha - this._textFadingVelocity * (float)deltaTime, 0f), 1.0f);
+        else
+            this._boardSizeTextAlpha = Math.min(this._boardSizeTextAlpha + this._textFadingVelocity * (float)deltaTime, 1.0f);
 
         //Recogemos input
         List<TouchEvent> list = this._engine.getInput().getTouchEvents();
@@ -128,11 +141,11 @@ public class OhNoGame implements Application {
                         (i == this._animacion.getLeft().getPos().getX() && j == this._animacion.getLeft().getPos().getY())){
                     //Calculamos el porcentaje de incremento que le corresponde agrandarse y se lo aplicamos a su radio original
                     double percentage = this._animacion.getRight().get_time() / this._animacion.getRight().get_timerTime();
-                    g.fillCircle(x, y, (int) radius + ((int)(Math.ceil((double)radius*0.1*percentage))));
+                    g.fillCircle(x, y, (int) radius + ((int)(Math.ceil((double)radius*0.1*percentage))), 1);
                 }
                 //En caso de que estemos dibujando un circulo sin animacion
                 else
-                    g.fillCircle(x, y, (int) radius);
+                    g.fillCircle(x, y, (int) radius, this._fadingManager.getFading(casilla));
 
                 if(!casilla.esModificable()){
                     //Si es azul no modificable ponemos el numero
@@ -141,7 +154,7 @@ public class OhNoGame implements Application {
                         this._font.setSize(radius);     //Cambiamos el tamanio de letra
                         g.setFont(this._font);          //Asignamos la fuente
                         String text = "" + casilla.getNumero();
-                        g.drawText(text, x , y +(int)radius/4);
+                        g.drawText(text, x , y +(int)radius/4, 1);
                     }
                     //Si la casilla es roja y esta activado el lock pintamos el candado
                     else if(this._isLocked && casilla.getTipoActual() == Casilla.Tipo.ROJO){
@@ -165,19 +178,20 @@ public class OhNoGame implements Application {
         g.save();
         String text = "";
         g.setColor(0xff000000);     //Color a negro
-        if(!this._isAnyHelp){
-            this._font.setSize(70);     //Asignamos tamanio de fuente
-            g.setFont(this._font);      //Asignamos la fuente;
-            text = this._boardSize + "x" + this._boardSize;
-            g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5);
-        }else{
-            this._font.setSize(20);     //Asignamos tamanio de fuente
-            g.setFont(this._font);      //Asignamos la fuente;
 
-            String[] paragraph = this._helpString.split("-");   //Separamos las cadenas
-            for (int i = 0; i < paragraph.length ;++i) {
-                g.drawText(paragraph[i], g.getWidthNativeCanvas() /2 ,g.getHeightNativeCanvas() / 10 + 20*i);
-            }
+        //Texto del tamanio del tablero
+        this._font.setSize(70);     //Asignamos tamanio de fuente
+        g.setFont(this._font);      //Asignamos la fuente;
+        text = this._boardSize + "x" + this._boardSize;
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5, this._boardSizeTextAlpha);
+
+        //Texto de ayuda pista
+        this._font.setSize(20);     //Asignamos tamanio de fuente
+        g.setFont(this._font);      //Asignamos la fuente;
+
+        String[] paragraph = this._helpString.split("-");   //Separamos las cadenas
+        for (int i = 0; i < paragraph.length ;++i) {
+            g.drawText(paragraph[i], g.getWidthNativeCanvas() /2 ,g.getHeightNativeCanvas() / 10 + 20*i, 1 - this._boardSizeTextAlpha);
         }
     }
 
@@ -249,8 +263,8 @@ public class OhNoGame implements Application {
                     else{
                         //aniadimos la casilla antes de modificarla
                         this._restoreManager.addCasilla(casilla);
-                        //modifiamos el tipo de la casilla actual
-                        this._tablero.modificarCasilla(casilla);
+                        //empezamos el fade de la casilla
+                        this._fadingManager.startFading(casilla);
                     }
                     return; //ya hemos comprobado que el click ha sido en una de las casillas
                 }
@@ -278,7 +292,7 @@ public class OhNoGame implements Application {
             if(aux != null)
                this._tablero.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
         }
-        posX = g.getWidthNativeCanvas()*3/4 - g.getWidthNativeCanvas()/8;
+        posX = (int)(g.getWidthNativeCanvas() * 0.65) - size;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
                 y > posY && y < posY + this._helpImage.getHeight()){
             Pair aux = this._tablero.damePista();
@@ -289,6 +303,7 @@ public class OhNoGame implements Application {
     }
 
     private Tablero _tablero;   //tablero del juego
+    private FadingManager _fadingManager;   //Gestor de fading
     private Engine _engine;     //engine
     private Image _closeImage, _rewindImage, _helpImage, _blockImage;   //imagenes de iconos
     private Font _font;         //fuente
@@ -298,6 +313,10 @@ public class OhNoGame implements Application {
     private Timer _myTimer;         //Timer utilizado para controlar las animaciones de las casillas que no se pueden modificar
     private Pair<Casilla, Timer> _animacion; //Pareja  que permite relacionar la casilla que tenemos que animar con el tiempo restante de la animacion
 
+    //Variables de control para el fade del texto superior
+    private float _textFadingVelocity;
+    private float _boardSizeTextAlpha;
+
     private int _boardSize;         //tamanio del tablero de juego
 
     private boolean _isLocked;      //si el usuario ha clicado en una casilla no modificable
@@ -305,7 +324,5 @@ public class OhNoGame implements Application {
     private boolean _isAnyHelp;     //si el usuario ha pedido una pista
     private String _helpString;     //cadena de texto donde se guarda la pista
     private Vector2D _posHelp;      //Guarda la posicion de la casilla donde se da la pista
-
-
 
 }

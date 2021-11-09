@@ -39,7 +39,7 @@ public class AbstractGraphics implements Graphics{
     public void setFont(Font font) {    }
 
     @Override
-    public void fillCircle(int cx, int cy, int radius) {    }
+    public void fillCircle(int cx, int cy, int radius, float alpha) {    }
 
     @Override
     public void fillRect(int x, int y, int w, int h, int color){}
@@ -50,7 +50,7 @@ public class AbstractGraphics implements Graphics{
     }
 
     @Override
-    public void drawText(String text, int x, int y) {    }
+    public void drawText(String text, int x, int y, float alpha) {    }
 
     @Override
     public int getWidth() {

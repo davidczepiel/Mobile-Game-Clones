@@ -135,9 +135,11 @@ public class AGraphics extends AbstractGraphics {
     * @param cy Posicion en y del centro del circulo
     * @param radius Radio del circulo a rellenar*/
     @Override
-    public void fillCircle(int cx, int cy, int radius) {
+    public void fillCircle(int cx, int cy, int radius, float alpha) {
         this._paint.setStyle(Paint.Style.FILL);
+        this._paint.setAlpha((int)(alpha * 255));
         this._canvas.drawCircle(cx,cy,radius,this._paint);
+        this._paint.setAlpha(255);
     }
 
     /*Metodo que permite rellenat un circulo en la pantalla
@@ -157,9 +159,11 @@ public class AGraphics extends AbstractGraphics {
     * @param x Posicion en x en la que queremos que se muestre el texto
     * @param y Posicion en y en la que queremos que se muestre el texto*/
     @Override
-    public void drawText(String text, int x, int y) {
+    public void drawText(String text, int x, int y, float alpha) {
+        this._paint.setAlpha((int)(alpha * 255));
         int sizeX = this.getTextWidth(text);
         this._canvas.drawText(text,x-sizeX/2,y,this._paint);
+        this._paint.setAlpha(255);
     }
 
     /*Metodo que permite establecer el color con el que deseamos pintar en pantalla

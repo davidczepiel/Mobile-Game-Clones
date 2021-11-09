@@ -31,7 +31,7 @@ public class Pista2 implements Pista{
 
 	@Override
 	public String GenerarAyuda() {
-		return "Si pusieramos un punto azul| en una celda vacia superariamos el"
+		return "Si pusieramos un punto azul- en una celda vacia superariamos el"
 				+ " numero de- visibles del numero y por- tanto debe ser una pared";
 	}
 

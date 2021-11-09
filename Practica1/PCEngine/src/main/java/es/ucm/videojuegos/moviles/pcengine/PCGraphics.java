@@ -141,9 +141,13 @@ public class PCGraphics extends AbstractGraphics {
      * @param cy Posicion en y del centro del circulo
      * @param radius Radio del circulo a rellenar*/
     @Override
-    public void fillCircle(int cx, int cy, int radius) {
-        Graphics2D g = (Graphics2D)this._graphics;
+    public void fillCircle(int cx, int cy, int radius, float alpha) {
+        Graphics2D g2d = (Graphics2D)this._graphics;
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        g2d.setComposite(ac);
         this._graphics.fillOval(cx - radius, cy - radius, radius * 2, radius * 2);
+        ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+        g2d.setComposite(ac);
     }
 
     /*Dibuja una circunferencia relleno desde el centro del mismo. El diametro de la circunferencia
@@ -166,14 +170,20 @@ public class PCGraphics extends AbstractGraphics {
     * @param x Posicion en x en la que queremos que se muestre el texto
     * @param y Posicion en y en la que queremos que se muestre el texto*/
     @Override
-    public void drawText(String text, int x, int y) {
+    public void drawText(String text, int x, int y, float alpha) {
+        //Alpha
+        Graphics2D g2d = (Graphics2D)this._graphics;
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        g2d.setComposite(ac);
         //Recogemos que metricas utiliza y calculamos el tamanio asignado en pixeles para el texto
         FontMetrics metrics = this._graphics.getFontMetrics(this._graphics.getFont());
         int sizeX = metrics.stringWidth(text);
         //Se realiza la resta a la hora de dibujar para que el pivote quede situado en el centro del texto
         //en la x
         this._graphics.drawString(text, x - sizeX/2,  y);
-
+        //Reestablecemos alpha
+        ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
+        g2d.setComposite(ac);
     }
 
     /*Metodo que permite obtener el ancho de la pantalla

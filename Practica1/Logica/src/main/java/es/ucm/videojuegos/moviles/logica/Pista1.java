@@ -31,7 +31,7 @@ public class Pista1 implements Pista {
 
 	@Override
 	public String GenerarAyuda() {
-		return "Si un numero tiene ya visibles- el numero de celdas que dice-| entonces se puede cerrar";
+		return "Si un numero tiene ya visibles- el numero de celdas que dice- entonces se puede cerrar";
 	}
 	
 

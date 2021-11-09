@@ -7,9 +7,7 @@ import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
-import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
-import jdk.tools.jaotc.Main;
 
 /*Clase que implementa el juego*/
 public class MainMenu implements Application {
@@ -64,22 +62,22 @@ public class MainMenu implements Application {
         this._titleFont.setSize(70);
         g.setFont(this._titleFont);
         text = "Oh No";
-        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5);
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5, 1);
 
         //Dibujo el texto de JUGAR
         this._font.setSize(50);
         g.setFont(this._font);
         text = "Jugar";
-        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() *4 / 9);
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() *4 / 9, 1);
 
         //Dibujo el texto de quien es el juego
         this._font.setSize(20);
         g.setColor(0xff808080);
         g.setFont(this._font);
         text =  "Un juego copiado a Q42";
-        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() *3/ 5);
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() *3/ 5, 1);
         text = "Creado por Martin Kool";
-        g.drawText(text, g.getWidthNativeCanvas()/2 ,20+g.getHeightNativeCanvas() *3/ 5);
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,20+g.getHeightNativeCanvas() *3/ 5, 1);
 
     }
 

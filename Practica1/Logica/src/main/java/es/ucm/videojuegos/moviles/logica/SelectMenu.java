@@ -77,10 +77,10 @@ public class SelectMenu implements Application {
         g.setColor(0xff000000);
         this._fontTitle.setSize(60);
         g.setFont(this._fontTitle);
-        g.drawText("Oh No", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas()/5);
+        g.drawText("Oh No", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas()/5, 1);
         this._fontInformation.setSize(20);
         g.setFont(this._fontInformation);
-        g.drawText("Elije el tamaño a jugar", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas() * 2/7);
+        g.drawText("Elije el tamaño a jugar", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas() * 2/7, 1);
     }
     private void drawCircles(Graphics g){
         //radio de cada circulo
@@ -103,10 +103,10 @@ public class SelectMenu implements Application {
             int j = (i/3 >= 1) ? 1: 0;
             int y = diametro * j + diametro/2;
 
-            g.fillCircle(x,y,radius);
+            g.fillCircle(x,y,radius, 1);
             g.setColor(0xffffffff);
             this._fontInformation.setSize(30);
-            g.drawText("" + _number[i],x,y +(int)radius/4);
+            g.drawText("" + _number[i],x,y +(int)radius/4, 1);
         }
     }
 

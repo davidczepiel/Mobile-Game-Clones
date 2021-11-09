@@ -1,5 +1,6 @@
 package es.ucm.videojuegos.moviles.logica;
 
+import java.util.List;
 import java.util.Random;
 
 import es.ucm.videojuegos.moviles.engine.Pair;
