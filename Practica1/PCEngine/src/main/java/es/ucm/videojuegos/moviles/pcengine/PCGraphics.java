@@ -15,9 +15,6 @@ import es.ucm.videojuegos.moviles.engine.Image;
 /*Clase que implementa metodos de Graphics haciendo uso de JFrame y Graphics*/
 public class PCGraphics extends AbstractGraphics {
 
-    //Esta constante se utiliza para solventar el problema de que (0,0) en la ventana del JFrame no coincide
-    //con el borde de la pantalla dibujado en el eje de las X's
-    private static final int OFFSET_JFRAME_X = 7;
     /**
      * Constructor.
      *
@@ -55,8 +52,6 @@ public class PCGraphics extends AbstractGraphics {
         this._originalWidth = this._canvasSizeX = this._window.getWidth();
         this._originalHeight = this._canvasSizeY =this._window.getHeight();
         this._scale = 1;
-        //Indicamos a AbstarctGraphics que tenga en cuenta los 7 pixeles que no tenemos en PC a la izquierda de la pantalla
-        this._offsetX = OFFSET_JFRAME_X;
     }
 
     /*Crea una imagen dada la ruta de la misma
@@ -203,7 +198,6 @@ public class PCGraphics extends AbstractGraphics {
     public void prepareFrame(){
         this._graphics = this._bufferStrategy.getDrawGraphics();
         clear(0xffffffff);
-        translate(OFFSET_JFRAME_X, 0);
         super.prepareFrame();
     }
 

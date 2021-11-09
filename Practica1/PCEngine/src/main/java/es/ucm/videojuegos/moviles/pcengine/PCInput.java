@@ -15,10 +15,6 @@ import es.ucm.videojuegos.moviles.engine.Graphics;
 * de coordenadas a nativas.*/
 public class PCInput extends AbstractInput implements MouseListener, MouseMotionListener {
 
-    //Esta constante se utiliza para solventar el problema de que (0,0) en la ventana del JFrame no coincide
-    //con el borde de la pantalla dibujado en el eje de las X's
-    private static final int OFFSET_JFRAME_X = 7;
-
     public PCInput(Graphics g){
         super(g);
     }
@@ -45,7 +41,7 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
 
         Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
         //Incorporamos el evento a la lista
-        event.set_x(pair.getLeft() - OFFSET_JFRAME_X);
+        event.set_x(pair.getLeft());
         event.set_y(pair.getRight());
         addEvent(event);
     }
@@ -61,7 +57,7 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
 
         Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
         //Incorporamos el evento a la lista
-        event.set_x(pair.getLeft() - OFFSET_JFRAME_X);
+        event.set_x(pair.getLeft());
         event.set_y(pair.getRight());
         addEvent(event);
     }
@@ -93,7 +89,7 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
 
         Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
         //Incorporamos el evento a la lista
-        event.set_x(pair.getLeft() - OFFSET_JFRAME_X);
+        event.set_x(pair.getLeft());
         event.set_y(pair.getRight());
         addEvent(event);
     }

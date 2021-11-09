@@ -9,11 +9,14 @@ import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
 import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
+import jdk.tools.jaotc.Main;
 
 /*Clase que implementa el juego*/
 public class MainMenu implements Application {
 
-
+    public MainMenu(ApplicationManager app){
+        this._app = app;
+    }
     /*Crea los recursos que va a necesitar a lo largo de la aplicacion
     * @param g Motor que va a sostener el juego*/
     @Override
@@ -22,7 +25,6 @@ public class MainMenu implements Application {
         this._font = g.getGraphics().newFont("assets/fonts/JosefinSans-Bold.ttf", 70, true);
         this._titleFont = g.getGraphics().newFont("assets/fonts/Molle-Regular.ttf", 70, false);
         this._gotaImage = g.getGraphics().newImage("assets/sprites/q42.png");
-
     }
 
      /*Recoge los eventos y los procesa
@@ -123,7 +125,7 @@ public class MainMenu implements Application {
 
         if(x > posX - (size/2) && x < posX + (size/2)  &&
                 y > posY  && y < posY + despVert){
-            System.out.println("Jugar");
+            _engine.setAplication(this._app.getAplication(ApplicationManager.Scene.SelectMenu,0));
         }
 
     }
@@ -131,6 +133,7 @@ public class MainMenu implements Application {
     private Engine _engine;     //engine
     private Image _gotaImage;   //imagenes de iconos
     private Font _font;         //fuente
-    private Font _titleFont;         //fuente
+    private Font _titleFont;    //fuente
+    private ApplicationManager _app;
 
 }

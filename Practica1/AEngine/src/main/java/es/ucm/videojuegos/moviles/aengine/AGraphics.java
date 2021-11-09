@@ -59,7 +59,7 @@ public class AGraphics extends AbstractGraphics {
      * @return nueva fuente de android*/
     @Override
     public Font newFont(String filename, int size, boolean isBold) {
-        return new AFont(filename,this._context,this._paint,isBold);
+        return new AFont(filename,this._context,this._paint,isBold, size);
     }
 
     /*Rellena el fondo de pantalla con el color establecido

@@ -12,12 +12,16 @@ import es.ucm.videojuegos.moviles.logica.Timer;
 
 /*Clase que implementa el juego*/
 public class OhNoGame implements Application {
+
+    public OhNoGame(int boardSize, ApplicationManager applicationManager){
+        //Atributos de la clase
+        this._boardSize = boardSize;
+        this._appManager = applicationManager;
+    }
     /*Crea los recursos que va a necesitar a lo largo de la aplicacion
     * @param g Motor que va a sostener el juego*/
     @Override
     public void onInit(Engine g) {
-        //Atributos de la clase
-        this._boardSize = 5;
         this._engine = g;
         this._isLocked = false;
         this._isAnyHelp = false;
@@ -94,8 +98,6 @@ public class OhNoGame implements Application {
         //radio de cada circulo
         int diametro = (int)Math.floor((g.getWidthNativeCanvas() - 7) / this._boardSize);
         int radius = (int)Math.floor((diametro * 0.5f) * 0.75f);
-        //Dalculamos el offset entre cada circulo
-        int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
 
         //Volvemos al estado de inicio y guardamos el valor (para la pila)
         g.restore();
@@ -267,8 +269,7 @@ public class OhNoGame implements Application {
         int posX = (int)(g.getWidthNativeCanvas() * 0.33) - size;
         if(x > posX && x < posX + this._closeImage.getWidth() &&
                 y > posY && y < posY + this._closeImage.getHeight()){
-            System.out.println("Close image");
-            //TODO:Cerrar la partida
+            _engine.setAplication(_appManager.getAplication(ApplicationManager.Scene.MainMenu,0));
         }
         posX = g.getWidthNativeCanvas()/2 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._rewindImage.getWidth() &&
@@ -285,7 +286,6 @@ public class OhNoGame implements Application {
             this._posHelp = (Vector2D)aux.getRight();
             this._isAnyHelp = !this._isAnyHelp;
         }
-
     }
 
     private Tablero _tablero;   //tablero del juego
@@ -293,6 +293,10 @@ public class OhNoGame implements Application {
     private Image _closeImage, _rewindImage, _helpImage, _blockImage;   //imagenes de iconos
     private Font _font;         //fuente
     private RestoreManager _restoreManager;     //guarda la cola de casillas pre-modificadas
+    private ApplicationManager _appManager;     //gestiona los estados del juego
+
+    private Timer _myTimer;         //Timer utilizado para controlar las animaciones de las casillas que no se pueden modificar
+    private Pair<Casilla, Timer> _animacion; //Pareja  que permite relacionar la casilla que tenemos que animar con el tiempo restante de la animacion
 
     private int _boardSize;         //tamanio del tablero de juego
 
@@ -303,6 +307,5 @@ public class OhNoGame implements Application {
     private Vector2D _posHelp;      //Guarda la posicion de la casilla donde se da la pista
 
 
-    private Timer _myTimer;         //Timer utilizado para controlar las animaciones de las casillas que no se pueden modificar
-    private Pair<Casilla, Timer> _animacion; //Pareja  que permite relacionar la casilla que tenemos que animar con el tiempo restante de la animacion
+
 }

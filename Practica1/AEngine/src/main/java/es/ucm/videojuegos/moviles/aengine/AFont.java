@@ -17,11 +17,12 @@ public class AFont implements Font {
      * @context contecto que va a permitir acceder al fichero de la fuente
      * @param p paint al que se le va a comunicar cambios en el tamaño y en el uso de la negrita para esta fuente
      * @param isBold boolean que si la fuente se va a dibujar en negrita*/
-    public AFont(String name, Context context, Paint p, boolean isBold){
+    public AFont(String name, Context context, Paint p, boolean isBold, int size){
         this._font = Typeface.createFromAsset(context.getAssets(), name);
         this._paint = p;
         if(isBold)
             this._paint.setFakeBoldText(true);
+        this.setSize(size);
     }
 
     /*Metodo que permite establecer el tamaño con el que queremos que se use la fuente
