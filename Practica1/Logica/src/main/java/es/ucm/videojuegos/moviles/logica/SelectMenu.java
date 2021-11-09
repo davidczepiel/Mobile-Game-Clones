@@ -75,6 +75,7 @@ public class SelectMenu implements Application {
         g.restore();
         g.save();
         g.setColor(0xff000000);
+        this._fontTitle.setSize(60);
         g.setFont(this._fontTitle);
         g.drawText("Oh No", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas()/5);
         this._fontInformation.setSize(20);

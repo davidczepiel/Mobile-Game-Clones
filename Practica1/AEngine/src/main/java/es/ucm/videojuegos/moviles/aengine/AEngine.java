@@ -36,6 +36,7 @@ public class AEngine implements Engine , Runnable {
     @Override
     public void setAplication(Application a) {
         this._application = a;
+        a.onInit(this);
     }
 
     /**

@@ -146,7 +146,7 @@ public class Tablero {
                 _juegoTablero[i][j] = new Casilla(Tipo.VACIO,0,true, new Vector2D(i,j),this);	
                 int caso = rand.nextInt(100);
                 //Azul
-                if(caso < 75) {
+                if(caso < 60) {
                 	_solucionTablero[i][j] = new Casilla(Tipo.AZUL,0,false, new Vector2D(i,j),this);		
             		azules++;
                 }
@@ -198,7 +198,7 @@ public class Tablero {
     private boolean escogerCasillas(int limAzules, int limRojos){
     	
         int azules =  _dimensiones*_dimensiones/4;
-        int rojos =  _dimensiones*_dimensiones/4;
+        int rojos =  _dimensiones*_dimensiones/5;
         
         if(azules > limAzules || rojos > limRojos) return false;
         
