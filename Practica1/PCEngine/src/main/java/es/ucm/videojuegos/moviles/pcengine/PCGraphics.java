@@ -86,6 +86,12 @@ public class PCGraphics extends AbstractGraphics {
         this._graphics.fillRect(0, 0, this._window.getWidth(), this._window.getHeight());
     }
 
+    public void fillRect(int x, int y, int w, int h, int color){
+        // Borramos el fondo.
+        this._graphics.setColor(new java.awt.Color(color));
+        this._graphics.fillRect(x, y, w, h);
+    }
+
     /*Dibuja una imagen en el x y sin escalado. El pivote de la imagen se
     * encuentra en la parte superior izquierda
     * @param x Posicion en x del pivote de la imagen

@@ -37,9 +37,12 @@ public class AInput extends AbstractInput implements View.OnTouchListener {
 
                 ev.set_type(TouchEvent.TouchEventType.pulsar);
                 Pair<Integer, Integer> pair = transformateCoord((int) xLogic, (int) yLogic);
+                if(pair == null) return true;
+
                 //Incorporamos el evento a la lista
                 ev.set_x(pair.getLeft());
                 ev.set_y(pair.getRight());
+                ev.set_id(event.getDeviceId());
                 addEvent(ev);
             }
                 break;
@@ -49,9 +52,12 @@ public class AInput extends AbstractInput implements View.OnTouchListener {
 
                 ev.set_type(TouchEvent.TouchEventType.liberar);
                 Pair<Integer, Integer> pair = transformateCoord((int) xLogic, (int) yLogic);
+                if(pair == null) return true;
+
                 //Incorporamos el evento a la lista
                 ev.set_x(pair.getLeft());
                 ev.set_y(pair.getRight());
+                ev.set_id(event.getDeviceId());
                 addEvent(ev);
             }
             break;
@@ -61,9 +67,12 @@ public class AInput extends AbstractInput implements View.OnTouchListener {
 
                 ev.set_type(TouchEvent.TouchEventType.desplazar);
                 Pair<Integer, Integer> pair = transformateCoord((int) xLogic, (int) yLogic);
+                if(pair == null) return true;
+
                 //Incorporamos el evento a la lista
                 ev.set_x(pair.getLeft());
                 ev.set_y(pair.getRight());
+                ev.set_id(event.getDeviceId());
                 addEvent(ev);
             }
                 break;

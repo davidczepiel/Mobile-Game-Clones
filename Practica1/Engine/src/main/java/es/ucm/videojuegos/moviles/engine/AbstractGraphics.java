@@ -42,6 +42,9 @@ public class AbstractGraphics implements Graphics{
     public void fillCircle(int cx, int cy, int radius) {    }
 
     @Override
+    public void fillRect(int x, int y, int w, int h, int color){}
+
+    @Override
     public void drawCircle(int cx, int cy, int radius, int widthStroke) {
 
     }
