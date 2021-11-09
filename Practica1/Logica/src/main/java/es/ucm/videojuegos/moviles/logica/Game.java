@@ -269,7 +269,7 @@ public class Game implements Scene{
         //Recorremos cada casilla del tablero
         for(int i = 0; i< this._boardSize; i++){
             for(int j = 0; j< this._boardSize; j++){
-                Square square = this._board.getTablero()[i][j];
+                Square square = this._board.getBoard()[i][j];
                 int cx = offsetX + diametro * j + radius + offseBetween/2;
                 int cy = offsetY + diametro * i + radius + offseBetween/2;
                 //calculamos catetos
