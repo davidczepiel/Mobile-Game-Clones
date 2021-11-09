@@ -254,7 +254,7 @@ public class Board {
         this._totalVoid = this._currentVoid;
     }
 
-    /*Pinta el tablero*/
+    /*Pinta el tablero (Solo para debug)*/
     public void debugBoardState() {
     	for(int i = 0; i < this._dimensions; i++) {
 			for(int j = 0; j < this._dimensions; j++) {

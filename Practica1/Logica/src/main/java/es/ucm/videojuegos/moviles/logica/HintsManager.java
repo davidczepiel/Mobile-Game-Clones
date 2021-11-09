@@ -11,45 +11,45 @@ import es.ucm.videojuegos.moviles.engine.Pair;
 public class HintsManager {
 
 	public HintsManager() {
-		this._pistasAplicables = new ArrayList<Hint>();
-		this._pistasInformativas = new ArrayList<Hint>();
+		this._applicableHints = new ArrayList<Hint>();
+		this._informativeHints = new ArrayList<Hint>();
 		
 		Hint hint = new Hint1();
-		this._pistasAplicables.add(hint);
-		this._pistasInformativas.add(hint);
+		this._applicableHints.add(hint);
+		this._informativeHints.add(hint);
 		
 		hint = new Hint2();
-		this._pistasAplicables.add(hint);
-		this._pistasInformativas.add(hint);
+		this._applicableHints.add(hint);
+		this._informativeHints.add(hint);
 		
 		hint = new Hint8();
-		this._pistasAplicables.add(hint);
-		this._pistasInformativas.add(hint);
+		this._applicableHints.add(hint);
+		this._informativeHints.add(hint);
 		
 		hint = new Hint9();
-		this._pistasAplicables.add(hint);
-		this._pistasInformativas.add(hint);
+		this._applicableHints.add(hint);
+		this._informativeHints.add(hint);
 		
 		hint = new Hint3();
-		this._pistasAplicables.add(hint);
-		this._pistasInformativas.add(hint);
+		this._applicableHints.add(hint);
+		this._informativeHints.add(hint);
 		
 		hint = new Hint6();
-		this._pistasInformativas.add(hint);
-		this._pistasAplicables.add(hint);
+		this._informativeHints.add(hint);
+		this._applicableHints.add(hint);
 		
 		hint = new Hint7();
-		this._pistasInformativas.add(hint);
-		this._pistasAplicables.add(hint);
+		this._informativeHints.add(hint);
+		this._applicableHints.add(hint);
 		//-----------------------------------
 		hint = new Hint4();
-		this._pistasInformativas.add(hint);
+		this._informativeHints.add(hint);
 		
 		hint = new Hint5();
-		this._pistasInformativas.add(hint);
+		this._informativeHints.add(hint);
 		
 		hint = new Hint10();
-		this._pistasInformativas.add(hint);
+		this._informativeHints.add(hint);
 	}
 
 	/* Comprueba si el board dado es válido y jugable dadas las pistas existentes
@@ -59,19 +59,15 @@ public class HintsManager {
 		Square[][] tableroJuego = board.getBoard();
 		int size = board.getDimensions();
 		while(board.getCurrentNumberOfVoid() > 0) {
-			boolean checkPista = false;	//si se ha realizado una pista en ela iteraccion actual
+			boolean checkHint = false;	//si se ha realizado una pista en ela iteraccion actual
 			for(int i = 0; i < size ; i++) {
 				for(int j = 0; j < size ; j++) {
-					checkPista = pruebaPista(tableroJuego[i][j], board);
-					if(checkPista) {
-						if(DEBUG)
-							board.debugBoardState();
-						break;
-					}
+					checkHint = tryHint(tableroJuego[i][j], board);
+					if(checkHint) break;
 				}
-				if(checkPista) break;
+				if(checkHint) break;
 			}
-			if(!checkPista) return false;	//si no se ha realizado una pista el board no es jugable
+			if(!checkHint) return false;	//si no se ha realizado una pista el board no es jugable
 			
 		}
 		return true;
@@ -81,15 +77,15 @@ public class HintsManager {
 	* @param board Board que vamos a analizar para conseguir una pista
 	* @return pareja que incluye tanto la pista a data como la casilla sobre la que se aplica*/
 	public Pair<String,Vector2D> getHint(Board board) {
-		Square[][] tableroJuego = board.getBoard();
+		Square[][] boardGame = board.getBoard();
 		int size = board.getDimensions();
 		for(int i = 0; i < size ; i++) {
 			for(int j = 0; j < size ; j++) {
-				for(Hint hint : this._pistasInformativas) {
-					if(hint.isApplicable(tableroJuego[i][j], board)){
-						String texto = hint.generateHelp();
-						if(texto!= null)
-							return new Pair(texto,tableroJuego[i][j].getPos());
+				for(Hint hint : this._informativeHints) {
+					if(hint.isApplicable(boardGame[i][j], board)){
+						String text = hint.generateHelp();
+						if(text!= null)
+							return new Pair(text,boardGame[i][j].getPos());
 					}
 				}
 			}
@@ -101,8 +97,8 @@ public class HintsManager {
 	* @param casilla Casilla sobre la que se van a probar las pistas
 	* @param board Board del juego
 	* @return boolean que representa si se ha podido aplicar alguna pista o no*/
-	private boolean pruebaPista(Square square, Board board) {
-		for(Hint hint : this._pistasAplicables) {
+	private boolean tryHint(Square square, Board board) {
+		for(Hint hint : this._applicableHints) {
 			if(hint.isApplicable(square, board)) {
 				hint.applyHint(square, board);
 				return true;
@@ -111,7 +107,6 @@ public class HintsManager {
 		return false;
 	}
 	
-	private ArrayList<Hint> _pistasInformativas;	//Lista con las pistas informativas para el jugador
-	private ArrayList<Hint> _pistasAplicables;		//Lista con las pistas utiles para la generacin del tablero
-	private boolean DEBUG = false;
+	private ArrayList<Hint> _informativeHints;	//Lista con las pistas informativas para el jugador
+	private ArrayList<Hint> _applicableHints;		//Lista con las pistas utiles para la generacin del tablero
 }
