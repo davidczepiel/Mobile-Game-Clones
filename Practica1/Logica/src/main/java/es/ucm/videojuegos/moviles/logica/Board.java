@@ -64,8 +64,12 @@ public class Board {
     public void modifyVoid(int mod) { _currentVoid +=mod;}
 
     /*Obtiene el n�mero actual de casillas vac�as en el tablero
-    * @return Numero de casillas del tablero*/
+    * @return Numero de casillas vacias actuales del tablero*/
     public int getCurrentNumberOfVoid() { return _currentVoid;}
+
+    /*Obtiene el numero total de vacios desde la creacion del tablero
+    * @return Numero de casillas totales y modificables del tablero */
+    public int getTotalNumberOfVoid() { return  _totalVoid;}
 
     /*Obtiene la dimensi�n del tablero
     * @return dimensiones del tablero*/
@@ -234,8 +238,7 @@ public class Board {
                 red--;
             }
         }
- 
-        
+
         return true;
     }
 
@@ -247,7 +250,8 @@ public class Board {
 				if(this._gameBoard[i][j].is_modificable())
 					this._gameBoard[i][j].setTipo(SquareType.VOID);
 			}
-		}    	
+		}
+        this._totalVoid = this._currentVoid;
     }
 
     /*Pinta el tablero*/
@@ -293,6 +297,8 @@ public class Board {
     private int _dimensions;
     //Numero de casillas que se encuentran vacias
     private int _currentVoid;
+    //Numero de casillas que se encuentran vacias
+    private int _totalVoid;
     //Array que representa las distintas casillas del tablero
     private Square[][] _gameBoard;
     private Square[][] _solutionBoard;

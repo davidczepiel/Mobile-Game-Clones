@@ -210,6 +210,18 @@ public class Game implements Scene{
     /* Dibuja los iconos de interfaz situados debajo del tablero
      * @param g Manager de lo relacionado con graficos*/
     private void drawUI(Graphics g){
+        //Dibuja porcentaje del mapa
+        g.restore();
+        g.save();
+        g.translate(g.getWidthNativeCanvas()/2,(int)(g.getHeightNativeCanvas() * 0.85));
+        this._informationFont.setSize(30);
+        g.setColor(0xffdddddd);
+        g.setFont(this._informationFont);
+        float total = this._board.getTotalNumberOfVoid();
+        float current = this._board.getCurrentNumberOfVoid();
+        int porcentaje = (int)(100 * ((total - current)/total));
+        g.drawText("" + porcentaje + "%",0,0, this._sceneAlpha);
+
         //Dibuja iconos Hint/Deshacer/Rendirse
         g.restore();
         g.save();
@@ -244,12 +256,13 @@ public class Game implements Scene{
      * @param x Posicion en el eje X donde se ha producido el input
      * @param y Posicion en el eje Y donde se ha producido el input*/
     private void checkCircles(int x, int y){
-        //distancia con el texto de arriba
-        int offsetText = _engine.getGraphics().getHeightNativeCanvas() / 4;
-        //Diametro logico de los circulos
-        int diametro = (int)Math.floor((_engine.getGraphics().getWidthNativeCanvas()) / this._boardSize);
         //radio de cada circulo
-        int radius = (int)Math.ceil((diametro * 0.5f) * 0.75f);
+        int diametro = (int)Math.floor((this._engine.getGraphics().getWidthNativeCanvas()*0.8f)  / this._boardSize);
+        int radius = (int)Math.floor((diametro * 0.5f) * 0.75f);
+
+        //distancia con el texto de arriba
+        int offsetX = (int)(_engine.getGraphics().getWidthNativeCanvas() * 0.1f);
+        int offsetY = _engine.getGraphics().getHeightNativeCanvas() / 4;
         //calculamos el offset entre cada circulo
         int offseBetween = (int)Math.floor((diametro * 0.5f) * 0.25f);
 
@@ -257,8 +270,8 @@ public class Game implements Scene{
         for(int i = 0; i< this._boardSize; i++){
             for(int j = 0; j< this._boardSize; j++){
                 Square square = this._board.getTablero()[i][j];
-                int cx = diametro * j + radius + offseBetween/2;
-                int cy = offsetText + diametro * i + radius + offseBetween/2;
+                int cx = offsetX + diametro * j + radius + offseBetween/2;
+                int cy = offsetY + diametro * i + radius + offseBetween/2;
                 //calculamos catetos
                 int deltaX = Math.abs(cx-x);
                 int deltaY = Math.abs(cy-y);
