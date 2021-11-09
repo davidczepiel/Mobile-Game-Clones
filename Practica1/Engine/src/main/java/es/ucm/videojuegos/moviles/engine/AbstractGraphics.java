@@ -42,12 +42,12 @@ public class AbstractGraphics implements Graphics{
     public void fillCircle(int cx, int cy, int radius, float alpha) {    }
 
     @Override
-    public void fillRect(int x, int y, int w, int h, int color){}
-
-    @Override
-    public void drawCircle(int cx, int cy, int radius, int widthStroke) {
+    public void drawCircle(int cx, int cy, int radius, int widthStroke, float alpha) {
 
     }
+
+    @Override
+    public void fillRect(int x, int y, int w, int h, int color){}
 
     @Override
     public void drawText(String text, int x, int y, float alpha) {    }

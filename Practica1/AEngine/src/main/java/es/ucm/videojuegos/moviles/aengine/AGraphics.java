@@ -148,10 +148,12 @@ public class AGraphics extends AbstractGraphics {
      * @param radius Radio del circulo que queremos dibujar
      * @param widthStroke ancho que queremos que tenga el borde del circulo*/
     @Override
-    public void drawCircle(int cx, int cy, int radius, int widthStroke) {
+    public void drawCircle(int cx, int cy, int radius, int widthStroke, float alpha) {
         this._paint.setStyle(Paint.Style.STROKE);
+        this._paint.setAlpha((int)(alpha * 255));
         this._paint.setStrokeWidth(widthStroke);
         this._canvas.drawCircle(cx,cy,radius,this._paint);
+        this._paint.setAlpha(255);
     }
 
     /*Metodo que permite dibujar un texto en pantalla, este dibujado tiene como origen la esquina superior izquierda del texto

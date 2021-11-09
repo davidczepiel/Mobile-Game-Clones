@@ -1,30 +1,30 @@
 package es.ucm.videojuegos.moviles.logica;
-import es.ucm.videojuegos.moviles.logica.Casilla.Tipo;
+import es.ucm.videojuegos.moviles.logica.Square.SquareType;
 
-public class Pista1 implements Pista {
+public class Hint1 implements Hint {
 	
 	@Override
-	public boolean EsAplicable(Casilla casilla, Tablero tablero) {
-		if(casilla.getNumero() == 0 ) return false;
+	public boolean EsAplicable(Square square, Board board) {
+		if(square.getNumber() == 0 ) return false;
 
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
 		//Buscamos si existe alg�n vac�o donde poner rojos
 		boolean posible = false;
 		for(int i = 0; i < 4 ; ++i) {
-			Casilla sospechoso = tablero.buscarPrimerVacio(dir[i], casilla.getPos());
+			Square sospechoso = board.searchFirstVoid(dir[i], square.getPos());
 			posible = (sospechoso != null) || posible;	//Si es null implica que no existe vac�o para esa direcci�n
 		}
 		return  posible &&		//Si sus casillas vecinas no son vac�as
-			   tablero.mirarAlrededor(casilla.getPos(), 1) == casilla.getNumero();
+			   board.lookAround(square.getPos(), 1) == square.getNumber();
 	}
 	
 	@Override
-	public void AplicarPista(Casilla casilla, Tablero tablero) {
+	public void AplicarPista(Square square, Board board) {
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
 		for(int i = 0; i < 4 ; ++i) {
-			Casilla sospechoso = tablero.buscarPrimerVacio(dir[i], casilla.getPos());
-			if(sospechoso != null && sospechoso.getTipoActual() == Tipo.VACIO) {
-				sospechoso.setTipo(Tipo.ROJO);
+			Square sospechoso = board.searchFirstVoid(dir[i], square.getPos());
+			if(sospechoso != null && sospechoso.getCurrentType() == SquareType.VOID) {
+				sospechoso.setTipo(SquareType.RED);
 			}
 		}
 	}

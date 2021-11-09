@@ -11,6 +11,8 @@ import es.ucm.videojuegos.moviles.engine.TouchEvent;
 /*Clase que implementa el juego*/
 public class MainMenu implements Scene {
 
+    private final float FADE_VELOCITY= 2.5f;
+
     public MainMenu(SceneManager app){
         this._sceneManager = app;
     }
@@ -18,7 +20,9 @@ public class MainMenu implements Scene {
     * @param g Motor que va a sostener el juego*/
     @Override
     public void onInit(Engine g) {
-        _engine = g;
+        this._sceneAlpha = 0;
+        this.fade = 1;
+        this._engine = g;
         this._font = this._sceneManager.getFont(SceneManager.Fonts.JosefinSans);
         this._titleFont = this._sceneManager.getFont(SceneManager.Fonts.MollerRegular);
         this._gotaImage = this._sceneManager.getImage(SceneManager.Images.q42);
@@ -28,6 +32,10 @@ public class MainMenu implements Scene {
      * @param deltaTime Tiempo transcurrido desde la ultima iteracion*/
     @Override
     public void onUpdate(double deltaTime) {
+        this._sceneAlpha = Math.min(this._sceneAlpha + fade * FADE_VELOCITY *(float) deltaTime , 1);
+
+        if(this._sceneAlpha < 0)
+            this._sceneManager.swapScene(SceneManager.SceneName.SelectMenu,0);
 
         //Recogemos input
         List<TouchEvent> list = this._engine.getInput().getTouchEvents();
@@ -61,29 +69,29 @@ public class MainMenu implements Scene {
         this._titleFont.setSize(70);
         g.setFont(this._titleFont);
         text = "Oh No";
-        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5, 1);
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5, this._sceneAlpha);
 
         //Dibujo el texto de JUGAR
         this._font.setSize(50);
         g.setFont(this._font);
         text = "Jugar";
-        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() *4 / 9, 1);
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() *4 / 9, this._sceneAlpha);
 
         //Dibujo el texto de quien es el juego
         this._font.setSize(20);
         g.setColor(0xff808080);
         g.setFont(this._font);
         text =  "Un juego copiado a Q42";
-        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() *3/ 5, 1);
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() *3/ 5, this._sceneAlpha);
         text = "Creado por Martin Kool";
-        g.drawText(text, g.getWidthNativeCanvas()/2 ,20+g.getHeightNativeCanvas() *3/ 5, 1);
+        g.drawText(text, g.getWidthNativeCanvas()/2 ,20+g.getHeightNativeCanvas() *3/ 5, this._sceneAlpha);
 
     }
 
     /* Dibuja los iconos de interfaz situados debajo del tablero
      * @param g Manager de lo relacionado con graficos*/
     private void drawImage(Graphics g){
-        //Dibuja iconos Pista/Deshacer/Rendirse
+        //Dibuja iconos Hint/Deshacer/Rendirse
         g.restore();
         g.save();
         g.translate(0,(int)(g.getHeightNativeCanvas() * 0.80));
@@ -95,7 +103,10 @@ public class MainMenu implements Scene {
         int size = this._gotaImage.getWidth()/2;
         int sizeImageX = (int)(g.getWidthNativeCanvas()/5);
         int sizeImageY = sizeImageX*3/2;
-        g.drawImage(this._gotaImage,(int)(g.getWidthNativeCanvas() * 0.5 * inverseScale)-sizeImageX/2 , 0,sizeImageX,sizeImageY, 0.6f);
+        g.drawImage(this._gotaImage,
+                (int)(g.getWidthNativeCanvas() * 0.5 * inverseScale)-sizeImageX/2 ,
+                0,sizeImageX,sizeImageY,
+                this._sceneAlpha * 0.6f);
 
     }
 
@@ -115,7 +126,8 @@ public class MainMenu implements Scene {
 
         if(x > posX - (size/2) && x < posX + (size/2)  &&
                 y > posY  && y < posY + despVert){
-            this._sceneManager.swapScene(SceneManager.SceneName.SelectMenu,0);
+            this.fade = -1;
+            this._sceneAlpha = 1;
         }
 
     }
@@ -125,5 +137,8 @@ public class MainMenu implements Scene {
     private Font _font;         //fuente
     private Font _titleFont;    //fuente
     private SceneManager _sceneManager;
+
+    float _sceneAlpha;
+    int fade = 1;
 
 }

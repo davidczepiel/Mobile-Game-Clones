@@ -157,10 +157,17 @@ public class PCGraphics extends AbstractGraphics {
     * @param radius Radio del circulo que queremos dibujar
     * @param widthStroke ancho que queremos que tenga el borde del circulo*/
     @Override
-    public void drawCircle(int cx, int cy, int radius, int widthStroke) {
+    public void drawCircle(int cx, int cy, int radius, int widthStroke, float alpha) {
+        //Alpha
+        Graphics2D g2d = (Graphics2D)this._graphics;
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        g2d.setComposite(ac);
         Graphics2D g = (Graphics2D)this._graphics;
         g.setStroke(new BasicStroke(widthStroke));
         this._graphics.drawOval(cx - radius, cy - radius, radius * 2, radius * 2);
+        //Reestablecemos alpha
+        ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
+        g2d.setComposite(ac);
     }
 
     /*

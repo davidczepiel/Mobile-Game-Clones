@@ -11,6 +11,9 @@ import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
 public class Game implements Scene{
 
+    private final float TEXT_FADING_VELOCITY = 4f;
+    private final float FADE_VELOCITY= 2.5f;
+
     public Game(SceneManager sceneManager, int size){
         this._sceneManager = sceneManager;
         this._boardSize = size;
@@ -24,8 +27,8 @@ public class Game implements Scene{
         this._isAnyInformation = false;
 
         //Creamos el tablero
-        this._tablero = new Tablero(this._boardSize);
-        this._fadingManager = new FadingManager(this._tablero);
+        this._board = new Board(this._boardSize);
+        this._fadingManager = new FadingManager(this._board);
 
         //Creamos la cola de casillas pre-modificadas
         this._restoreManager = new RestoreManager();
@@ -38,31 +41,34 @@ public class Game implements Scene{
         this._blockImage = this._sceneManager.getImage(SceneManager.Images.lock);
 
         //Timer y animaciones
-        this._endTimer  = new Timer(1.2);
         this._animationTimer = new Timer(0.15);
-        this._animacion = new Pair<Casilla, Timer>(_tablero.getTablero()[0][0],this._animationTimer);
+        this._animacion = new Pair<Square, Timer>(_board.getTablero()[0][0],this._animationTimer);
 
         this._informationString = " ";
         //Comenzamos mostrando el texto del tamanio del tablero
-        this._textFadingVelocity = 2f;
         this._boardSizeTextAlpha = 1f;
+
+        this._sceneAlpha = 0;
+        this.fade = 1;
     }
 
     /*Recoge los eventos y los procesa
      * @param deltaTime Tiempo transcurrido desde la ultima iteracion*/
     @Override
     public void onUpdate(double deltaTime) {
+        this._sceneAlpha = Math.min(this._sceneAlpha + fade * FADE_VELOCITY *(float) deltaTime , 1);
+        if(this._sceneAlpha < 0)
+            this._sceneManager.swapScene(SceneManager.SceneName.MainMenu,0);
         //Actualizacion de los timers
         this._animacion.getRight().tick(deltaTime);
-        this._endTimer.tick(deltaTime);
         //Actualizacion de los fade-in/out
         this._fadingManager.updateFadings(deltaTime);
 
         //Cambiar el alpha de los textos superiores para mostrar pista o mostrar el tamanio del tablero
         if(this._isAnyInformation)
-            this._boardSizeTextAlpha = Math.min(Math.max(this._boardSizeTextAlpha - this._textFadingVelocity * (float)deltaTime, 0f), 1.0f);
+            this._boardSizeTextAlpha = Math.min(Math.max(this._boardSizeTextAlpha - TEXT_FADING_VELOCITY* (float)deltaTime, 0f), 1.0f);
         else
-            this._boardSizeTextAlpha = Math.min(this._boardSizeTextAlpha + this._textFadingVelocity * (float)deltaTime, 1.0f);
+            this._boardSizeTextAlpha = Math.min(this._boardSizeTextAlpha + TEXT_FADING_VELOCITY * (float)deltaTime, 1.0f);
 
         if(!this._endSucces ){  //Si no ha terminado el juego
             //Recogemos input
@@ -78,8 +84,6 @@ public class Game implements Scene{
             //Comprobamos si se ha terminado el juego
             checkEndedGame();
         }
-        else if(this._endTimer.is_finished())
-           this._sceneManager.swapScene(SceneManager.SceneName.MainMenu,0);
     }
 
     /*Dibuja el estado del juego*/
@@ -107,7 +111,7 @@ public class Game implements Scene{
          * +-----------------------------------------------------------------+*/
 
         //radio de cada circulo
-        int diametro = (int)Math.floor((g.getWidthNativeCanvas() - 7) / this._boardSize);
+        int diametro = (int)Math.floor((g.getWidthNativeCanvas()*0.8f)  / this._boardSize);
         int radius = (int)Math.floor((diametro * 0.5f) * 0.75f);
 
         //Volvemos al estado de inicio y guardamos el valor (para la pila)
@@ -115,17 +119,17 @@ public class Game implements Scene{
         g.save();
         //Situamos l x e y para pintar el tablero
         g.setColor(0xffffffff);
-        g.translate(0,g.getHeightNativeCanvas() / 4);
+        g.translate((int)(g.getWidthNativeCanvas() * 0.1f),g.getHeightNativeCanvas() / 4);
 
         //Recorremos cada casilla del tablero
         for(int i = 0; i< this._boardSize; i++){
             for(int j = 0; j< this._boardSize; j++){
-                Casilla casilla = this._tablero.getTablero()[i][j];
+                Square square = this._board.getTablero()[i][j];
                 //Asignamos el color actual dependiendo del tipo
-                switch (casilla.getTipoActual()){
-                    case AZUL:  g.setColor(0xff33c7ff);     break;
-                    case ROJO:  g.setColor(0xfffa4848);     break;
-                    case VACIO: g.setColor(0xffdfdfdf);     break;
+                switch (square.getCurrentType()){
+                    case BLUE:  g.setColor(0xff33c7ff);     break;
+                    case RED:  g.setColor(0xfffa4848);     break;
+                    case VOID: g.setColor(0xffdfdfdf);     break;
                 }
 
                 int x = diametro * j + diametro/2;
@@ -139,31 +143,31 @@ public class Game implements Scene{
                         (i == this._animacion.getLeft().getPos().getX() && j == this._animacion.getLeft().getPos().getY())){
                     //Calculamos el porcentaje de incremento que le corresponde agrandarse y se lo aplicamos a su radio original
                     double percentage = this._animacion.getRight().get_time() / this._animacion.getRight().get_timerTime();
-                    g.fillCircle(x, y, (int) radius + ((int)(Math.ceil((double)radius*0.1*percentage))), 1);
+                    g.fillCircle(x, y, (int) radius + ((int)(Math.ceil((double)radius*0.1*percentage))), this._sceneAlpha);
                 }
                 //En caso de que estemos dibujando un circulo sin animacion
                 else
-                    g.fillCircle(x, y, (int) radius, this._fadingManager.getFading(casilla));
+                    g.fillCircle(x, y, (int) radius, this._fadingManager.getFading(square) * this._sceneAlpha);
 
-                if(!casilla.esModificable()){
+                if(!square.is_modificable()){
                     //Si es azul no modificable ponemos el numero
-                    if(casilla.getTipoActual() == Casilla.Tipo.AZUL){
+                    if(square.getCurrentType() == Square.SquareType.BLUE){
                         g.setColor(0xffffffff);         //Asignamos el color blanco
                         this._informationFont.setSize(radius);     //Cambiamos el tamanio de letra
                         g.setFont(this._informationFont);          //Asignamos la fuente
-                        String text = "" + casilla.getNumero();
-                        g.drawText(text, x , y +(int)radius/4, 1);
+                        String text = "" + square.getNumber();
+                        g.drawText(text, x , y +(int)radius/4, this._sceneAlpha);
                     }
                     //Si la casilla es roja y esta activado el lock pintamos el candado
-                    else if(this._isLocked && casilla.getTipoActual() == Casilla.Tipo.ROJO){
+                    else if(this._isLocked && square.getCurrentType() == Square.SquareType.RED){
                         int lockX = x - (int)(radius * 0.5f);
                         int lockY = y - (int)(radius * 0.5f);
-                        g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f), 0.3f);
+                        g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f), this._sceneAlpha * 0.3f);
                     }
                 }
-                if(this._isAnyInformation && casilla.getPos() == this._posHelp){
+                if(this._isAnyInformation && square.getPos() == this._posHelp){
                     g.setColor(0xff000000);
-                    g.drawCircle(x, y, (int)radius, 3);
+                    g.drawCircle(x, y, (int)radius, 3, this._sceneAlpha);
                 }
             }
         }
@@ -179,14 +183,14 @@ public class Game implements Scene{
 
         if(this._endSucces){
             g.setFont(this._titleFont);      //Asignamos la fuente;
-            g.drawText("Perfecto!", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas()/5, 1);
+            g.drawText("Perfecto!", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas()/5, this._sceneAlpha);
         }
         else{
             //Texto del tamanio del tablero
             this._informationFont.setSize(70);     //Asignamos tamanio de fuente
             g.setFont(this._informationFont);      //Asignamos la fuente;
             text = this._boardSize + "x" + this._boardSize;
-            g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5, this._boardSizeTextAlpha);
+            g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5, this._sceneAlpha * this._boardSizeTextAlpha);
 
             //Texto de ayuda pista
             int fontSize = 25;
@@ -198,7 +202,7 @@ public class Game implements Scene{
                 g.drawText(paragraph[i],
                         g.getWidthNativeCanvas() /2 ,
                         g.getHeightNativeCanvas() / 10 + fontSize*i,
-                        1 - this._boardSizeTextAlpha);
+                        (1 - this._boardSizeTextAlpha)* this._sceneAlpha);
             }
         }
     }
@@ -206,7 +210,7 @@ public class Game implements Scene{
     /* Dibuja los iconos de interfaz situados debajo del tablero
      * @param g Manager de lo relacionado con graficos*/
     private void drawUI(Graphics g){
-        //Dibuja iconos Pista/Deshacer/Rendirse
+        //Dibuja iconos Hint/Deshacer/Rendirse
         g.restore();
         g.save();
         g.translate(0,(int)(g.getHeightNativeCanvas() * 0.90));
@@ -217,18 +221,18 @@ public class Game implements Scene{
         g.scale(scale,scale);
 
         int size = this._closeImage.getWidth()/2;
-        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.35 * inverseScale) - size, 0, 0.6f);
-        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0, 0.6f);
-        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.65 * inverseScale) - size,0, 0.6f);
+        g.drawImage(this._closeImage,(int)(g.getWidthNativeCanvas() * 0.35 * inverseScale) - size, 0, this._sceneAlpha * 0.6f);
+        g.drawImage(this._rewindImage,(int)(g.getWidthNativeCanvas() * 0.50 * inverseScale) - size, 0, this._sceneAlpha * 0.6f);
+        g.drawImage(this._helpImage,(int)(g.getWidthNativeCanvas() * 0.65 * inverseScale) - size,0, this._sceneAlpha * 0.6f);
     }
 
     /*Comprueba si el numero de casillas del tablero es 0
      *En caso de ser 0 comprueba si es correcto o no y notifica al jugador.*/
     private void checkEndedGame(){
-        if(this._tablero.getNumVacias() == 0){
-            if(this._tablero.esCorrecto()) { //TODO: poner variables para hacer los textos
+        if(this._board.getCurrentNumberOfVoid() == 0){
+            if(this._board.isCorrect()) { //TODO: poner variables para hacer los textos
                 this._endSucces = true;
-                this._endTimer.start();
+                fade = -0.2f;
             }
             else
                 putHelp();
@@ -252,7 +256,7 @@ public class Game implements Scene{
         //Recorremos cada casilla del tablero
         for(int i = 0; i< this._boardSize; i++){
             for(int j = 0; j< this._boardSize; j++){
-                Casilla casilla = this._tablero.getTablero()[i][j];
+                Square square = this._board.getTablero()[i][j];
                 int cx = diametro * j + radius + offseBetween/2;
                 int cy = offsetText + diametro * i + radius + offseBetween/2;
                 //calculamos catetos
@@ -262,18 +266,18 @@ public class Game implements Scene{
                 double distance = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2));
                 //comprobamos si se está clicando
                 if(distance <= radius){
-                    if(!casilla.esModificable()){
+                    if(!square.is_modificable()){
                         this._isLocked = !this._isLocked;
 
                         //Relacionamos la casilla a animar con el timer que controlara su animacion e indicamos que la animacion acaba de empezar
-                        this._animacion = new Pair<Casilla, Timer>(casilla,this._animationTimer);
+                        this._animacion = new Pair<Square, Timer>(square,this._animationTimer);
                         this._animacion.getRight().start();
                     }
                     else{
                         //aniadimos la casilla antes de modificarla
-                        this._restoreManager.addCasilla(casilla);
+                        this._restoreManager.addCasilla(square);
                         //empezamos el fade de la casilla
-                        this._fadingManager.startFading(casilla);
+                        this._fadingManager.startFading(square);
                     }
                     return; //ya hemos comprobado que el click ha sido en una de las casillas
                 }
@@ -292,14 +296,28 @@ public class Game implements Scene{
         int posX = (int)(g.getWidthNativeCanvas() * 0.33) - size;
         if(x > posX && x < posX + this._closeImage.getWidth() &&
                 y > posY && y < posY + this._closeImage.getHeight()){
-            _sceneManager.swapScene(SceneManager.SceneName.MainMenu,0);
+           this.fade = -1;
         }
         posX = g.getWidthNativeCanvas()/2 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._rewindImage.getWidth() &&
                 y > posY && y < posY + this._rewindImage.getHeight()){
-            RestoreCasilla aux = this._restoreManager.getLastCasilla();
-            if(aux != null)
-                this._tablero.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
+            RestoreSquare aux = this._restoreManager.getLastCasilla();
+            if(aux != null){
+                this._board.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
+                switch (aux.get_currentType()){
+                    case BLUE:  this._informationString = "Esta casilla ha vuelto a azul";  break;
+                    case RED:  this._informationString = "Esta casilla ha vuelto a rojo";  break;
+                    case VOID: this._informationString = "Esta casilla ha vuelto a vacio";  break;
+                }
+                this._posHelp = aux.get_position();
+                _isAnyInformation =  true;
+
+            }
+            else{
+                this._informationString = "No hay mas movimientos";
+                _isAnyInformation = !_isAnyInformation;
+            }
+
         }
         posX = (int)(g.getWidthNativeCanvas() * 0.65) - size;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
@@ -308,27 +326,28 @@ public class Game implements Scene{
         }
     }
     private void putHelp(){
-        Pair aux = this._tablero.damePista();
+        Pair aux = this._board.getHint();
+        if(aux == null) return;
         this._informationString = (String)aux.getLeft();
         this._posHelp = (Vector2D)aux.getRight();
         this._isAnyInformation = !this._isAnyInformation;
     }
 
-    private Tablero _tablero;                           //tablero del juego
+    private Board _board;                           //tablero del juego
     private FadingManager _fadingManager;               //Gestor de fading
     private Engine _engine;                             //engine
     private Font _informationFont, _titleFont;         //fuente
     private Image _closeImage, _rewindImage, _helpImage, _blockImage;   //imagenes de iconos
 
     private RestoreManager _restoreManager;     //guarda la cola de casillas pre-modificadas
-    private SceneManager _sceneManager;     //gestiona los estados del juego
+    private SceneManager _sceneManager;         //gestiona los estados del juego
 
     private Timer _animationTimer;              //controla las animaciones de las casillas que no se pueden modificar
-    private Pair<Casilla, Timer> _animacion;    //Permite relacionar la casilla que tenemos que animar con el tiempo restante de la animacion
+    private Pair<Square, Timer> _animacion;    //Permite relacionar la casilla que tenemos que animar con el tiempo restante de la animacion
 
-    //Variables de control para el fade del texto superior
-    private float _textFadingVelocity;
-    private float _boardSizeTextAlpha;
+    private float _boardSizeTextAlpha;      //Alpha del texto que se muestra en la parte de arriba
+    private float _sceneAlpha;              //Alpha de la escena
+    private float fade;                       //Fade-in o fade-out
 
     private int _boardSize;         //tamanio del tablero de juego
 
@@ -339,5 +358,4 @@ public class Game implements Scene{
     private Vector2D _posHelp;              //guarda la posicion de la casilla donde se da la pista
 
     private boolean _endSucces;             //si al terminar el tablero ha sido exitoso o no
-    private Timer   _endTimer;              //tiempo para volver al menu
 }

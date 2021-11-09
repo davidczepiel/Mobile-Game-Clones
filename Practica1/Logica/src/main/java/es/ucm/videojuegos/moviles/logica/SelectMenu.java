@@ -10,11 +10,15 @@ import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
 public class SelectMenu implements Scene {
 
+    private final float FADE_VELOCITY= 2.5f;
+
     public SelectMenu(SceneManager sceneManager){
         this._sceneManager = sceneManager;
     }
     @Override
     public void onInit(Engine g) {
+        this._sceneAlpha = 0;
+        this.fade = 1;
         this._engine = g;
         this._closeIcon =  this._sceneManager.getImage(SceneManager.Images.close);
         //Guardamos las fuentes
@@ -27,6 +31,14 @@ public class SelectMenu implements Scene {
 
     @Override
     public void onUpdate(double deltaTime) {
+        this._sceneAlpha = Math.min(this._sceneAlpha + fade * FADE_VELOCITY *(float) deltaTime , 1);
+        if(this._sceneAlpha < 0){
+            if(this._board == -1)
+                this._sceneManager.swapScene(SceneManager.SceneName.MainMenu, 0);
+            else
+                this._sceneManager.swapScene(SceneManager.SceneName.OhNo, this._number[this._board]);
+
+        }
         //Recogemos input
         List<TouchEvent> list = this._engine.getInput().getTouchEvents();
         //Procesamos el input
@@ -50,7 +62,7 @@ public class SelectMenu implements Scene {
     /* Dibuja los iconos de interfaz situados debajo del tablero
      * @param g Manager de lo relacionado con graficos*/
     private void drawUI(Graphics g){
-        //Dibuja iconos Pista/Deshacer/Rendirse
+        //Dibuja iconos Hint/Deshacer/Rendirse
         g.restore();
         g.save();
         g.translate(0,(int)(g.getHeightNativeCanvas() * 0.80));
@@ -61,7 +73,7 @@ public class SelectMenu implements Scene {
         g.scale(scale,scale);
 
         int size = this._closeIcon.getWidth()/2;
-        g.drawImage(this._closeIcon,(int)(g.getWidthNativeCanvas() * 0.5 * inverseScale) - size, 0, 0.6f);
+        g.drawImage(this._closeIcon,(int)(g.getWidthNativeCanvas() * 0.5 * inverseScale) - size, 0, 0.6f * this._sceneAlpha);
 
     }
     private void drawText(Graphics g){
@@ -70,10 +82,10 @@ public class SelectMenu implements Scene {
         g.setColor(0xff000000);
         this._fontTitle.setSize(60);
         g.setFont(this._fontTitle);
-        g.drawText("Oh No", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas()/5, 1);
+        g.drawText("Oh No", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas()/5,  this._sceneAlpha);
         this._fontInformation.setSize(20);
         g.setFont(this._fontInformation);
-        g.drawText("Elije el tamaño a jugar", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas() * 2/7, 1);
+        g.drawText("Elije el tamaño a jugar", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas() * 2/7,  this._sceneAlpha);
     }
     private void drawCircles(Graphics g){
         //radio de cada circulo
@@ -96,10 +108,10 @@ public class SelectMenu implements Scene {
             int j = (i/3 >= 1) ? 1: 0;
             int y = diametro * j + diametro/2;
 
-            g.fillCircle(x,y,radius, 1);
+            g.fillCircle(x,y,radius,  this._sceneAlpha);
             g.setColor(0xffffffff);
             this._fontInformation.setSize(30);
-            g.drawText("" + _number[i],x,y +(int)radius/4, 1);
+            g.drawText("" + _number[i],x,y +(int)radius/4,  this._sceneAlpha);
         }
     }
 
@@ -130,7 +142,8 @@ public class SelectMenu implements Scene {
             double distance = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2));
             //comprobamos si se está clicando
             if(distance <= radius) {
-               this._sceneManager.swapScene(SceneManager.SceneName.OhNo, this._number[i]);
+                this._board= i;
+                this.fade= -1;
             }
         }
     }
@@ -146,15 +159,19 @@ public class SelectMenu implements Scene {
         int posX = (int) (g.getWidthNativeCanvas() * 0.5) - size;
         if (x > posX && x < posX + this._closeIcon.getWidth() &&
                 y > posY && y < posY + this._closeIcon.getHeight()) {
-            this._sceneManager.swapScene(SceneManager.SceneName.MainMenu, 0);
+            this._board = -1;
+            this.fade = -1;
         }
     }
-    SceneManager _sceneManager;
-    Engine _engine;
+    private SceneManager _sceneManager;
+    private Engine _engine;
 
-    Font _fontTitle, _fontInformation;
+    private Font _fontTitle, _fontInformation;
+    private Image _closeIcon;
 
-    Image _closeIcon;
+    private float _sceneAlpha;
+    private int fade;
 
-    int[] _number;
+    private int[] _number;
+    private int _board;
 }

@@ -2,9 +2,9 @@ package es.ucm.videojuegos.moviles.logica;
 /*Clase que guarda la informacion necesaria para devolver a una casilla
 * a su estado anterior. Es usada en Restore Manager con el fin de no guardar
 * Casilla*/
-public class RestoreCasilla {
+public class RestoreSquare {
 
-    RestoreCasilla(Vector2D pos, Casilla.Tipo currentType){
+    RestoreSquare(Vector2D pos, Square.SquareType currentType){
         this._currentType = currentType;
         this._position = pos;
     }
@@ -17,12 +17,12 @@ public class RestoreCasilla {
 
     /*Devuelve el estado de la casilla que hemos almacenado
     * @return Estado de la casilla*/
-    public Casilla.Tipo get_currentType() {
+    public Square.SquareType get_currentType() {
         return _currentType;
     }
 
     //Posicion dentro del tablero
     private Vector2D _position;
     //Tipo de la casilla que se quiere guardar
-    private Casilla.Tipo _currentType;
+    private Square.SquareType _currentType;
 }

@@ -10,25 +10,25 @@ public class FadingManager {
 
     private static final float FADING_VEL = 7f;
 
-    public FadingManager(Tablero board){
+    public FadingManager(Board board){
         this._board = board;
         this._fadingVelocity = FADING_VEL;
-        this._squaresFading = new HashMap<Casilla, FadingInfo>();
+        this._squaresFading = new HashMap<Square, FadingInfo>();
     }
 
     /*Registrar una nueva casilla para hacer el fade*/
-    public void startFading(Casilla square){
+    public void startFading(Square square){
         //Si esta casilla ya estaba previamente en fading, la modificamos para empezar con el siguiente fade
         if(this._squaresFading.get(square) != null && !this._squaresFading.get(square).hasChanged())
-            this._board.modificarCasilla(square);
+            this._board.modifySquare(square);
 
         this._squaresFading.put(square, new FadingInfo());
     }
 
     /*Metodo para actualizar el fade de cada casilla registrada y modificar su color si ha alcanzado la mitad del fade*/
     public void updateFadings(double deltaTime){
-        List<Casilla> squaresToRemove = new ArrayList<Casilla>();
-        for (Map.Entry<Casilla, FadingInfo> entry : this._squaresFading.entrySet()) {
+        List<Square> squaresToRemove = new ArrayList<Square>();
+        for (Map.Entry<Square, FadingInfo> entry : this._squaresFading.entrySet()) {
             FadingInfo squareFade = entry.getValue();
             //Sumamos el tiempo que ha pasado al fade
             squareFade.addFading(this._fadingVelocity * (float)deltaTime);
@@ -41,7 +41,7 @@ public class FadingManager {
             }
             //Si ha llegado a la mitad del fading, cambiamos su color
             else if(squareFade.getFading() >= 1f && !squareFade.hasChanged()){
-                this._board.modificarCasilla(entry.getKey());
+                this._board.modifySquare(entry.getKey());
                 squareFade.changed();
             }
         }
@@ -51,7 +51,7 @@ public class FadingManager {
     }
 
     /*Devuelve el fade actual de la casilla*/
-    public float getFading(Casilla square){
+    public float getFading(Square square){
         //Si esa casilla no esta registrada se devuelve 1 (opaco)
         if(this._squaresFading.get(square) == null) return 1f;
 
@@ -61,11 +61,11 @@ public class FadingManager {
         return f;
     }
 
-    private Tablero _board;
+    private Board _board;
     //Velocidad del fade
     private float _fadingVelocity;
     //Lista de casillas que tienen que actualizar su fading
-    private Map<Casilla, FadingInfo> _squaresFading;
+    private Map<Square, FadingInfo> _squaresFading;
 }
 
 /*Clase para guardar informacion sobre el fading de una casilla*/

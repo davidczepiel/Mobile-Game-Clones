@@ -38,11 +38,9 @@ public interface Graphics {
      ** @param cx posicion en X del centro del circulo
      ** @param cy posicion en Y del centro del circulo
      ** @param radius radio de la circunferencia */
-    void drawCircle(int cx, int cy, int radius, int widthStroke);
-
-
+    void drawCircle(int cx, int cy, int radius, int widthStroke, float alpha);
+    /* Dibuja un rect en la posicion x,y con un tamanio w,h*/
     void fillRect(int x, int y, int w, int h, int color);
-
     /* Escribe el texto con la fuente y color activos */
     void drawText(String text, int x, int y, float alpha);
     // Establece el color a utilizar en las operaciones de
