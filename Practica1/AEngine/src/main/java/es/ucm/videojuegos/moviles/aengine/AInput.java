@@ -4,6 +4,8 @@ import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import es.ucm.videojuegos.moviles.engine.AbstractInput;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Pair;
@@ -25,60 +27,49 @@ public class AInput extends AbstractInput implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        //Posiciones en X/Y dentro de la seccion pintable (sin contar la banda superior)
-        float xLogic=event.getX();
-        float yLogic=event.getY();
-
-        //TODO considerar separar en metodos? en pc input esta en distintos metodos pero porque JFrame los separaba
+        boolean eventProcessed=true;
         switch(event.getAction()){
-            case MotionEvent.ACTION_DOWN: {
-                TouchEvent ev = _pool.getTouchEvent();
-                if(ev == null) return false; //false porque no hemos podido procesar el input
-
-                ev.set_type(TouchEvent.TouchEventType.pulsar);
-                Pair<Integer, Integer> pair = transformateCoord((int) xLogic, (int) yLogic);
-                if(pair == null) return true;
-
-                //Incorporamos el evento a la lista
-                ev.set_x(pair.getLeft());
-                ev.set_y(pair.getRight());
-                ev.set_id(event.getDeviceId());
-                addEvent(ev);
-            }
+            case MotionEvent.ACTION_DOWN:
+                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.pulsar,0);
                 break;
-            case MotionEvent.ACTION_UP: {
-                TouchEvent ev = _pool.getTouchEvent();
-                if(ev == null) return false; //false porque no hemos podido procesar el input
+            case MotionEvent.ACTION_UP:
+                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.liberar,0);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                eventProcessed=processTouchInput(event,TouchEvent.TouchEventType.desplazar,0);
+                break;
 
-                ev.set_type(TouchEvent.TouchEventType.liberar);
-                Pair<Integer, Integer> pair = transformateCoord((int) xLogic, (int) yLogic);
-                if(pair == null) return true;
-
-                //Incorporamos el evento a la lista
-                ev.set_x(pair.getLeft());
-                ev.set_y(pair.getRight());
-                ev.set_id(event.getDeviceId());
-                addEvent(ev);
-            }
-            break;
-            case MotionEvent.ACTION_MOVE: {
-                TouchEvent ev = _pool.getTouchEvent();
-                if(ev == null) return false; //false porque no hemos podido procesar el input
-
-                ev.set_type(TouchEvent.TouchEventType.desplazar);
-                Pair<Integer, Integer> pair = transformateCoord((int) xLogic, (int) yLogic);
-                if(pair == null) return true;
-
-                //Incorporamos el evento a la lista
-                ev.set_x(pair.getLeft());
-                ev.set_y(pair.getRight());
-                ev.set_id(event.getDeviceId());
-                addEvent(ev);
-            }
+            case MotionEvent.ACTION_POINTER_DOWN:
+                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.pulsar,event.getActionIndex());
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.liberar,event.getActionIndex());
                 break;
         }
 
         //true si hemos consumido el evento
+        return eventProcessed;
+    }
+
+    private boolean processTouchInput(MotionEvent event, TouchEvent.TouchEventType type, int index){
+        TouchEvent ev = _pool.getTouchEvent();
+        if(ev == null) return false; //false porque no hemos podido procesar el input
+
+        //Posiciones en X/Y dentro de la seccion pintable (sin contar la banda superior)
+        float xLogic=event.getX(index);
+        float yLogic=event.getY(index);
+        Pair<Integer, Integer> pair = transformateCoord((int) xLogic, (int) yLogic);
+
+        //Devolvemos true porque hemos sido capaces de procesarlo, sin embargo no nos interesa hacer caso
+        //si se encuentra fuera del canvas
+        if(pair == null) return true;
+
+        //Incorporamos el evento a la lista
+        ev.set_type(type);
+        ev.set_x(pair.getLeft());
+        ev.set_y(pair.getRight());
+        ev.set_id(event.getPointerId(index));
+        addEvent(ev);
         return true;
     }
 }
