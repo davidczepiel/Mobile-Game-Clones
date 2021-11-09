@@ -32,7 +32,7 @@ public class Square {
     /*Modifica el tipo de la casilla actual y actualiza el numero de vacias del tablero
     * si su tipo es vacio o su tipo ya modificado tambien lo es
     * @param tipo Tipo que queremos que la casilla pase a ser*/
-    public void setTipo(SquareType squareType)
+    public void setType(SquareType squareType)
     {
     	if(_myCurrentSquareType == SquareType.VOID && squareType != SquareType.VOID)
     		_board.modifyVoid(-1);

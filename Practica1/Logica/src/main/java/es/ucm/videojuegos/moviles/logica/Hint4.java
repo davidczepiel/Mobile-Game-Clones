@@ -3,7 +3,7 @@ package es.ucm.videojuegos.moviles.logica;
 public class Hint4 implements Hint {
 
 	@Override
-	public boolean EsAplicable(Square square, Board board) {
+	public boolean isApplicable(Square square, Board board) {
 		if(square.getNumber() == 0) return false;
 		
 		int azules = board.lookAround(square.getPos(), 1);
@@ -11,12 +11,12 @@ public class Hint4 implements Hint {
 	}
 
 	@Override
-	public void AplicarPista(Square square, Board board) {
+	public void applyHint(Square square, Board board) {
 		//Esta pista no es aplicable, es meramente informativa
 	}
 
 	@Override
-	public String GenerarAyuda() {
+	public String generateHelp() {
 		return "Esta casilla tiene mas- casillas azules visibles- de las que deberia";
 	}
 	

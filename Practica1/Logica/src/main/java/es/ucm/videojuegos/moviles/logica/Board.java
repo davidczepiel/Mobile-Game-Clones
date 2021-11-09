@@ -47,13 +47,13 @@ public class Board {
     public void modifySquare(Square square) {
     	switch(square.getCurrentType()) {
     	case RED:
-    		square.setTipo(SquareType.VOID);
+    		square.setType(SquareType.VOID);
     		break;
     	case BLUE:
-    		square.setTipo(SquareType.RED);
+    		square.setType(SquareType.RED);
     		break;
     	case VOID:
-    		square.setTipo(SquareType.BLUE);
+    		square.setType(SquareType.BLUE);
     		break;
 
     	}
@@ -73,7 +73,7 @@ public class Board {
 
     /*Obtiene el tablero de juego
     * @return Array que contiene todas las casillas del tablero*/
-    public Square[][] getTablero() {return _gameBoard;}
+    public Square[][] getBoard() {return _gameBoard;}
 
     /* Miramos cuantos azules hay alrededor de una casilla hasta encontrar una pared
      * @param pos (actual desde la cual se mira en el tablero)
@@ -215,7 +215,7 @@ public class Board {
             if(_solutionBoard[posX][posY].getCurrentType() == SquareType.BLUE &&		//Si en la soluci�n es azul
             _gameBoard[posX][posY].getCurrentType() != SquareType.BLUE){			//Si no he visitado ya esta casilla
                 _gameBoard[posX][posY].setModificable(false);
-                _gameBoard[posX][posY].setTipo(SquareType.BLUE);
+                _gameBoard[posX][posY].setType(SquareType.BLUE);
                 int numAzules = lookAround(new Vector2D(posX,posY),0);
                 if(numAzules == 0 || numAzules>this._dimensions) return false;
                 _gameBoard[posX][posY].setNumber(numAzules);
@@ -230,7 +230,7 @@ public class Board {
             if(_solutionBoard[posX][posY].getCurrentType() == SquareType.RED && 	//Si en la soluci�n es azul
     	    _gameBoard[posX][posY].getCurrentType() != SquareType.RED){			//Si no he visitado ya esta casilla
                 _gameBoard[posX][posY].setModificable(false);
-                _gameBoard[posX][posY].setTipo(SquareType.RED);
+                _gameBoard[posX][posY].setType(SquareType.RED);
                 red--;
             }
         }
@@ -245,7 +245,7 @@ public class Board {
     	for(int i = 0; i < this._dimensions; i++) {
 			for(int j = 0; j < this._dimensions; j++) {
 				if(this._gameBoard[i][j].is_modificable())
-					this._gameBoard[i][j].setTipo(SquareType.VOID);
+					this._gameBoard[i][j].setType(SquareType.VOID);
 			}
 		}    	
     }

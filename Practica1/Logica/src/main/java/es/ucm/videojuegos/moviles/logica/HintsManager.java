@@ -56,7 +56,7 @@ public class HintsManager {
 	* @param board Board que se va a comprobar
 	* @return boolean que reperesenta si el board que se ha pasado es apto para ser juagado*/
 	public boolean isValid(Board board) {
-		Square[][] tableroJuego = board.getTablero();
+		Square[][] tableroJuego = board.getBoard();
 		int size = board.getDimensions();
 		while(board.getCurrentNumberOfVoid() > 0) {
 			boolean checkPista = false;	//si se ha realizado una pista en ela iteraccion actual
@@ -81,13 +81,13 @@ public class HintsManager {
 	* @param board Board que vamos a analizar para conseguir una pista
 	* @return pareja que incluye tanto la pista a data como la casilla sobre la que se aplica*/
 	public Pair<String,Vector2D> getHint(Board board) {
-		Square[][] tableroJuego = board.getTablero();
+		Square[][] tableroJuego = board.getBoard();
 		int size = board.getDimensions();
 		for(int i = 0; i < size ; i++) {
 			for(int j = 0; j < size ; j++) {
 				for(Hint hint : this._pistasInformativas) {
-					if(hint.EsAplicable(tableroJuego[i][j], board)){
-						String texto = hint.GenerarAyuda();
+					if(hint.isApplicable(tableroJuego[i][j], board)){
+						String texto = hint.generateHelp();
 						if(texto!= null)
 							return new Pair(texto,tableroJuego[i][j].getPos());
 					}
@@ -103,8 +103,8 @@ public class HintsManager {
 	* @return boolean que representa si se ha podido aplicar alguna pista o no*/
 	private boolean pruebaPista(Square square, Board board) {
 		for(Hint hint : this._pistasAplicables) {
-			if(hint.EsAplicable(square, board)) {
-				hint.AplicarPista(square, board);
+			if(hint.isApplicable(square, board)) {
+				hint.applyHint(square, board);
 				return true;
 			}
 		}

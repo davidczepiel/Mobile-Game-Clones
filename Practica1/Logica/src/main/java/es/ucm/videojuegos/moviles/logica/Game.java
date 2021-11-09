@@ -42,7 +42,7 @@ public class Game implements Scene{
 
         //Timer y animaciones
         this._animationTimer = new Timer(0.15);
-        this._animacion = new Pair<Square, Timer>(_board.getTablero()[0][0],this._animationTimer);
+        this._animacion = new Pair<Square, Timer>(_board.getBoard()[0][0],this._animationTimer);
 
         this._informationString = " ";
         //Comenzamos mostrando el texto del tamanio del tablero
@@ -124,7 +124,7 @@ public class Game implements Scene{
         //Recorremos cada casilla del tablero
         for(int i = 0; i< this._boardSize; i++){
             for(int j = 0; j< this._boardSize; j++){
-                Square square = this._board.getTablero()[i][j];
+                Square square = this._board.getBoard()[i][j];
                 //Asignamos el color actual dependiendo del tipo
                 switch (square.getCurrentType()){
                     case BLUE:  g.setColor(0xff33c7ff);     break;
@@ -256,7 +256,7 @@ public class Game implements Scene{
         //Recorremos cada casilla del tablero
         for(int i = 0; i< this._boardSize; i++){
             for(int j = 0; j< this._boardSize; j++){
-                Square square = this._board.getTablero()[i][j];
+                Square square = this._board.getBoard()[i][j];
                 int cx = diametro * j + radius + offseBetween/2;
                 int cy = offsetText + diametro * i + radius + offseBetween/2;
                 //calculamos catetos
@@ -303,7 +303,7 @@ public class Game implements Scene{
                 y > posY && y < posY + this._rewindImage.getHeight()){
             RestoreSquare aux = this._restoreManager.getLastCasilla();
             if(aux != null){
-                this._board.getTablero()[aux.get_position().getX()][aux.get_position().getY()].setTipo(aux.get_currentType());
+                this._board.getBoard()[aux.get_position().getX()][aux.get_position().getY()].setType(aux.get_currentType());
                 switch (aux.get_currentType()){
                     case BLUE:  this._informationString = "Esta casilla ha vuelto a azul";  break;
                     case RED:  this._informationString = "Esta casilla ha vuelto a rojo";  break;
