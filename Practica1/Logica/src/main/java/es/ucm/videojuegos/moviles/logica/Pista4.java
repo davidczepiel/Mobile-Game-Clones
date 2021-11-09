@@ -6,7 +6,7 @@ public class Pista4 implements Pista{
 	public boolean EsAplicable(Casilla casilla, Tablero tablero) {
 		if(casilla.getNumero() == 0) return false;
 		
-		int azules = tablero.mirarAlrededor(casilla.getPos(), 2);
+		int azules = tablero.mirarAlrededor(casilla.getPos(), 1);
 		return azules > casilla.getNumero();
 	}
 

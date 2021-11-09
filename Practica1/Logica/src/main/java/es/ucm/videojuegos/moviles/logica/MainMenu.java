@@ -2,7 +2,6 @@ package es.ucm.videojuegos.moviles.logica;
 
 import java.util.List;
 
-import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Graphics;
@@ -10,19 +9,19 @@ import es.ucm.videojuegos.moviles.engine.Image;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
 /*Clase que implementa el juego*/
-public class MainMenu implements Application {
+public class MainMenu implements Scene {
 
-    public MainMenu(ApplicationManager app){
-        this._app = app;
+    public MainMenu(SceneManager app){
+        this._sceneManager = app;
     }
     /*Crea los recursos que va a necesitar a lo largo de la aplicacion
     * @param g Motor que va a sostener el juego*/
     @Override
     public void onInit(Engine g) {
         _engine = g;
-        this._font = g.getGraphics().newFont("assets/fonts/JosefinSans-Bold.ttf", 70, true);
-        this._titleFont = g.getGraphics().newFont("assets/fonts/Molle-Regular.ttf", 70, false);
-        this._gotaImage = g.getGraphics().newImage("assets/sprites/q42.png");
+        this._font = this._sceneManager.getFont(SceneManager.Fonts.JosefinSans);
+        this._titleFont = this._sceneManager.getFont(SceneManager.Fonts.MollerRegular);
+        this._gotaImage = this._sceneManager.getImage(SceneManager.Images.q42);
     }
 
      /*Recoge los eventos y los procesa
@@ -100,13 +99,6 @@ public class MainMenu implements Application {
 
     }
 
-    /*Devuelve el nombre de la aplicacion
-    * @return nombre del juego*/
-    @Override
-    public String getName() {
-        return "Oh No Game";
-    }
-
     /*Comprueba dado un x,y del input si corresponde a alguno de los iconos
      * @param x Posicion en el eje X donde se ha producido el input
      * @param y Posicion en el eje Y donde se ha producido el input*/
@@ -123,7 +115,7 @@ public class MainMenu implements Application {
 
         if(x > posX - (size/2) && x < posX + (size/2)  &&
                 y > posY  && y < posY + despVert){
-            _engine.setAplication(this._app.getAplication(ApplicationManager.Scene.SelectMenu,0));
+            this._sceneManager.swapScene(SceneManager.SceneName.SelectMenu,0);
         }
 
     }
@@ -132,6 +124,6 @@ public class MainMenu implements Application {
     private Image _gotaImage;   //imagenes de iconos
     private Font _font;         //fuente
     private Font _titleFont;    //fuente
-    private ApplicationManager _app;
+    private SceneManager _sceneManager;
 
 }

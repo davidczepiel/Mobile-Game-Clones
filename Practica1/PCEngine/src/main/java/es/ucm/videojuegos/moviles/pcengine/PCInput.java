@@ -40,6 +40,7 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
         event.set_type(TouchEventType.pulsar);
 
         Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
+        if(pair == null) return;
         //Incorporamos el evento a la lista
         event.set_x(pair.getLeft());
         event.set_y(pair.getRight());
@@ -56,6 +57,7 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
         event.set_type(TouchEventType.liberar);
 
         Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
+        if(pair == null) return;
         //Incorporamos el evento a la lista
         event.set_x(pair.getLeft());
         event.set_y(pair.getRight());
@@ -88,6 +90,7 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
         event.set_type(TouchEventType.desplazar);
 
         Pair<Integer, Integer> pair = transformateCoord(e.getX(),e.getY());
+        if(pair == null) return;
         //Incorporamos el evento a la lista
         event.set_x(pair.getLeft());
         event.set_y(pair.getRight());

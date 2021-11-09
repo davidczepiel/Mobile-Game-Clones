@@ -33,12 +33,6 @@ public class AEngine implements Engine , Runnable {
         return this._input;
     }
 
-    @Override
-    public void setAplication(Application a) {
-        this._application = a;
-        a.onInit(this);
-    }
-
     /**
      * Método llamado para solicitar que se continue con el
      * active rendering. El "juego" se vuelve a poner en marcha

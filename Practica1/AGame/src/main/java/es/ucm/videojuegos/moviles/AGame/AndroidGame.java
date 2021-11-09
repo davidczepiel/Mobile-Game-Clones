@@ -5,7 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import es.ucm.videojuegos.moviles.aengine.AEngine;
-import es.ucm.videojuegos.moviles.logica.ApplicationManager;
+import es.ucm.videojuegos.moviles.logica.OhNoGame;
+import es.ucm.videojuegos.moviles.logica.SceneManager;
 
 
 public class AndroidGame extends AppCompatActivity {
@@ -16,8 +17,7 @@ public class AndroidGame extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ApplicationManager app = new ApplicationManager();
-        this._engine = new AEngine(app.getAplication(ApplicationManager.Scene.MainMenu, 0), this);
+        this._engine = new AEngine(new OhNoGame(), this);
         this._engine.run();
     }
 

@@ -72,11 +72,6 @@ public class PCEngine implements Engine {
         return this._input;
     }
 
-    @Override
-    public void setAplication(Application a) {
-        this._app = a;
-        a.onInit(this);
-    }
 
     Application _app;           //Aplicacion que va a poner en marcha el engine
     PCGraphics _graphics;       //Manager de lo relacionado con los graficos en PC

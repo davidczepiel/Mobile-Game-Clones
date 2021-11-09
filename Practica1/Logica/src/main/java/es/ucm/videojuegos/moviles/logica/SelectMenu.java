@@ -2,26 +2,24 @@ package es.ucm.videojuegos.moviles.logica;
 
 import java.util.List;
 
-import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
-import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
-public class SelectMenu implements Application {
+public class SelectMenu implements Scene {
 
-    public SelectMenu(ApplicationManager applicationManager){
-        this._applicationManager = applicationManager;
+    public SelectMenu(SceneManager sceneManager){
+        this._sceneManager = sceneManager;
     }
     @Override
     public void onInit(Engine g) {
         this._engine = g;
-        this._closeIcon = g.getGraphics().newImage("assets/sprites/close.png");
+        this._closeIcon =  this._sceneManager.getImage(SceneManager.Images.close);
         //Guardamos las fuentes
-        this._fontInformation = g.getGraphics().newFont("assets/fonts/JosefinSans-Bold.ttf", 20, true);
-        this._fontTitle = g.getGraphics().newFont("assets/fonts/Molle-Regular.ttf", 60, false);
+        this._fontInformation = this._sceneManager.getFont(SceneManager.Fonts.JosefinSans);
+        this._fontTitle = this._sceneManager.getFont(SceneManager.Fonts.MollerRegular);
 
         int[] number = {4,5,6,7,8,9};
         this._number = number;
@@ -49,11 +47,6 @@ public class SelectMenu implements Application {
         drawUI(g);
     }
 
-
-    @Override
-    public String getName() {
-        return "OhNoGame";
-    }
     /* Dibuja los iconos de interfaz situados debajo del tablero
      * @param g Manager de lo relacionado con graficos*/
     private void drawUI(Graphics g){
@@ -137,7 +130,7 @@ public class SelectMenu implements Application {
             double distance = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2));
             //comprobamos si se está clicando
             if(distance <= radius) {
-                _engine.setAplication(this._applicationManager.getAplication(ApplicationManager.Scene.OhNo, this._number[i]));
+               this._sceneManager.swapScene(SceneManager.SceneName.OhNo, this._number[i]);
             }
         }
     }
@@ -153,10 +146,10 @@ public class SelectMenu implements Application {
         int posX = (int) (g.getWidthNativeCanvas() * 0.5) - size;
         if (x > posX && x < posX + this._closeIcon.getWidth() &&
                 y > posY && y < posY + this._closeIcon.getHeight()) {
-            _engine.setAplication(this._applicationManager.getAplication(ApplicationManager.Scene.MainMenu, 0));
+            this._sceneManager.swapScene(SceneManager.SceneName.MainMenu, 0);
         }
     }
-    ApplicationManager _applicationManager;
+    SceneManager _sceneManager;
     Engine _engine;
 
     Font _fontTitle, _fontInformation;

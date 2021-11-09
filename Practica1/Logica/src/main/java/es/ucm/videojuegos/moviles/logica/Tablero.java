@@ -20,6 +20,7 @@ public class Tablero {
         	non_zeros = generarTablero();
         } while(!non_zeros || !esValido());        
 
+        //debugEstadoTableros();
         limpiarTableroJuego();       
     }
 
@@ -199,7 +200,7 @@ public class Tablero {
     private boolean escogerCasillas(int limAzules, int limRojos){
     	
         int azules =  _dimensiones*_dimensiones/4;
-        int rojos =  _dimensiones*_dimensiones/5;
+        int rojos =  (int)(_dimensiones*_dimensiones/4.5f);
         
         if(azules > limAzules || rojos > limRojos) return false;
         
