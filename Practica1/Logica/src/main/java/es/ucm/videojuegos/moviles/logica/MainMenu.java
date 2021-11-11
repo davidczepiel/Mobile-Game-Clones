@@ -26,6 +26,7 @@ public class MainMenu implements Scene {
         this._font = this._sceneManager.getFont(SceneManager.Fonts.JosefinSans);
         this._titleFont = this._sceneManager.getFont(SceneManager.Fonts.MollerRegular);
         this._gotaImage = this._sceneManager.getImage(SceneManager.Images.q42);
+        this._changeScene = false;
     }
 
      /*Recoge los eventos y los procesa
@@ -37,6 +38,7 @@ public class MainMenu implements Scene {
         if(this._sceneAlpha < 0)
             this._sceneManager.swapScene(SceneManager.SceneName.SelectMenu,0);
 
+        if(this._changeScene) return;
         //Recogemos input
         List<TouchEvent> list = this._engine.getInput().getTouchEvents();
         //Procesamos el input
@@ -128,6 +130,7 @@ public class MainMenu implements Scene {
                 y > posY  && y < posY + despVert){
             this.fade = -1;
             this._sceneAlpha = 1;
+            this._changeScene = true;
         }
 
     }
@@ -140,5 +143,6 @@ public class MainMenu implements Scene {
 
     float _sceneAlpha;
     int fade = 1;
+    boolean _changeScene;
 
 }

@@ -29,7 +29,8 @@ public class Hint8 implements Hint {
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
 		for(int i = 0; i < dir.length; ++i) {
 			Square aux = square;
-			while(countVoids(square.getPos(), dir[i], false, board) > 0) {
+			while(countVoids(square.getPos(), dir[i], false, board) > 0
+					&& board.lookAround(square.getPos(), 1) < square.getNumber()) {
 				Vector2D nuevaPos = new Vector2D(aux.getPos().getX()+ dir[i].getX(),
 						aux.getPos().getY()+ dir[i].getY());
 				board.getBoard()[nuevaPos.getX()][nuevaPos.getY()].setType(SquareType.BLUE);

@@ -70,7 +70,7 @@ public class Game implements Scene{
         else
             this._boardSizeTextAlpha = Math.min(this._boardSizeTextAlpha + TEXT_FADING_VELOCITY * (float)deltaTime, 1.0f);
 
-        if(!this._endSucces ){  //Si no ha terminado el juego
+        if(!this._endSucces){  //Si no ha terminado el juego
             //Recogemos input
             List<TouchEvent> list = this._engine.getInput().getTouchEvents();
             //Procesamos el input
@@ -165,7 +165,7 @@ public class Game implements Scene{
                         g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f), this._sceneAlpha * 0.3f);
                     }
                 }
-                if(this._isAnyInformation && square.getPos() == this._posHelp){
+                if(this._isAnyInformation && square.getPos() == this._posHelp && !this._endSucces){
                     g.setColor(0xff000000);
                     g.drawCircle(x, y, (int)radius, 3, this._sceneAlpha);
                 }

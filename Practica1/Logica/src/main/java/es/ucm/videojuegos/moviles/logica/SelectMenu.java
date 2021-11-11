@@ -27,6 +27,7 @@ public class SelectMenu implements Scene {
 
         int[] number = {4,5,6,7,8,9};
         this._number = number;
+        this._changeScene = false;
     }
 
     @Override
@@ -39,6 +40,7 @@ public class SelectMenu implements Scene {
                 this._sceneManager.swapScene(SceneManager.SceneName.OhNo, this._number[this._board]);
 
         }
+        if(this._changeScene) return;
         //Recogemos input
         List<TouchEvent> list = this._engine.getInput().getTouchEvents();
         //Procesamos el input
@@ -142,8 +144,7 @@ public class SelectMenu implements Scene {
             double distance = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2));
             //comprobamos si se está clicando
             if(distance <= radius) {
-                this._board= i;
-                this.fade= -1;
+                changeScene(i);
             }
         }
     }
@@ -159,10 +160,16 @@ public class SelectMenu implements Scene {
         int posX = (int) (g.getWidthNativeCanvas() * 0.5) - size;
         if (x > posX && x < posX + this._closeIcon.getWidth() &&
                 y > posY && y < posY + this._closeIcon.getHeight()) {
-            this._board = -1;
-            this.fade = -1;
+            changeScene(-1);
         }
     }
+
+    private void changeScene(int size){
+        this._board = size;
+        this.fade = -1;
+        this._changeScene = true;
+    }
+
     private SceneManager _sceneManager;
     private Engine _engine;
 
@@ -171,6 +178,7 @@ public class SelectMenu implements Scene {
 
     private float _sceneAlpha;
     private int fade;
+    private boolean _changeScene;
 
     private int[] _number;
     private int _board;

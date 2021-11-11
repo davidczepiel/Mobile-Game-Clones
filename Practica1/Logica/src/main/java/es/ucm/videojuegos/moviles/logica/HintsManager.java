@@ -101,6 +101,7 @@ public class HintsManager {
 		for(Hint hint : this._applicableHints) {
 			if(hint.isApplicable(square, board)) {
 				hint.applyHint(square, board);
+				//System.out.println(hint.generateHelp() + " aplicada en " + square.getPos().getX() + ", " + square.getPos().getY());
 				return true;
 			}
 		}

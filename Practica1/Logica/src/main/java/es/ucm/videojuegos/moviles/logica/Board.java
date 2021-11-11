@@ -14,13 +14,15 @@ public class Board {
         _hintsManager = new HintsManager();
         _currentVoid = tam * tam;
         boolean non_zeros;
-        
+        int i = 0;
         do {
         	non_zeros = doBoard();
+        	i++;
         } while(!non_zeros || !isValid());
-
-        //debugEstadoTableros();
+        System.out.println(i);
+        debugBoardState();
         cleanBoard();
+        debugBoardState();
     }
 
     /*Metodo que devuelve si el tablero que se ha resuelto es igual al de la solucion
@@ -99,8 +101,8 @@ public class Board {
         return numVistos;
     }
 
-    /*Mira en el tablero del juego de manera recursiva dada una posicci�n y una direcci�n el n�mero de azules.
-     * Deja de contar al encontrarse con un rojo o con un vac�o
+    /*Mira en el tablero del juego de manera recursiva dada una posiccion y una direccion el numero de azules.
+     * Deja de contar al encontrarse con un rojo o con un vacio
      * @param pos inicial desde la cual se busca
      * @param dir en la que se buscan azules
      * @return numero de casillas que se han encontrado*/
@@ -137,7 +139,16 @@ public class Board {
     private boolean isValid(){
     	if(!this._hintsManager.isValid(this))
     		return false;
-        return isCorrect();
+        //Vemos si la solucion dada se corresponde con el tablero de la solcion
+        for(int i = 0; i < this._dimensions; i++) {
+            for(int j = 0; j < this._dimensions; j++) {
+                if(this._gameBoard[i][j].getNumber() > 0){
+                    if(lookAround(this._gameBoard[i][j].getPos(),2) != this._gameBoard[i][j].getNumber())
+                        return false;
+                }
+            }
+        }
+        return true;
     }
     
     /*Genera un tablero de manera aleatoria. Siendo un 75% azules y un 25% rojos
@@ -247,6 +258,7 @@ public class Board {
     private void cleanBoard() {
     	for(int i = 0; i < this._dimensions; i++) {
 			for(int j = 0; j < this._dimensions; j++) {
+			    this._solutionBoard[i][j].setType(this._gameBoard[i][j].getCurrentType());
 				if(this._gameBoard[i][j].is_modificable())
 					this._gameBoard[i][j].setType(SquareType.VOID);
 			}
