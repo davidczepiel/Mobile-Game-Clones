@@ -38,7 +38,6 @@ public class AInput extends AbstractInput implements View.OnTouchListener {
             case MotionEvent.ACTION_MOVE:
                 eventProcessed=processTouchInput(event,TouchEvent.TouchEventType.desplazar,0);
                 break;
-
             case MotionEvent.ACTION_POINTER_DOWN:
                 eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.pulsar,event.getActionIndex());
                 break;

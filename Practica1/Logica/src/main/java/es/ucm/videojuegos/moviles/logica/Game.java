@@ -165,6 +165,14 @@ public class Game implements Scene{
                         g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f), this._sceneAlpha * 0.3f);
                     }
                 }
+                //Si es azul no modificable y hemos ganado hay que mostrar el numero
+                else if(square.getCurrentType() == Square.SquareType.BLUE && this._endSucces){
+                    g.setColor(0xffffffff);         //Asignamos el color blanco
+                    this._informationFont.setSize(radius);     //Cambiamos el tamanio de letra
+                    g.setFont(this._informationFont);          //Asignamos la fuente
+                    String text = "" + this._board.getSoltionBoard()[i][j].getNumber();
+                    g.drawText(text, x , y +(int)radius/4, this._sceneAlpha);
+                }
                 if(this._isAnyInformation && square.getPos() == this._posHelp && !this._endSucces){
                     g.setColor(0xff000000);
                     g.drawCircle(x, y, (int)radius, 3, this._sceneAlpha);
