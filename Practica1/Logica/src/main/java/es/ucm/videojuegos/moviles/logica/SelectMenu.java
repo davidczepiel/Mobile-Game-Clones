@@ -6,6 +6,7 @@ import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
+import es.ucm.videojuegos.moviles.engine.Sound;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
 public class SelectMenu implements Scene {
@@ -24,6 +25,7 @@ public class SelectMenu implements Scene {
         //Guardamos las fuentes
         this._fontInformation = this._sceneManager.getFont(SceneManager.Fonts.JosefinSans);
         this._fontTitle = this._sceneManager.getFont(SceneManager.Fonts.MollerRegular);
+        this._clickSound = this._sceneManager.getSound(SceneManager.Sounds.Click);
 
         int[] number = {4,5,6,7,8,9};
         this._number = number;
@@ -144,6 +146,7 @@ public class SelectMenu implements Scene {
             double distance = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2));
             //comprobamos si se está clicando
             if(distance <= radius) {
+                this._clickSound.play();    //lanzamos el sonido
                 changeScene(i);
             }
         }
@@ -160,6 +163,7 @@ public class SelectMenu implements Scene {
         int posX = (int) (g.getWidthNativeCanvas() * 0.5) - size;
         if (x > posX && x < posX + this._closeIcon.getWidth() &&
                 y > posY && y < posY + this._closeIcon.getHeight()) {
+            this._clickSound.play();    //lanzamos el sonido
             changeScene(-1);
         }
     }
@@ -175,6 +179,7 @@ public class SelectMenu implements Scene {
 
     private Font _fontTitle, _fontInformation;
     private Image _closeIcon;
+    private Sound _clickSound;                          //sonido de click
 
     private float _sceneAlpha;
     private int fade;

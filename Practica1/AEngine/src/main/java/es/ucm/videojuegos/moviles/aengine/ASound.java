@@ -17,74 +17,38 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import es.ucm.videojuegos.moviles.engine.Sound;
-/*
-public class ASound implements Sound {
-    public ASound(String file, Context context){
-
-        this._mediaPlayer = new MediaPlayer();
-        AssetManager assetManager = context.getAssets();
-        try {
-            AssetFileDescriptor fileDescriptor = assetManager.openFd(file);
-            this._mediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(),fileDescriptor.getStartOffset(),fileDescriptor.getLength());
-            this._mediaPlayer.setOnPreparedListener(this);
-            this._mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            this._mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public void loop() {
-        this._mediaPlayer.setLooping(true);
-    }
-
-    @Override
-    public void play() {
-        if(this._mediaPlayer.isPlaying()){
-            stop();
-            this._mediaPlayer.prepare();
-        }
-        if(this._isPrepared)
-            this._mediaPlayer.start();
-    }
-
-    @Override
-    public void stop() {
-        this._mediaPlayer.stop();
-    }
-
-    @Override
-    public void release(){
-        this._mediaPlayer.release();
-        this._mediaPlayer = null;
-    }
-
-    MediaPlayer _mediaPlayer;
-    boolean _isPrepared = false;
-}*/
-
+/*Clase que implementa los sonidos para Android.
+recoge los sonidos de una pool de sonidos(SoundPool) que ha de
+ser inicializada antes de hacer el new del objeto
+ */
 public class ASound implements Sound {
 
+    /*Crea una sonido de Android dada la pool de sonidos
+    * @param file ruta del fichero
+    * @param context aplicacion
+    * @param pool SoundPool de android ya inicializada*/
     public ASound(String file, Context context, SoundPool pool){
         AssetManager assetManager = context.getAssets();
         this._pool = pool;
         try {
             AssetFileDescriptor fileDescriptor = assetManager.openFd(file);
-            pool.load(fileDescriptor,1);
+            this._idSound = pool.load(fileDescriptor,1);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    /*Pone el sonido en loop*/
     @Override
     public void loop() {
         this._pool.setLoop(this._idSound,-1);
     }
-
+    /*Ejecuta el sonido*/
     @Override
     public void play() {
         this._pool.play(this._idSound, 1,1,1,0,1);
     }
 
+    /*Para el sonido si esta sonando*/
     @Override
     public void stop() {
         this._pool.stop(this._idSound);

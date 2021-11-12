@@ -61,20 +61,8 @@ public class Game implements Scene{
      * @param deltaTime Tiempo transcurrido desde la ultima iteracion*/
     @Override
     public void onUpdate(double deltaTime) {
-        this._sceneAlpha = Math.min(this._sceneAlpha + fade * FADE_VELOCITY *(float) deltaTime , 1);
-        if(this._sceneAlpha < 0)
-            this._sceneManager.swapScene(SceneManager.SceneName.MainMenu,0);
-        //Actualizacion de los timers
-        this._animacion.getRight().tick(deltaTime);
-        //Actualizacion de los fade-in/out
-        this._fadingManager.updateFadings(deltaTime);
 
-        //Cambiar el alpha de los textos superiores para mostrar pista o mostrar el tamanio del tablero
-        if(this._isAnyInformation)
-            this._boardSizeTextAlpha = Math.min(Math.max(this._boardSizeTextAlpha - TEXT_FADING_VELOCITY* (float)deltaTime, 0f), 1.0f);
-        else
-            this._boardSizeTextAlpha = Math.min(this._boardSizeTextAlpha + TEXT_FADING_VELOCITY * (float)deltaTime, 1.0f);
-
+        updateAlphaAndAnimation(deltaTime);
         if(!this._endSucces){  //Si no ha terminado el juego
             //Recogemos input
             List<TouchEvent> list = this._engine.getInput().getTouchEvents();
@@ -167,20 +155,20 @@ public class Game implements Scene{
                     else if(this._isLocked && square.getCurrentType() == Square.SquareType.RED){
                         int lockX = x - (int)(radius * 0.5f);
                         int lockY = y - (int)(radius * 0.5f);
-                        g.drawImage(this._blockImage, lockX, lockY, (int)(radius * 1.0f), (int)(radius * 1.0f), this._sceneAlpha * 0.3f);
+                        g.drawImage(this._blockImage, lockX, lockY, radius, radius, this._sceneAlpha * 0.3f);
                     }
                 }
-                //Si es azul no modificable y hemos ganado hay que mostrar el numero
+                //Si es azul modificable y hemos ganado hay que mostrar el numero
                 else if(square.getCurrentType() == Square.SquareType.BLUE && this._endSucces){
-                    g.setColor(0xffffffff);         //Asignamos el color blanco
-                    this._informationFont.setSize(radius);     //Cambiamos el tamanio de letra
-                    g.setFont(this._informationFont);          //Asignamos la fuente
+                    g.setColor(0xffffffff);                     //Asignamos el color blanco
+                    this._informationFont.setSize(radius);      //Cambiamos el tamanio de letra
+                    g.setFont(this._informationFont);           //Asignamos la fuente
                     String text = "" + this._board.getSoltionBoard()[i][j].getNumber();
-                    g.drawText(text, x , y +(int)radius/4, this._sceneAlpha);
+                    g.drawText(text, x , y + radius/4, this._sceneAlpha);
                 }
                 if(this._isAnyInformation && square.getPos() == this._posHelp && !this._endSucces){
                     g.setColor(0xff000000);
-                    g.drawCircle(x, y, (int)radius, 3, this._sceneAlpha);
+                    g.drawCircle(x, y, radius, 3, this._sceneAlpha);
                 }
             }
         }
@@ -196,14 +184,20 @@ public class Game implements Scene{
 
         if(this._endSucces){
             g.setFont(this._titleFont);      //Asignamos la fuente;
-            g.drawText("Perfecto!", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas()/5, this._sceneAlpha);
+            g.drawText("Perfecto!",
+                    g.getWidthNativeCanvas()/2,
+                    g.getHeightNativeCanvas()/5,
+                    this._sceneAlpha);
         }
         else{
             //Texto del tamanio del tablero
             this._informationFont.setSize(70);     //Asignamos tamanio de fuente
             g.setFont(this._informationFont);      //Asignamos la fuente;
             text = this._boardSize + "x" + this._boardSize;
-            g.drawText(text, g.getWidthNativeCanvas()/2 ,g.getHeightNativeCanvas() / 5, this._sceneAlpha * this._boardSizeTextAlpha);
+            g.drawText(text,
+                    g.getWidthNativeCanvas()/2 ,
+                    g.getHeightNativeCanvas() / 5,
+                    this._sceneAlpha * this._boardSizeTextAlpha);
 
             //Texto de ayuda pista
             int fontSize = 25;
@@ -223,7 +217,7 @@ public class Game implements Scene{
     /* Dibuja los iconos de interfaz situados debajo del tablero
      * @param g Manager de lo relacionado con graficos*/
     private void drawUI(Graphics g){
-        //Dibuja porcentaje del mapa
+        //Dibuja porcentaje del mapa------------------------
         g.restore();
         g.save();
         g.translate(g.getWidthNativeCanvas()/2,(int)(g.getHeightNativeCanvas() * 0.85));
@@ -235,7 +229,7 @@ public class Game implements Scene{
         int porcentaje = (int)(100 * ((total - current)/total));
         g.drawText("" + porcentaje + "%",0,0, this._sceneAlpha);
 
-        //Dibuja iconos Hint/Deshacer/Rendirse
+        //Dibuja iconos Hint/Deshacer/Rendirse--------------
         g.restore();
         g.save();
         g.translate(0,(int)(g.getHeightNativeCanvas() * 0.90));
@@ -252,10 +246,10 @@ public class Game implements Scene{
     }
 
     /*Comprueba si el numero de casillas del tablero es 0
-     *En caso de ser 0 comprueba si es correcto o no y notifica al jugador.*/
+     *En caso de ser 0 comprueba si es correcto y sino muestra una pista.*/
     private void checkEndedGame(){
         if(this._board.getCurrentNumberOfVoid() == 0){
-            if(this._board.isCorrect()) { //TODO: poner variables para hacer los textos
+            if(this._board.isCorrect()) {
                 this._endSucces = true;
                 fade = -0.2f;
             }
@@ -323,13 +317,13 @@ public class Game implements Scene{
         int posX = (int)(g.getWidthNativeCanvas() * 0.33) - size;
         if(x > posX && x < posX + this._closeImage.getWidth() &&
                 y > posY && y < posY + this._closeImage.getHeight()){
-            //this._clickSound.play();    //lanzamos el sonido
+            this._clickSound.play();    //lanzamos el sonido
             this.fade = -1;
         }
         posX = g.getWidthNativeCanvas()/2 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._rewindImage.getWidth() &&
                 y > posY && y < posY + this._rewindImage.getHeight()){
-            //this._clickSound.play();    //lanzamos el sonido
+            this._clickSound.play();    //lanzamos el sonido
             RestoreSquare aux = this._restoreManager.getLastCasilla();
             if(aux != null){
                 this._board.getBoard()[aux.get_position().getX()][aux.get_position().getY()].setType(aux.get_currentType());
@@ -350,16 +344,33 @@ public class Game implements Scene{
         posX = (int)(g.getWidthNativeCanvas() * 0.65) - size;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
                 y > posY && y < posY + this._helpImage.getHeight()){
-            //this._clickSound.play();    //lanzamos el sonido
+            this._clickSound.play();    //lanzamos el sonido
             putHelp();
         }
     }
+    /*Guarda la ayuda que se mostrara en la parte superior de la pantalla*/
     private void putHelp(){
         Pair aux = this._board.getHint();
         if(aux == null) return;
         this._informationString = (String)aux.getLeft();
         this._posHelp = (Vector2D)aux.getRight();
         this._isAnyInformation = !this._isAnyInformation;
+    }
+    /*Actualiza las variables de alpha de la escena y hace tick para el resto de animaciones*/
+    private void updateAlphaAndAnimation(double deltaTime){
+        this._sceneAlpha = Math.min(this._sceneAlpha + fade * FADE_VELOCITY *(float) deltaTime , 1);
+        if(this._sceneAlpha < 0)
+            this._sceneManager.swapScene(SceneManager.SceneName.MainMenu,0);
+        //Actualizacion de los timers
+        this._animacion.getRight().tick(deltaTime);
+        //Actualizacion de los fade-in/out
+        this._fadingManager.updateFadings(deltaTime);
+
+        //Cambiar el alpha de los textos superiores para mostrar pista o mostrar el tamanio del tablero
+        if(this._isAnyInformation)
+            this._boardSizeTextAlpha = Math.min(Math.max(this._boardSizeTextAlpha - TEXT_FADING_VELOCITY* (float)deltaTime, 0f), 1.0f);
+        else
+            this._boardSizeTextAlpha = Math.min(this._boardSizeTextAlpha + TEXT_FADING_VELOCITY * (float)deltaTime, 1.0f);
     }
 
     private Board _board;                               //tablero del juego

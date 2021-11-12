@@ -14,9 +14,12 @@ public class Board {
         _hintsManager = new HintsManager();
         _currentVoid = tam * tam;
         boolean non_zeros;
+        int i = 0;
         do {
+            i++;
         	non_zeros = doBoard();
         } while(!non_zeros || !isValid());
+        System.out.println(i);
         prepareBoard();
     }
 
@@ -133,16 +136,19 @@ public class Board {
             return _gameBoard[newPos.getX()][newPos.getY()];
     }
     /*Comprueba si el tablero generado es resoluble dadas las pistas
-     * que proporciona el juego
+     * que proporciona el juego. Además comprueba que la solucion es correcta, es deir
+     * que todos los numeros no modificables ven los numeros que les corresponden y además que
+     * todos los azules vean menos que las dimensiones del tablero
      * @return Boolean que indica si el tablero es valido*/
     private boolean isValid(){
     	if(!this._hintsManager.isValid(this))
     		return false;
-        //Vemos si la solucion dada se corresponde con el tablero de la solcion
+        //Vemos si los numeros se corresponden y pueden ser correctos
         for(int i = 0; i < this._dimensions; i++) {
             for(int j = 0; j < this._dimensions; j++) {
                 if(this._gameBoard[i][j].getNumber() > 0){
-                    if(lookAround(this._gameBoard[i][j].getPos(),2) != this._gameBoard[i][j].getNumber())
+                    int lookAround = lookAround(this._gameBoard[i][j].getPos(),2);
+                    if(lookAround != this._gameBoard[i][j].getNumber() && lookAround <= this._dimensions)
                         return false;
                 }
             }

@@ -6,6 +6,7 @@ import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
+import es.ucm.videojuegos.moviles.engine.Sound;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
 /*Clase que implementa el juego*/
@@ -26,6 +27,7 @@ public class MainMenu implements Scene {
         this._font = this._sceneManager.getFont(SceneManager.Fonts.JosefinSans);
         this._titleFont = this._sceneManager.getFont(SceneManager.Fonts.MollerRegular);
         this._gotaImage = this._sceneManager.getImage(SceneManager.Images.q42);
+        this._clickSound = this._sceneManager.getSound(SceneManager.Sounds.Click);
         this._changeScene = false;
     }
 
@@ -131,6 +133,7 @@ public class MainMenu implements Scene {
             this.fade = -1;
             this._sceneAlpha = 1;
             this._changeScene = true;
+            this._clickSound.play();    //lanzamos el sonido
         }
 
     }
@@ -139,6 +142,7 @@ public class MainMenu implements Scene {
     private Image _gotaImage;   //imagenes de iconos
     private Font _font;         //fuente
     private Font _titleFont;    //fuente
+    private Sound _clickSound;  //sonido de click
     private SceneManager _sceneManager;
 
     float _sceneAlpha;
