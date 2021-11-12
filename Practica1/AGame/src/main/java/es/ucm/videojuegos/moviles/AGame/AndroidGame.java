@@ -54,6 +54,13 @@ public class AndroidGame extends AppCompatActivity {
         this._engine.pause();
     } // onPause
 
+    @Override
+    protected void onDestroy() {
+        // Avisamos a la vista (que es la encargada del active render)
+        // de lo que está pasando.
+        super.onDestroy();
+        this._engine.destroy();
+    } // onPause
 
     private AEngine _engine;
 

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Queue;
 
 import es.ucm.videojuegos.moviles.engine.TouchEvent.TouchEventType;
-import es.ucm.videojuegos.moviles.engine.TouchEvent;
+
 /*Clase que implementa las pool de TouchEvent*/
 public class Pool {
     /*Constructora de la clase
@@ -14,7 +14,7 @@ public class Pool {
     public Pool(int num){
         _notUsed = new ArrayDeque<>();
         for(int i = 0; i< num; ++i){
-            TouchEvent e = new TouchEvent(TouchEventType.desplazar,0,0,0,0,0);
+            TouchEvent e = new TouchEvent(TouchEventType.slide,0,0,0,0,0);
             this._notUsed.add(e);
         }
     }

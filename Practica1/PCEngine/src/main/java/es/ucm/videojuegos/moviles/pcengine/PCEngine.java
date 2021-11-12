@@ -4,6 +4,7 @@ import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Input;
+import es.ucm.videojuegos.moviles.engine.SoundManager;
 
 public class PCEngine implements Engine {
 
@@ -15,6 +16,7 @@ public class PCEngine implements Engine {
         this._graphics = new PCGraphics(window);
         this._input = new PCInput(this._graphics);
         this._app = application;
+        this._soundManager = new PCSoundManager();
         window.addMouseListener(this._input);
         application.onInit(this);
     }
@@ -72,10 +74,16 @@ public class PCEngine implements Engine {
         return this._input;
     }
 
+    @Override
+    public SoundManager getSoundManager() {
+        return this._soundManager;
+    }
 
-    Application _app;           //Aplicacion que va a poner en marcha el engine
-    PCGraphics _graphics;       //Manager de lo relacionado con los graficos en PC
-    PCInput _input;             //Manager de lo relacionado con el input en PC
+
+    Application _app;               //Aplicacion que va a poner en marcha el engine
+    PCGraphics _graphics;           //Manager de lo relacionado con los graficos en PC
+    PCInput _input;                 //Manager de lo relacionado con el input en PC
+    PCSoundManager _soundManager;   //Manager para los sonidos
 
 
 }

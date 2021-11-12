@@ -6,6 +6,7 @@ import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Input;
+import es.ucm.videojuegos.moviles.engine.SoundManager;
 
 
 public class AEngine implements Engine , Runnable {
@@ -14,6 +15,7 @@ public class AEngine implements Engine , Runnable {
         this._graphics = new AGraphics(context);
         this._application = app;
         this._input = new AInput(this._graphics);
+        this._soundManager = new ASoundManager(context);
         this._application.onInit(this);
 
         this._graphics.getSurfaceView().setOnTouchListener(this._input);
@@ -33,6 +35,16 @@ public class AEngine implements Engine , Runnable {
         return this._input;
     }
 
+    @Override
+    public SoundManager getSoundManager() {
+        return this._soundManager;
+    }
+    /*Metodo llamado para destruir las informacion de los
+     *sonidos creados en el juego
+     * */
+    public void destroy(){
+        this._soundManager.releaseSounds();
+    }
     /**
      * Método llamado para solicitar que se continue con el
      * active rendering. El "juego" se vuelve a poner en marcha
@@ -141,5 +153,6 @@ public class AEngine implements Engine , Runnable {
     private Application _application;
     private AGraphics _graphics;
     private AInput _input;
+    private ASoundManager _soundManager;
 
 }

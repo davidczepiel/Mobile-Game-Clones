@@ -6,9 +6,11 @@ package es.ucm.videojuegos.moviles.engine;
 public class TouchEvent {
 
     /*enum que representa los tipos de input que somos capaces de procesar*/
-    public enum TouchEventType { pulsar,    //cuando se clica
-                                liberar,    //cuando se libera el dedo/click
-                                desplazar}  //cuando ha habido un desplazamiento
+    public enum TouchEventType {
+        touch,    //cuando se clica
+        release,      //cuando se libera el dedo/click
+        slide           //cuando ha habido un desplazamiento
+    }
     /* Constructora de la clase
      * @param x posicion en X
      * @param y posicion en y

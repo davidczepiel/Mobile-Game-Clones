@@ -14,7 +14,7 @@ import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
 /*Clase que implementa metodos de Graphics haciendo uso de JFrame y Graphics*/
 public class PCGraphics extends AbstractGraphics {
-
+    private static final String PATH = "assets/";
     /**
      * Constructor.
      *
@@ -59,7 +59,7 @@ public class PCGraphics extends AbstractGraphics {
     * @returns nueva imagen de PC*/
     @Override
     public Image newImage(String name) {
-        return new PCImage(name);
+        return new PCImage(PATH +name);
     }
 
     /*Crea una fuente dada la ruta de la misma
@@ -69,7 +69,7 @@ public class PCGraphics extends AbstractGraphics {
     * @return nueva fuente de PC*/
     @Override
     public Font newFont(String filename, int size, boolean isBold) {
-        return new PCFont(filename,size,isBold);
+        return new PCFont(PATH + filename,size,isBold);
     }
 
     /*Rellena el fondo de la pantalla con el color establecido

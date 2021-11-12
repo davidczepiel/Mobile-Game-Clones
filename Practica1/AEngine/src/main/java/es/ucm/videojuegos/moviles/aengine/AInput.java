@@ -1,10 +1,7 @@
 package es.ucm.videojuegos.moviles.aengine;
 
-import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.View;
-
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import es.ucm.videojuegos.moviles.engine.AbstractInput;
 import es.ucm.videojuegos.moviles.engine.Graphics;
@@ -29,20 +26,22 @@ public class AInput extends AbstractInput implements View.OnTouchListener {
 
         boolean eventProcessed=true;
         switch(event.getAction()){
+            case MotionEvent.ACTION_MOVE:
+                for(int i=0; i<event.getPointerCount(); i++){
+                    eventProcessed=processTouchInput(event,TouchEvent.TouchEventType.slide,i);
+                }
+                break;
             case MotionEvent.ACTION_DOWN:
-                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.pulsar,0);
+                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.touch,event.getActionIndex());
                 break;
             case MotionEvent.ACTION_UP:
-                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.liberar,0);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                eventProcessed=processTouchInput(event,TouchEvent.TouchEventType.desplazar,0);
+                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.release,event.getActionIndex());
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
-                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.pulsar,event.getActionIndex());
+                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.touch,event.getActionIndex());
                 break;
             case MotionEvent.ACTION_POINTER_UP:
-                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.liberar,event.getActionIndex());
+                eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.release,event.getActionIndex());
                 break;
         }
 
@@ -61,7 +60,8 @@ public class AInput extends AbstractInput implements View.OnTouchListener {
 
         //Devolvemos true porque hemos sido capaces de procesarlo, sin embargo no nos interesa hacer caso
         //si se encuentra fuera del canvas
-        if(pair == null) return true;
+        if(pair == null)
+            return true;
 
         //Incorporamos el evento a la lista
         ev.set_type(type);

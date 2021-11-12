@@ -7,6 +7,7 @@ import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Image;
+import es.ucm.videojuegos.moviles.engine.Sound;
 
 /*Clase utilizada para guardar y crear las instancias de las aplicaciones con el fin de
  *reutilizar las aplicaciones de los menus y no crear nuevas instancias.
@@ -16,6 +17,7 @@ public class SceneManager {
     public enum SceneName{ MainMenu, SelectMenu, OhNo}
     public enum Images{close,history,eye,lock,q42}
     public enum Fonts{JosefinSans, MollerRegular}
+    public enum Sounds{Click}
 
     public SceneManager(Engine engine){
         _scenes = new ArrayList<>();
@@ -41,22 +43,28 @@ public class SceneManager {
         this._currentScene.onInit(this.engine);
 
     }
+
+    /*Devuelve la escena que está actualmente usandose*/
     public Scene getCurrentScene(){
         return  this._currentScene;
     }
+    /*Crea y guarda todos los recursos del juego*/
     public void chargeResources(){
         if(_images == null){
             this._images = new ArrayList<>();
             this._fonts = new ArrayList<>();
+            this._sounds = new ArrayList<>();
             //Guardamos las imagenes
-            this._images.add(engine.getGraphics().newImage("assets/sprites/close.png"));
-            this._images.add(engine.getGraphics().newImage("assets/sprites/history.png"));
-            this._images.add(engine.getGraphics().newImage("assets/sprites/eye.png"));
-            this._images.add(engine.getGraphics().newImage("assets/sprites/lock.png"));
-            this._images.add(engine.getGraphics().newImage("assets/sprites/q42.png"));
+            this._images.add(engine.getGraphics().newImage("sprites/close.png"));
+            this._images.add(engine.getGraphics().newImage("sprites/history.png"));
+            this._images.add(engine.getGraphics().newImage("sprites/eye.png"));
+            this._images.add(engine.getGraphics().newImage("sprites/lock.png"));
+            this._images.add(engine.getGraphics().newImage("sprites/q42.png"));
             //Guardamos las fuentes
-            this._fonts.add(engine.getGraphics().newFont("assets/fonts/JosefinSans-Bold.ttf", 70, true));
-            this._fonts.add(engine.getGraphics().newFont("assets/fonts/Molle-Regular.ttf", 50, false));
+            this._fonts.add(engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 70, true));
+            this._fonts.add(engine.getGraphics().newFont("fonts/Molle-Regular.ttf", 50, false));
+
+            this._sounds.add(engine.getSoundManager().newSound("sounds/click.wav"));
         }
     }
 
@@ -66,11 +74,15 @@ public class SceneManager {
     public Font getFont(Fonts id){
         return this._fonts.get(id.ordinal());
     }
+    public Sound getSound(Sounds id){
+        return this._sounds.get(id.ordinal());
+    }
 
     private Scene _currentScene;
     private List<Scene> _scenes;    //array donde se guardan las escenas
     private List<Image> _images;    //array donde se guardan las imagenes
     private List<Font> _fonts;      //array donde se guardan las fuentes
+    private List<Sound> _sounds;      //array donde se guardan las fuentes
 
     private Engine engine;
 }

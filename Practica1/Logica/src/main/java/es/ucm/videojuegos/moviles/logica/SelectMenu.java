@@ -46,7 +46,7 @@ public class SelectMenu implements Scene {
         //Procesamos el input
         for (TouchEvent e: list) {
             //Solo comprobamos eventos cuando sean pulsados
-            if(e.get_type() == TouchEvent.TouchEventType.pulsar){
+            if(e.get_type() == TouchEvent.TouchEventType.touch){
                 checkCircles(e.get_x(),e.get_y());
                 checkUI(e.get_x(),e.get_y());
             }

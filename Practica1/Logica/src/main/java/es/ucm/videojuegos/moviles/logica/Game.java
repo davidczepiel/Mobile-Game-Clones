@@ -7,6 +7,7 @@ import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
 import es.ucm.videojuegos.moviles.engine.Pair;
+import es.ucm.videojuegos.moviles.engine.Sound;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
 
 public class Game implements Scene{
@@ -33,12 +34,16 @@ public class Game implements Scene{
         //Creamos la cola de casillas pre-modificadas
         this._restoreManager = new RestoreManager();
 
+        //Cogemos los recursos que vayamos a usar
         this._informationFont = this._sceneManager.getFont(SceneManager.Fonts.JosefinSans);
         this._titleFont = this._sceneManager.getFont(SceneManager.Fonts.MollerRegular);
+
         this._closeImage = this._sceneManager.getImage(SceneManager.Images.close);
         this._rewindImage = this._sceneManager.getImage(SceneManager.Images.history);
         this._helpImage = this._sceneManager.getImage(SceneManager.Images.eye);
         this._blockImage = this._sceneManager.getImage(SceneManager.Images.lock);
+
+        this._clickSound = this._sceneManager.getSound(SceneManager.Sounds.Click);
 
         //Timer y animaciones
         this._animationTimer = new Timer(0.15);
@@ -76,7 +81,7 @@ public class Game implements Scene{
             //Procesamos el input
             for (TouchEvent e: list) {
                 //Solo comprobamos eventos cuando sean pulsados
-                if(e.get_type() == TouchEvent.TouchEventType.pulsar){
+                if(e.get_type() == TouchEvent.TouchEventType.touch){
                     checkCircles(e.get_x(),e.get_y());
                     checkUI(e.get_x(),e.get_y());
                 }
@@ -287,6 +292,7 @@ public class Game implements Scene{
                 double distance = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2));
                 //comprobamos si se está clicando
                 if(distance <= radius){
+                    this._clickSound.play();    //lanzamos el sonido
                     if(!square.is_modificable()){
                         this._isLocked = !this._isLocked;
 
@@ -317,11 +323,13 @@ public class Game implements Scene{
         int posX = (int)(g.getWidthNativeCanvas() * 0.33) - size;
         if(x > posX && x < posX + this._closeImage.getWidth() &&
                 y > posY && y < posY + this._closeImage.getHeight()){
-           this.fade = -1;
+            //this._clickSound.play();    //lanzamos el sonido
+            this.fade = -1;
         }
         posX = g.getWidthNativeCanvas()/2 - g.getWidthNativeCanvas()/8;
         if(x > posX && x < posX + this._rewindImage.getWidth() &&
                 y > posY && y < posY + this._rewindImage.getHeight()){
+            //this._clickSound.play();    //lanzamos el sonido
             RestoreSquare aux = this._restoreManager.getLastCasilla();
             if(aux != null){
                 this._board.getBoard()[aux.get_position().getX()][aux.get_position().getY()].setType(aux.get_currentType());
@@ -338,11 +346,11 @@ public class Game implements Scene{
                 this._informationString = "No hay mas movimientos";
                 _isAnyInformation = !_isAnyInformation;
             }
-
         }
         posX = (int)(g.getWidthNativeCanvas() * 0.65) - size;
         if(x > posX && x < posX + this._helpImage.getWidth() &&
                 y > posY && y < posY + this._helpImage.getHeight()){
+            //this._clickSound.play();    //lanzamos el sonido
             putHelp();
         }
     }
@@ -354,10 +362,11 @@ public class Game implements Scene{
         this._isAnyInformation = !this._isAnyInformation;
     }
 
-    private Board _board;                           //tablero del juego
+    private Board _board;                               //tablero del juego
     private FadingManager _fadingManager;               //Gestor de fading
     private Engine _engine;                             //engine
-    private Font _informationFont, _titleFont;         //fuente
+    private Font _informationFont, _titleFont;          //fuente
+    private Sound _clickSound;                          //sonido de click
     private Image _closeImage, _rewindImage, _helpImage, _blockImage;   //imagenes de iconos
 
     private RestoreManager _restoreManager;     //guarda la cola de casillas pre-modificadas
@@ -368,7 +377,7 @@ public class Game implements Scene{
 
     private float _boardSizeTextAlpha;      //Alpha del texto que se muestra en la parte de arriba
     private float _sceneAlpha;              //Alpha de la escena
-    private float fade;                       //Fade-in o fade-out
+    private float fade;                     //Fade-in o fade-out
 
     private int _boardSize;         //tamanio del tablero de juego
 
@@ -378,5 +387,5 @@ public class Game implements Scene{
     private String _informationString;      //cadena de texto donde se guarda la pista
     private Vector2D _posHelp;              //guarda la posicion de la casilla donde se da la pista
 
-    private boolean _endSucces;             //si al terminar el tablero ha sido exitoso o no
+    private boolean _endSucces;             //si al terminar el tablero ha sido exitoso
 }
