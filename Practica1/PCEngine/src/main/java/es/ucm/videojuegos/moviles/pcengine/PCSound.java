@@ -52,11 +52,6 @@ public class PCSound implements Sound {
             this._audio.stop();
     }
 
-    @Override
-    public void release() {
-        this._audio.close();
-    }
-
     private Clip _audio;
     private File _audioFile;
 }

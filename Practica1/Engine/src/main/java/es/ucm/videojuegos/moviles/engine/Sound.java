@@ -4,5 +4,4 @@ public interface Sound {
     void loop();
     void play();
     void stop();
-    void release();
 }

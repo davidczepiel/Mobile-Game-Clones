@@ -1,6 +1,8 @@
 package es.ucm.videojuegos.moviles.aengine;
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.SoundPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,23 +14,21 @@ public class ASoundManager implements SoundManager {
 
     public ASoundManager(Context context){
         this._context = context;
-        this._sounds = new ArrayList<>();
+        this._pool = new SoundPool(
+                10,
+                AudioManager.STREAM_MUSIC,
+                0);
     }
     @Override
     public Sound newSound(String file) {
-        ASound a = new ASound(file, _context);
-        this._sounds.add(a);
-        return a;
+        return new ASound(file, _context, this._pool);
     }
 
     @Override
     public void releaseSounds() {
-        for(ASound sound: this._sounds){
-            sound.release();
-        }
+        this._pool.release();
     }
 
-
-    private List<ASound> _sounds;
     private Context _context;
+    private SoundPool _pool;
 }
