@@ -25,21 +25,31 @@ public class AInput extends AbstractInput implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
 
         boolean eventProcessed=true;
-        switch(event.getAction()){
-            case MotionEvent.ACTION_MOVE:
-                for(int i=0; i<event.getPointerCount(); i++){
-                    eventProcessed=processTouchInput(event,TouchEvent.TouchEventType.slide,i);
-                }
-                break;
+
+        //Pregunto por la accion (no uso getAction porque eso incluye info del index culpable, este metodo solo informa de la accion,
+        // posteriormente obtendo el index)
+        switch(event.getActionMasked()){
             case MotionEvent.ACTION_DOWN:
                 eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.touch,event.getActionIndex());
                 break;
+
             case MotionEvent.ACTION_UP:
                 eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.release,event.getActionIndex());
                 break;
+
+            case MotionEvent.ACTION_MOVE:
+                //Como no disponemos de un caso especifico en al accion de mover para cuando estamos con multitouch
+                //estamos obligados a mirar cuantos dedos hay presionando la pantalla y decir que todos ellos se acaban de mover
+                //porque si preguntamos por el index del dedo que ha causado la accion siempre obtendremos el index del primer
+                //dedo que toco la pantalla, a pesar de que pueda haber sido el segundo o el tercero el que se haya movido
+                for(int i =0; i<event.getPointerCount();i++)
+                    eventProcessed=processTouchInput(event,TouchEvent.TouchEventType.slide,i);
+                break;
+
             case MotionEvent.ACTION_POINTER_DOWN:
                 eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.touch,event.getActionIndex());
                 break;
+
             case MotionEvent.ACTION_POINTER_UP:
                 eventProcessed=processTouchInput(event, TouchEvent.TouchEventType.release,event.getActionIndex());
                 break;
