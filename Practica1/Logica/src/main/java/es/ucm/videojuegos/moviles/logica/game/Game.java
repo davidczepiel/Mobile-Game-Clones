@@ -1,4 +1,4 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.game;
 
 import java.util.List;
 
@@ -9,8 +9,17 @@ import es.ucm.videojuegos.moviles.engine.Image;
 import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.engine.Sound;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
+import es.ucm.videojuegos.moviles.logica.board.Board;
+import es.ucm.videojuegos.moviles.logica.board.Square;
+import es.ucm.videojuegos.moviles.logica.board.Vector2D;
+import es.ucm.videojuegos.moviles.logica.game.FadingManager;
+import es.ucm.videojuegos.moviles.logica.game.RestoreManager;
+import es.ucm.videojuegos.moviles.logica.game.RestoreSquare;
+import es.ucm.videojuegos.moviles.logica.game.Scene;
+import es.ucm.videojuegos.moviles.logica.game.SceneManager;
+import es.ucm.videojuegos.moviles.logica.game.Timer;
 
-public class Game implements Scene{
+public class Game implements Scene {
 
     private final float TEXT_FADING_VELOCITY = 4f;
     private final float FADE_VELOCITY= 2.5f;

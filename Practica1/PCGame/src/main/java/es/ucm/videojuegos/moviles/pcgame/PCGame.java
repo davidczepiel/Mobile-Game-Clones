@@ -1,7 +1,7 @@
 package es.ucm.videojuegos.moviles.pcgame;
 
 
-import es.ucm.videojuegos.moviles.logica.OhNoGame;
+import es.ucm.videojuegos.moviles.logica.game.OhNoGame;
 import es.ucm.videojuegos.moviles.pcengine.PCEngine;
 
 /*Clase que representa el lanzador en PC*/

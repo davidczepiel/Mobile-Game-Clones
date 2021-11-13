@@ -1,4 +1,4 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.board;
 
 public class Hint4 implements Hint {
 

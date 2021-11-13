@@ -1,4 +1,4 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.game;
 
 import es.ucm.videojuegos.moviles.engine.Engine;
 

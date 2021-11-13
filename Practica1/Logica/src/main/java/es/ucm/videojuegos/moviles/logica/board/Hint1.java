@@ -1,5 +1,5 @@
-package es.ucm.videojuegos.moviles.logica;
-import es.ucm.videojuegos.moviles.logica.Square.SquareType;
+package es.ucm.videojuegos.moviles.logica.board;
+import es.ucm.videojuegos.moviles.logica.board.Square.SquareType;
 
 public class Hint1 implements Hint {
 	

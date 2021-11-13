@@ -1,9 +1,9 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.board;
 
 import java.util.Random;
 
 import es.ucm.videojuegos.moviles.engine.Pair;
-import es.ucm.videojuegos.moviles.logica.Square.SquareType;
+import es.ucm.videojuegos.moviles.logica.board.Square.SquareType;
 
 public class Board {
 

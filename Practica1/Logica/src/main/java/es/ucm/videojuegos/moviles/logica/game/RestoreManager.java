@@ -1,6 +1,8 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.game;
 
 import java.util.Stack;
+
+import es.ucm.videojuegos.moviles.logica.board.Square;
 
 /*Clase encargada de guardar las casillas que han sido modificadas antes de su modificacion,
 * con el fin de devolver el último cambio realizado*/

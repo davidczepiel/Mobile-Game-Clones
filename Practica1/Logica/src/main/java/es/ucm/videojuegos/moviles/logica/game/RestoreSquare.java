@@ -1,4 +1,8 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.game;
+
+import es.ucm.videojuegos.moviles.logica.board.Square;
+import es.ucm.videojuegos.moviles.logica.board.Vector2D;
+
 /*Clase que guarda la informacion necesaria para devolver a una casilla
 * a su estado anterior. Es usada en Restore Manager con el fin de no guardar
 * Casilla*/

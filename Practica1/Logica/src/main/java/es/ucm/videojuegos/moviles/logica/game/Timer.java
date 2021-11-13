@@ -1,4 +1,4 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.game;
 /*Clase que guarda toda la informacion necesaria para representar un temporizador
 * Se utiliza para realizar las animaciones al clicar en los ciculos no modificables
 * Ofrece las funciones más básicas necesarias para un temporizador, como

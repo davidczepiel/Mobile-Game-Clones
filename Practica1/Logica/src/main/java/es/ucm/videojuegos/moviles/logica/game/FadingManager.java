@@ -1,9 +1,12 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import es.ucm.videojuegos.moviles.logica.board.Board;
+import es.ucm.videojuegos.moviles.logica.board.Square;
 
 /*Clase encargada de manejar los fade-ins y fade-outs de las casillas y de las pistas mostradas*/
 public class FadingManager {

@@ -1,4 +1,7 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.board;
+
+import es.ucm.videojuegos.moviles.logica.board.Board;
+import es.ucm.videojuegos.moviles.logica.board.Vector2D;
 
 /*Clase que guarda la informacion de una casilla del tablero*/
 public class Square {

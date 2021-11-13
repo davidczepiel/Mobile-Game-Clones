@@ -1,4 +1,4 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.board;
 
 public interface Hint {
 	/* Vemos si dado el estado del board la pista actual puede ser aplicable

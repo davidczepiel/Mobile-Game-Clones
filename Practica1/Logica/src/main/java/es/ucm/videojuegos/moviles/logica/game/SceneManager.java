@@ -1,9 +1,8 @@
-package es.ucm.videojuegos.moviles.logica;
+package es.ucm.videojuegos.moviles.logica.game;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import es.ucm.videojuegos.moviles.engine.Application;
 import es.ucm.videojuegos.moviles.engine.Engine;
 import es.ucm.videojuegos.moviles.engine.Font;
 import es.ucm.videojuegos.moviles.engine.Image;

@@ -5,8 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import es.ucm.videojuegos.moviles.aengine.AEngine;
-import es.ucm.videojuegos.moviles.logica.OhNoGame;
-import es.ucm.videojuegos.moviles.logica.SceneManager;
+import es.ucm.videojuegos.moviles.logica.game.OhNoGame;
 
 
 public class AndroidGame extends AppCompatActivity {
