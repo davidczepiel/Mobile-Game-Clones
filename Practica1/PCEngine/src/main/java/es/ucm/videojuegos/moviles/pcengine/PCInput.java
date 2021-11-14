@@ -78,7 +78,9 @@ public class PCInput extends AbstractInput implements MouseListener, MouseMotion
     public void mouseExited(MouseEvent e) {
         //
     }
-
+    //+-----------------------------------------------------------------------+
+    //|                   Interfaz Mouse Motion Listener                      |
+    //+-----------------------------------------------------------------------+
     /*Metodo de PC que obtiene un evento cuando el mouse esta presionando y moviendose a la vez
      * en cualquier lado de la pantalla
      * @param e Clase que almacena la informacion del evento que ha ocurrido*/

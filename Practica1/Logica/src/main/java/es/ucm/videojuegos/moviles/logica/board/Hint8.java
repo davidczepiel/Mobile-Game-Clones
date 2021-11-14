@@ -12,7 +12,7 @@ public class Hint8 implements Hint {
 		
 		if(numInSight >= square.getNumber()) return false;
 		
-		int openDirections = 0;
+		int openDirections = 0;	//la pista solo se da si encontramos una direccion
 		
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
 		for(int i = 0; i < dir.length; ++i) {
@@ -23,7 +23,7 @@ public class Hint8 implements Hint {
 		
 		return openDirections == 1;
 	}
-
+	/*Pone azules en la direccion que se de*/
 	@Override
 	public void applyHint(Square square, Board board) {
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};
@@ -43,7 +43,8 @@ public class Hint8 implements Hint {
 	public String generateHelp() {
 		return "Un numero que no ve suficientes- puntos no esta cerrado aun y- solo tiene abierta una direccion";
 	}
-	
+
+	/*Cuenta el numero de vacios dada una direccion*/
 	int countVoids(Vector2D pos, Vector2D dir, boolean counting, Board board) {
 		//Nos movemos a la siguiente posicion
 		Vector2D newPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());

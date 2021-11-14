@@ -2,7 +2,9 @@ package es.ucm.videojuegos.moviles.engine;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*Clase encargada de tener una capa abstracta para cada una de las plataformas
+* donde se realizan los calculos de transformacion de coordenadas y se recogen y aniaden
+* los eventos a las listas de eventos.*/
 public class AbstractInput implements Input{
 
     //Numero de listas que usa el input para almacenar los eventos y hacer swap cada vez que la logica pida una lista de eventos (siempre 2)

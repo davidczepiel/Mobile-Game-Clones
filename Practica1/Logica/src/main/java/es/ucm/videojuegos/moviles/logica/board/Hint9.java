@@ -39,7 +39,7 @@ public class Hint9 implements Hint {
     private int completeVoidsAroundRecInGame(Vector2D pos, Vector2D dir, Board board){
         Vector2D newPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
         if( newPos.getX() < 0 || newPos.getX() >= board.getDimensions() || newPos.getY() < 0 || newPos.getY() >= board.getDimensions() ||   	//Si me he salido de cualquier limite
-		board.getBoard()[newPos.getX()][newPos.getY()].getCurrentType() == SquareType.RED)									  	// Si me he encontrado un muro
+		board.getBoard()[newPos.getX()][newPos.getY()].getCurrentType() == SquareType.RED)									  					// Si me he encontrado un muro
             return 0;
         else board.getBoard()[newPos.getX()][newPos.getY()].setType(SquareType.BLUE);
         return 1 + completeVoidsAroundRecInGame(newPos,dir, board);

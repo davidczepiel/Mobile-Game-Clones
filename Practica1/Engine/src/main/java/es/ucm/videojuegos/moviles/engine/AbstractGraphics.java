@@ -1,5 +1,6 @@
 package es.ucm.videojuegos.moviles.engine;
-
+/*Clase que realiza los calculos de posicionaminto y escalado del canvas para ambas
+* plataformas*/
 public class AbstractGraphics implements Graphics{
     @Override
     public Image newImage(String name) {
@@ -62,21 +63,24 @@ public class AbstractGraphics implements Graphics{
         return 0;
     }
 
+    /*Devuelve el ancho del canvas nativo(400x600)*/
     @Override
     public int getWidthNativeCanvas() {
         return this._originalWidth;
     }
 
+    /*Devuelve el alto del canvas nativo(400x600)*/
     @Override
     public int getHeightNativeCanvas() {
         return this._originalHeight;
     }
 
+    /*Devuelve el ancho del canvas actualmente pintado*/
     @Override
     public int getLogicCanvasWidth() {
         return this._canvasSizeX;
     }
-
+    /*Devuelve el alto del canvas actualmente pintado*/
     @Override
     public int getLogicCanvasHeight() {
         return this._canvasSizeY;
@@ -116,13 +120,13 @@ public class AbstractGraphics implements Graphics{
         scale(this._scale, this._scale);
         save();
     }
-    /* Deja de utilizar el motor de render de cada plataforma*/
+    /* Muestra el contenido pintado en el buffer*/
     public void show(){
 
     }
 
     protected int _x,  _y;                            // Posicion desde la cual se empieza a pintar el canvas
-    protected double _scale;                           // Factor de escalado
+    protected double _scale;                          // Factor de escalado
     protected int _canvasSizeX, _canvasSizeY;         //El tamanio de la parte pintable del juego que es relacion a 2/3
     protected int _originalWidth, _originalHeight;    //El tamanio original desde el que se inicia la app
 }

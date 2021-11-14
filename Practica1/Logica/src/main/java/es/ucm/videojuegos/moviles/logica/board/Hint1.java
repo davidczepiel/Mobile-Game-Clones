@@ -17,7 +17,7 @@ public class Hint1 implements Hint {
 		return  posible &&		//Si sus casillas vecinas no son vacias
 			   board.lookAround(square.getPos(), 1) == square.getNumber();
 	}
-	
+	/*Cierra las casillas alrededor del azul*/
 	@Override
 	public void applyHint(Square square, Board board) {
 		Vector2D[] dir = {new Vector2D(1,0),new Vector2D(-1,0),new Vector2D(0,1),new Vector2D(0,-1)};

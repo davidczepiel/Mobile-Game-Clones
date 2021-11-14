@@ -1,5 +1,6 @@
 package es.ucm.videojuegos.moviles.engine;
 
+/*Clase que simula una Tupla con el fin de almacenar dos valores*/
 public class Pair<L,R> {
 
     private final L left;

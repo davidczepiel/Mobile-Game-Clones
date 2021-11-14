@@ -15,7 +15,7 @@ public class Hint2 implements Hint {
 			Square firstVoid = board.searchFirstVoid(dir[i], square.getPos());
 			if(firstVoid != null) {
 				int voidsIcanSee = board.lookAroundRecParcial(firstVoid.getPos(), dir[i]);	//Vacios que veo en la direccion i
-				if (numBlueSquares + voidsIcanSee > square.getNumber()) {	//Si supero el numero establecido por la casilla
+				if (numBlueSquares + voidsIcanSee > square.getNumber()) {					//Si supero el numero establecido por la casilla
 					currentVoid = firstVoid;
 					return true;									//Significa que puedo poner una pared
 				}

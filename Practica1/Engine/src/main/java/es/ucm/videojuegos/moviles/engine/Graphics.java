@@ -1,5 +1,8 @@
 package es.ucm.videojuegos.moviles.engine;
 
+/*Interfaz encargada de tener metodos necesarios para dibujar
+ * en cada plataforma
+ */
 public interface Graphics {
     // Crea una nueva imagen
     Image newImage(String name);

@@ -10,7 +10,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import es.ucm.videojuegos.moviles.engine.Sound;
-
+/*Clase que implementa los sonidos en PC utilizando un Clip de Java*/
 public class PCSound implements Sound {
 
     public PCSound(String file) {
@@ -32,7 +32,6 @@ public class PCSound implements Sound {
 
     @Override
     public void loop() {
-
         this._audio.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
@@ -46,7 +45,7 @@ public class PCSound implements Sound {
         this._audio.start();
     }
 
-       @Override
+    @Override
     public void stop() {
         if(this._audio.isRunning())
             this._audio.stop();

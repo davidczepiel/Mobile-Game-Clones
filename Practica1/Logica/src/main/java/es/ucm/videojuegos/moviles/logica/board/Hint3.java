@@ -48,7 +48,6 @@ public class Hint3 implements Hint {
 		aux.setType(SquareType.BLUE);
 	}
 	
-	
 
 	@Override
 	public String generateHelp() {

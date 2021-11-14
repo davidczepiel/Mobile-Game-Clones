@@ -4,22 +4,22 @@ import java.util.Random;
 
 import es.ucm.videojuegos.moviles.engine.Pair;
 import es.ucm.videojuegos.moviles.logica.board.Square.SquareType;
-
+/*Clase que implementa y gestiona el tablero del juego desde su creacion hasta su comprobacion.
+ */
 public class Board {
-
+    /*Constructora de la clase que crea un tablero de tamxtam*/
     public Board(int tam){
         _dimensions = tam;
         _gameBoard = new Square[_dimensions][_dimensions];
         _solutionBoard = new Square[_dimensions][_dimensions];
         _hintsManager = new HintsManager();
         _currentVoid = tam * tam;
+        //variable que guarda si el numero de azules y rojos es distinto de 0 o si el numero de azules
+        //que ven los numeros es menor o igual que el tamanio del tablero
         boolean non_zeros;
-        int i = 0;
         do {
-            i++;
         	non_zeros = doBoard();
-        } while(!non_zeros || !isValid());
-        System.out.println(i);
+        } while(!non_zeros || !isValid());  //mientras que no sea valido
         prepareBoard();
     }
 
@@ -55,15 +55,14 @@ public class Board {
     	case VOID:
     		square.setType(SquareType.BLUE);
     		break;
-
     	}
     }
 
-    /* Suma el valor de vac�as al actual valor
+    /* Suma el valor de vacias al actual valor
 	 * @param mod modificador que se suma. Si es negativo se resta*/
     public void modifyVoid(int mod) { _currentVoid +=mod;}
 
-    /*Obtiene el n�mero actual de casillas vac�as en el tablero
+    /*Obtiene el numero actual de casillas vacias en el tablero
     * @return Numero de casillas vacias actuales del tablero*/
     public int getCurrentNumberOfVoid() { return _currentVoid;}
 
@@ -71,7 +70,7 @@ public class Board {
     * @return Numero de casillas totales y modificables del tablero */
     public int getTotalNumberOfVoid() { return  _totalVoid;}
 
-    /*Obtiene la dimensi�n del tablero
+    /*Obtiene la dimension del tablero
     * @return dimensiones del tablero*/
     public int getDimensions() { return _dimensions;}
 
@@ -117,15 +116,15 @@ public class Board {
         return 1 + lookAroundRecParcial(newPos,dir);
     }
 
-    /* Dada una direcci�n, busca el �ltimo espacio vacio sin paredes de por medio
-     * @param dir direcci�n en la que buscar� un sospechoso
+    /* Dada una direccion, busca el ultimo espacio vacio sin paredes de por medio
+     * @param dir direccion en la que buscara un sospechoso
      * @param tablero (del juego)
-     * @param pos posici�n de la casilla desde la que partir
+     * @param pos posicion de la casilla desde la que partir
      * @return Casilla vacia encontrada o null en caso de que no existiera ninguna*/
     protected Square searchFirstVoid(Vector2D dir, Vector2D pos) {
         Vector2D newPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
 
-        if( newPos.getX() < 0 || newPos.getX() >= _dimensions ||  						//Si me he salido por las X's
+        if( newPos.getX() < 0 || newPos.getX() >= _dimensions ||  						    //Si me he salido por las X's
                 newPos.getY() < 0 || newPos.getY() >= _dimensions ||   						//Si me he salido por las Y's
                 _gameBoard[newPos.getX()][newPos.getY()].getCurrentType() == SquareType.RED)			//La siguiente es roja
             return null;
@@ -179,13 +178,13 @@ public class Board {
                 }
             }
         }
-        //Escogemos casillas para ponerlas est�ticas
+        //Escogemos casillas para ponerlas estaticas
         return blue > 0 && red > 0 && chooseSquares(blue, red);
         
     }
     
-    /*Mira en el tablero de la solcion de manera recursiva dada una posicci�n y una direcci�n el n�mero de azules.
-     * Usado para calcular el n�mero en los no modificables a la hora de generar el tablero
+    /*Mira en el tablero de la solcion de manera recursiva dada una posiccion y una direccion el numero de azules.
+     * Usado para calcular el numero en los no modificables a la hora de generar el tablero
      * Deja de contar al encontrarse con un rojo
      * @param pos inicial desde la cual se busca
      * @param dir en la que se buscan azules
@@ -193,12 +192,12 @@ public class Board {
     private int lookAroundRecInSolutionBoard(Vector2D pos, Vector2D dir){
         Vector2D newPos = new Vector2D(pos.getX()+ dir.getX(),pos.getY()+ dir.getY());
         if( newPos.getX() < 0 || newPos.getX() >= _dimensions || newPos.getY() < 0 || newPos.getY() >= _dimensions ||   //Si me he salido de cualquier limite
-            _solutionBoard[newPos.getX()][newPos.getY()].getCurrentType() == SquareType.RED)                             // Si me he encontrado un muro
+            _solutionBoard[newPos.getX()][newPos.getY()].getCurrentType() == SquareType.RED)                            //Si me he encontrado un muro
             return 0;
         return 1 + lookAroundRecInSolutionBoard(newPos,dir);
     }
     
-    /*Mira en el tablero del juego de manera recursiva dada una posicci�n y una direcci�n el n�mero de azules.
+    /*Mira en el tablero del juego de manera recursiva dada una posiccion y una direccion el numero de azules.
      * Deja de contar al encontrarse con un rojo
      * @param pos inicial desde la cual se busca
      * @param dir en la que se buscan azules
@@ -227,12 +226,12 @@ public class Board {
         _currentVoid = _dimensions * _dimensions;
         
         Random rand = new Random();
-        //Mientras que haya azules que posicionar, busco una posici�n aleatoria
-        // y a�ado al tablero del juego siempre que sea posible
+        //Mientras que haya azules que posicionar, busco una posicion aleatoria
+        // y aniado al tablero del juego siempre que sea posible
         while(blue>0){
             int posX=rand.nextInt(_dimensions);
             int posY=rand.nextInt(_dimensions);
-            if(_solutionBoard[posX][posY].getCurrentType() == SquareType.BLUE &&		//Si en la soluci�n es azul
+            if(_solutionBoard[posX][posY].getCurrentType() == SquareType.BLUE &&		//Si en la solucion es azul
             _gameBoard[posX][posY].getCurrentType() != SquareType.BLUE){			//Si no he visitado ya esta casilla
                 _gameBoard[posX][posY].setModificable(false);
                 _gameBoard[posX][posY].setType(SquareType.BLUE);
@@ -242,12 +241,12 @@ public class Board {
                 blue--;
             }
         }
-        //Mientras que haya rojos que posicionar, busco una posici�n aleatoria
-        // y a�ado al tablero del juego siempre que sea posible
+        //Mientras que haya rojos que posicionar, busco una posicion aleatoria
+        // y aniado al tablero del juego siempre que sea posible
         while(red>0){
             int posX=rand.nextInt(_dimensions);
             int posY=rand.nextInt(_dimensions);
-            if(_solutionBoard[posX][posY].getCurrentType() == SquareType.RED && 	//Si en la soluci�n es azul
+            if(_solutionBoard[posX][posY].getCurrentType() == SquareType.RED && 	//Si en la solucion es azul
     	    _gameBoard[posX][posY].getCurrentType() != SquareType.RED){			//Si no he visitado ya esta casilla
                 _gameBoard[posX][posY].setModificable(false);
                 _gameBoard[posX][posY].setType(SquareType.RED);

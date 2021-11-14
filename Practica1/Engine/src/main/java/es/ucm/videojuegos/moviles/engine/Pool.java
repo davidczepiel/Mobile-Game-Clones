@@ -37,5 +37,5 @@ public class Pool {
         }
     }
 
-    private Queue<TouchEvent> _notUsed;
+    private Queue<TouchEvent> _notUsed;     //Cola de eventos que no estan siendo usados
 }

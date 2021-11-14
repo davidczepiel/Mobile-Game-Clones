@@ -8,14 +8,15 @@ import es.ucm.videojuegos.moviles.engine.Graphics;
 import es.ucm.videojuegos.moviles.engine.Image;
 import es.ucm.videojuegos.moviles.engine.Sound;
 import es.ucm.videojuegos.moviles.engine.TouchEvent;
-
+/*Escena que realiza el menu intermedio de elecion de tamanio*/
 public class SelectMenu implements Scene {
 
     private final float FADE_VELOCITY= 2.5f;
-
+    /*Constructora*/
     public SelectMenu(SceneManager sceneManager){
         this._sceneManager = sceneManager;
     }
+    /*Inicializa las variables de clase*/
     @Override
     public void onInit(Engine g) {
         this._sceneAlpha = 0;
@@ -80,6 +81,8 @@ public class SelectMenu implements Scene {
         g.drawImage(this._closeIcon,(int)(g.getWidthNativeCanvas() * 0.5 * inverseScale) - size, 0, 0.6f * this._sceneAlpha);
 
     }
+    /* Dibuja los textos de la interfaz situados encima del tablero
+     * @param g Manager de lo relacionado con graficos*/
     private void drawText(Graphics g){
         g.restore();
         g.save();
@@ -91,6 +94,8 @@ public class SelectMenu implements Scene {
         g.setFont(this._fontInformation);
         g.drawText("Elije el tamaño a jugar", g.getWidthNativeCanvas()/2, g.getHeightNativeCanvas() * 2/7,  this._sceneAlpha);
     }
+
+    /*Dibuja el tablero/circulos de eleccion de tablero*/
     private void drawCircles(Graphics g){
         //radio de cada circulo
         int diametro = (int)Math.floor((g.getWidthNativeCanvas() - 7) / 5);
@@ -104,9 +109,9 @@ public class SelectMenu implements Scene {
 
         for(int i = 0; i< this._number.length; i++){
             if(i % 2 == 0)
-                g.setColor(0xff33c7ff);
+                g.setColor(0xff33c7ff);     //azul
             else
-                g.setColor(0xfffa4848);
+                g.setColor(0xfffa4848);     //rojo
 
             int x = diametro * (i % 3) + diametro/2;
             int j = (i/3 >= 1) ? 1: 0;
@@ -151,7 +156,6 @@ public class SelectMenu implements Scene {
             }
         }
     }
-
     /*Comprueba dado un x,y del input si corresponde a alguno de los iconos
      * @param x Posicion en el eje X donde se ha producido el input
      * @param y Posicion en el eje Y donde se ha producido el input*/
@@ -167,7 +171,7 @@ public class SelectMenu implements Scene {
             changeScene(-1);
         }
     }
-
+    /*Cambia las variabels que gestionan el fade y el cambio de escena*/
     private void changeScene(int size){
         this._board = size;
         this.fade = -1;
@@ -177,14 +181,14 @@ public class SelectMenu implements Scene {
     private SceneManager _sceneManager;
     private Engine _engine;
 
-    private Font _fontTitle, _fontInformation;
-    private Image _closeIcon;
+    private Font _fontTitle, _fontInformation;          //fuentes
+    private Image _closeIcon;                           //imagen de icono de cerrado
     private Sound _clickSound;                          //sonido de click
 
-    private float _sceneAlpha;
-    private int fade;
-    private boolean _changeScene;
+    private float _sceneAlpha;      //alpha de toda la escena
+    private int fade;               //direccion del fade(fade-in/out)
+    private boolean _changeScene;   //si hay cambio de escena
 
-    private int[] _number;
-    private int _board;
+    private int[] _number;  //array con los numeros de elecion de tablero
+    private int _board;     //variable que guarda la eleccion del tablero(su tamanio). Si es -1 indica que se quiere ir a la escena anterior
 }

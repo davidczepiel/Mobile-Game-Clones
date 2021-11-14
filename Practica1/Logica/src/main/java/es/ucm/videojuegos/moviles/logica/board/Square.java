@@ -62,18 +62,14 @@ public class Square {
     * @param m Numero de casillas azules que esta casilla ve*/
     public void setNumber(int m) { _number = m;}
     
-    //Posicion dentro del tablero
-    private Vector2D _position;
-    
-    private SquareType _myCurrentSquareType;
-    
-    //Numero de casillas que puedo ver desde mi posicion
-    private int _number;
 
-    //Representa si esta casilla se ve desde el principio de la partida o no
-    private boolean _modificable;
+    private Vector2D _position;                 //Posicion dentro del tablero
+    private SquareType _myCurrentSquareType;    //Mi tipo actual
+
+    private int _number;                        //Numero de casillas que puedo ver desde mi posicion
+    private boolean _modificable;               //Representa si esta casilla se ve desde el principio de la partida o no
     
-    private Board _board;
+    private Board _board;                       //Tablero del juego
     
 
 }
