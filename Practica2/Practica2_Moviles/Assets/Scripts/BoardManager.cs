@@ -20,14 +20,17 @@ namespace Flow
             _myMap = map;
             _currentPipes = new List<Pipe>(_myMap.getNumPipes());
             createBoard();
-
         }
 
         void createBoard()
         {
             int sizeX = _myMap.getSizeX();
             int sizeY = _myMap.getSizeY();
+
+            //Se crea el array de Tiles
             _myTileMap = new Tile[sizeX, sizeY];
+
+            //Instanciamos todas las casillas y las inicializamos como vacias
             for (int i = 0; i < sizeX; i++)
             {
                 for (int j = 0; j < sizeX; j++)
@@ -37,70 +40,93 @@ namespace Flow
                 }
             }
 
-            //Num tuberias del mapa
+            //Numero de tuberias del mapa
             int numPipes = _myMap.getNumPipes();
+
+            //Colocar los extremos de las tuberias en los tiles del mapa
             for (int i = 0; i < numPipes; i++)
             {
-                //Primer elemento de la tuberia
+                //Obtenemos los valores de las tuberias
                 List<int> pipeSol = _myMap.getPipeSolution(i);
-                KeyValuePair<int, int> firstTilePos = transformCoord(pipeSol[0], sizeX);
-                _myTileMap[firstTilePos.Key, firstTilePos.Value].setTileType(Tile.TileType.circleTile);
-                _myTileMap[firstTilePos.Key, firstTilePos.Value].setColor(_myColors[i]);
+
+                //Primer elemento de la tuberia
+                Vector2 firstTilePos = transformCoord(pipeSol[0], sizeX);
+                _myTileMap[(int)firstTilePos.x, (int)firstTilePos.y].setTileType(Tile.TileType.circleTile);
+                _myTileMap[(int)firstTilePos.x, (int)firstTilePos.y].setColor(_myColors[i]);
 
                 //Ultimo elemento de la tuberia
-                KeyValuePair<int, int> secondTilePos = transformCoord(pipeSol[pipeSol.Count - 1], sizeX);
-                _myTileMap[secondTilePos.Key, secondTilePos.Value].setTileType(Tile.TileType.circleTile);
-                _myTileMap[secondTilePos.Key, secondTilePos.Value].setColor(_myColors[i]);
+                Vector2 secondTilePos = transformCoord(pipeSol[pipeSol.Count - 1], sizeX);
+                _myTileMap[(int)secondTilePos.x, (int)secondTilePos.y].setTileType(Tile.TileType.circleTile);
+                _myTileMap[(int)secondTilePos.x, (int)secondTilePos.y].setColor(_myColors[i]);
 
-                //Nueva tuberia
-                _currentPipes[i] = new Pipe(_myTileMap[firstTilePos.Key, firstTilePos.Value], _myTileMap[secondTilePos.Key, secondTilePos.Value]);
+                //Nuevo registro de tuberia
+                _currentPipes[i] = new Pipe(_myTileMap[(int)firstTilePos.x, (int)firstTilePos.y], _myTileMap[(int)secondTilePos.x, (int)secondTilePos.y]);
             }
 
-            List<KeyValuePair<int, int>> wallsInfo = _myMap.getWallsInfo();
+            //Obtenemos la informacion de las paredes del mapa
+            List<Vector2> wallsInfo = _myMap.getWallsInfo();
             for (int i = 0; i < wallsInfo.Count; i++)
             {
-                KeyValuePair<int, int> firstTile = transformCoord(wallsInfo[i].Key, sizeX);
-                KeyValuePair<int, int> secondTile = transformCoord(wallsInfo[i].Value, sizeX);
+                //Primer y segundo tile entre las que se encuentra la pared
+                Vector2 firstTile = transformCoord((int)wallsInfo[i].x, sizeX);
+                Vector2 secondTile = transformCoord((int)wallsInfo[i].y, sizeX);
 
-                //Si los tiles se encuentran en la misma fila
-                if (firstTile.Key == secondTile.Key)
-                {
-                    //Si el primer tile esta en la izquierda
-                    if (firstTile.Key < secondTile.Key)
-                    {
-                        _myTileMap[firstTile.Key, firstTile.Value].setWall(3, true);
-                        _myTileMap[secondTile.Key, secondTile.Value].setWall(2, true);
-                    }
-                    //Si el primer tile esta en la derecha
-                    else
-                    {
-                        _myTileMap[firstTile.Key, firstTile.Value].setWall(2, true);
-                        _myTileMap[secondTile.Key, secondTile.Value].setWall(3, true);
-                    }
-                }
-                //Si los tiles se encuentran en la misma columna
-                else
-                {
-                    //Si el primer tile esta arriba
-                    if (firstTile.Value < secondTile.Value)
-                    {
-                        _myTileMap[firstTile.Key, firstTile.Value].setWall(1, true);
-                        _myTileMap[secondTile.Key, secondTile.Value].setWall(0, true);
-                    }
-                    //Si el primer tile esta abajo
-                    else
-                    {
-                        _myTileMap[firstTile.Key, firstTile.Value].setWall(0, true);
-                        _myTileMap[secondTile.Key, secondTile.Value].setWall(1, true);
-                    }
-                }
+                //Colocar pared entre dos tiles
+                colocaPared(firstTile, secondTile);
             }
 
         }
 
-        private KeyValuePair<int, int> transformCoord(int x, int size)
+        /// <summary>
+        /// transformar desde coordenadas unidimensionales a bidimensionales
+        /// </summary>
+        /// <param name="x"> Posicion unidimensional</param>
+        /// <param name="size"> Ancho de la matriz</param>
+        /// <returns> Vector2 de la (x) e (y) para un array bidimensional</returns>
+        private Vector2 transformCoord(int x, int size)
         {
-            return new KeyValuePair<int, int>(x / size, x % size);
+            return new Vector2(x / size, x % size);
+        }
+
+        /// <summary>
+        /// Coloca una pared entre la primera casilla y la segunda
+        /// </summary>
+        /// <param name="firstTile"> Primera casilla </param>
+        /// <param name="secondTile"> Segunda casilla </param>
+        private void colocaPared(Vector2 firstTile, Vector2 secondTile)
+        {
+            //Si los tiles se encuentran en la misma fila
+            if (firstTile.x == secondTile.x)
+            {
+                //Si el primer tile esta en la izquierda
+                if (firstTile.x < secondTile.x)
+                {
+                    _myTileMap[(int)firstTile.x, (int)firstTile.y].setWall(3, true);
+                    _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(2, true);
+                }
+                //Si el primer tile esta en la derecha
+                else
+                {
+                    _myTileMap[(int)firstTile.x, (int)firstTile.y].setWall(2, true);
+                    _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(3, true);
+                }
+            }
+            //Si los tiles se encuentran en la misma columna
+            else
+            {
+                //Si el primer tile esta arriba
+                if (firstTile.x < secondTile.y)
+                {
+                    _myTileMap[(int)firstTile.x, (int)firstTile.y].setWall(1, true);
+                    _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(0, true);
+                }
+                //Si el primer tile esta abajo
+                else
+                {
+                    _myTileMap[(int)firstTile.x, (int)firstTile.y].setWall(0, true);
+                    _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(1, true);
+                }
+            }
         }
     }
 

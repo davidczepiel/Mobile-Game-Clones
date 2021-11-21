@@ -1,19 +1,17 @@
 using System.Collections.Generic;
 using System.IO;
-
+using UnityEngine;
 
 namespace Flow
 {
     public class Map
     {
         List<List<int>> _pipesSolution;
-        List<KeyValuePair<int, int>> _wallInfo;
+        List<Vector2> _wallInfo;
 
         int _sizeX , _sizeY;
         int numNivel, _numPipes;
 
-
-        // Start is called before the first frame update
         Map(string filePath)
         {
             StreamReader reader; //Open
@@ -44,7 +42,7 @@ namespace Flow
             return _numPipes;
         }
 
-        public List<KeyValuePair<int, int>> getWallsInfo()
+        public List<Vector2> getWallsInfo()
         {
             return _wallInfo;
         }

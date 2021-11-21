@@ -27,11 +27,7 @@ namespace Flow
         //Arriba,abajo,izquierda,derecha
         bool[] walls = { false, false, false, false };
 
-
-
-
-        //private Animation animacion;
-        //TODO imagen circulo
+        //TODO private Animation animacion;
 
         public void setTileType(TileType newType)
         {
@@ -43,12 +39,10 @@ namespace Flow
             return _myType;
         }
 
-
         public void setColor(Color newColor)
         {
             _tileColor = newColor;
             _pipe.material.color = _tileColor;
-            //_pipe.color = _tileAboveColor;
         }
 
         public Color getColor()
@@ -60,14 +54,17 @@ namespace Flow
         {
             return _direction;
         }
+
         public void setDirection(Vector2 newDir)
         {
             _direction = newDir;
         }
+
         public void setWall(int index, bool value)
         {
             walls[index] = value;
         }
+
         public bool getWall(int index)
         {
             return walls[index];
