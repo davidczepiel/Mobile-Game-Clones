@@ -6,20 +6,72 @@ namespace Flow
 {
     public class Tile : MonoBehaviour
     {
+        public enum TileType { voidTile, connectedTile, circleTile }
+
+        [SerializeField]
+        SpriteRenderer _pipe;
         [SerializeField]
         SpriteRenderer _circleRenderer;
-        public enum TileType{ voidTile, connectedTile, circleTile}
 
-        private Color _tileColor;
-        private Vector2 _direction;
-        private Sprite _circleImage;
+        [SerializeField]
+        Sprite _circleImage;
+        [SerializeField]
+        Sprite imageHint;
+        [SerializeField]
+        Sprite _pipeImage;
 
-        private Sprite _connectionImage;
-        private Sprite imageTick;
+        TileType _myType = TileType.voidTile;
+        Color _tileColor;
+        Vector2 _direction;
+
+        //Arriba,abajo,izquierda,derecha
+        bool[] walls = { false, false, false, false };
+
+
+
+
         //private Animation animacion;
         //TODO imagen circulo
 
+        public void setTileType(TileType newType)
+        {
+            _myType = newType;
+        }
 
+        public TileType getTileType()
+        {
+            return _myType;
+        }
+
+
+        public void setColor(Color newColor)
+        {
+            _tileColor = newColor;
+            _pipe.material.color = _tileColor;
+            //_pipe.color = _tileAboveColor;
+        }
+
+        public Color getColor()
+        {
+            return _tileColor;
+        }
+
+        public Vector2 getDirection()
+        {
+            return _direction;
+        }
+        public void setDirection(Vector2 newDir)
+        {
+            _direction = newDir;
+        }
+        public void setWall(int index, bool value)
+        {
+            walls[index] = value;
+        }
+        public bool getWall(int index)
+        {
+            return walls[index];
+        }
     }
 }
 
