@@ -46,14 +46,14 @@ namespace Flow
 
             //Si la tuberia no esta cerrada, se eliminan los tiles desde el corte hasta el final
             if (!_finished)
-                removeTilesRange(where, _pipe.Count - 1);
+                removeTilesRange(where, _pipe.Count);
             //Si esta cerrada, se corta el trazo con mas cantidad de tiles respecto al corte
             else
             {
                 if (where < _pipe.Count - 1 - where)
                     removeTilesRange(0, where);
                 else
-                    removeTilesRange(where, _pipe.Count - 1);
+                    removeTilesRange(where, _pipe.Count);
             }
 
             //La tuberia deja de estar cerrada
