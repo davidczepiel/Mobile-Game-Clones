@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +36,7 @@ namespace Flow
             {
                 for (int j = 0; j < sizeX; j++)
                 {
-                    _myTileMap[i, j] = Instantiate(tilePrefab, new Vector3(i,0,j), Quaternion.identity).GetComponent<Tile>();
+                    _myTileMap[i, j] = Instantiate(tilePrefab, new Vector3(i, 0, j), Quaternion.identity).GetComponent<Tile>();
                     _myTileMap[i, j].setTileType(Tile.TileType.voidTile);
                 }
             }
@@ -47,29 +48,27 @@ namespace Flow
             for (int i = 0; i < numPipes; i++)
             {
                 //Obtenemos los valores de las tuberias
-                List<int> pipeSol = _myMap.getPipeSolution(i);
+                List<Vector2> pipeSol = _myMap.getPipeSolution(i);
 
                 //Primer elemento de la tuberia
-                Vector2 firstTilePos = transformCoord(pipeSol[0], sizeX);
-                _myTileMap[(int)firstTilePos.x, (int)firstTilePos.y].setTileType(Tile.TileType.circleTile);
-                _myTileMap[(int)firstTilePos.x, (int)firstTilePos.y].setColor(_myColors[i]);
+                _myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y].setTileType(Tile.TileType.circleTile);
+                _myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y].setColor(_myColors[i]);
 
                 //Ultimo elemento de la tuberia
-                Vector2 secondTilePos = transformCoord(pipeSol[pipeSol.Count - 1], sizeX);
-                _myTileMap[(int)secondTilePos.x, (int)secondTilePos.y].setTileType(Tile.TileType.circleTile);
-                _myTileMap[(int)secondTilePos.x, (int)secondTilePos.y].setColor(_myColors[i]);
+                _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].setTileType(Tile.TileType.circleTile);
+                _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].setColor(_myColors[i]);
 
                 //Nuevo registro de tuberia
-                _currentPipes[i] = new Pipe(_myTileMap[(int)firstTilePos.x, (int)firstTilePos.y], _myTileMap[(int)secondTilePos.x, (int)secondTilePos.y]);
+                _currentPipes[i] = new Pipe(_myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y], _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y]);
             }
 
             //Obtenemos la informacion de las paredes del mapa
-            List<Vector2> wallsInfo = _myMap.getWallsInfo();
+            List<Tuple<Vector2,Vector2>> wallsInfo = _myMap.getWallsInfo();
             for (int i = 0; i < wallsInfo.Count; i++)
             {
                 //Primer y segundo tile entre las que se encuentra la pared
-                Vector2 firstTile = transformCoord((int)wallsInfo[i].x, sizeX);
-                Vector2 secondTile = transformCoord((int)wallsInfo[i].y, sizeX);
+                Vector2 firstTile = wallsInfo[i].Item1;
+                Vector2 secondTile = wallsInfo[i].Item2;
 
                 //Colocar pared entre dos tiles
                 colocaPared(firstTile, secondTile);
@@ -77,16 +76,7 @@ namespace Flow
 
         }
 
-        /// <summary>
-        /// transformar desde coordenadas unidimensionales a bidimensionales
-        /// </summary>
-        /// <param name="x"> Posicion unidimensional</param>
-        /// <param name="size"> Ancho de la matriz</param>
-        /// <returns> Vector2 de la (x) e (y) para un array bidimensional</returns>
-        private Vector2 transformCoord(int x, int size)
-        {
-            return new Vector2(x / size, x % size);
-        }
+
 
         /// <summary>
         /// Coloca una pared entre la primera casilla y la segunda
