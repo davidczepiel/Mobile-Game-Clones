@@ -10,20 +10,21 @@ namespace Flow
     {
         [SerializeField]
         GameObject tilePrefab;
+        [SerializeField]
+        Transform boardGO;
 
-        Color[] _myColors = { Color.red, Color.blue, Color.green, Color.yellow, Color.white, Color.cyan, Color.magenta, Color.grey };
         Tile[,] _myTileMap;
         Map _myMap;
         List<Pipe> _currentPipes;
 
-        public void prepareBoard(Map map)
+        public void prepareBoard(Map map, Color[] skin)
         {
             _myMap = map;
             _currentPipes = new List<Pipe>();
-            createBoard();
+            createBoard(skin);
         }
 
-        void createBoard()
+        void createBoard(Color[] skin)
         {
             int sizeX = _myMap.getSizeX();
             int sizeY = _myMap.getSizeY();
@@ -36,7 +37,7 @@ namespace Flow
             {
                 for (int j = 0; j < sizeX; j++)
                 {
-                    _myTileMap[i, j] = Instantiate(tilePrefab, new Vector3(i, j, 0), Quaternion.identity).GetComponent<Tile>();
+                    _myTileMap[i, j] = Instantiate(tilePrefab, new Vector3(i, j, 0), Quaternion.identity, boardGO).GetComponent<Tile>();
                     _myTileMap[i, j].setTileType(Tile.TileType.voidTile);
                 }
             }
@@ -51,10 +52,10 @@ namespace Flow
                 List<Vector2> pipeSol = _myMap.getPipeSolution(i);
 
                 //Primer elemento de la tuberia
-                _myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y].initTile(Tile.TileType.circleTile, _myColors[i]);
+                _myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y].initTile(Tile.TileType.circleTile, skin[i]);
 
                 //Ultimo elemento de la tuberia
-                _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].initTile(Tile.TileType.circleTile, _myColors[i]);
+                _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].initTile(Tile.TileType.circleTile, skin[i]);
 
                 //Nuevo registro de tuberia
                 _currentPipes.Add(new Pipe(_myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y], _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y]));
@@ -76,8 +77,6 @@ namespace Flow
                 }
 
         }
-
-
 
         /// <summary>
         /// Coloca una pared entre la primera casilla y la segunda
@@ -118,6 +117,38 @@ namespace Flow
                     _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(1, true);
                 }
             }
+        }
+
+        private void onTouch(int x, int y)
+        {
+            Tile touchedTile = _myTileMap[x, y];
+            Color col = touchedTile.getColor();
+            Pipe touchedPipe = pipeWithColor(col);
+            switch (touchedTile.getTileType())
+            {
+                case Tile.TileType.circleTile:
+                    //Animacion
+                    touchedPipe.clearPipe();
+                    touchedPipe.addTileToPipe(touchedTile);
+                    break;
+
+                case Tile.TileType.connectedTile:
+                    //Animacion Cabeza
+                    touchedPipe.cut(touchedTile);
+                    break;
+
+                case Tile.TileType.pipeHead:
+                    //Animacion
+                    break;
+            }
+        }
+
+        private Pipe pipeWithColor(Color col)
+        {
+            foreach(Pipe p in _currentPipes)
+                if (p.getColor() == col) return p;
+
+            return null;
         }
     }
 

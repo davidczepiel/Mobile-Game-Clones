@@ -51,16 +51,16 @@ namespace Flow
             switch (newType)
             {
                 case TileType.pipeHead:
-                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true, true);
+                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true, false);
                     break;
                 case TileType.circleTile:
-                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true, true);
+                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true, false);
                     break;
                 case TileType.voidTile:
                     changeTileAppearance(false, false, false, false);
                     break;
                 case TileType.connectedTile:
-                    changeTileAppearance(_direction.x == 1, _direction.y == 1, false, true);
+                    changeTileAppearance(_direction.x == 1, _direction.y == 1, false, false);
                     break;
             }
             _myType = newType;
@@ -136,25 +136,6 @@ namespace Flow
                 _circleRenderer.enabled = true;
 
 
-        }
-
-
-        public void onTouch()
-        {
-            switch (_myType)
-            {
-                case TileType.circleTile:
-                    //Animacion
-                    break;
-                case TileType.voidTile:
-                    //nada
-                    break;
-                case TileType.connectedTile:
-                    //Animacion Cabeza
-
-                    //Empezar a crecer
-                    break;
-            }
         }
 
         public void onTileEnter(Vector2 dir, Color newColor)

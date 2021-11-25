@@ -13,7 +13,7 @@ namespace Flow
         // Start is called before the first frame update
         void Start()
         {
-            _board.prepareBoard(GameManager.getInstance().createMap());
+            _board.prepareBoard(GameManager.getInstance().createMap(), GameManager.getInstance().getSkin());
         }
 
     }

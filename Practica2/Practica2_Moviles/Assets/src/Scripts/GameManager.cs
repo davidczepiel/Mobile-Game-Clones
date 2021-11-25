@@ -68,6 +68,10 @@ namespace Flow
             return package;
         }
 
+        public Color[] getSkin()
+        {
+            return myLevels[currentLevel].skin.levelColors;
+        }
 
     }
 

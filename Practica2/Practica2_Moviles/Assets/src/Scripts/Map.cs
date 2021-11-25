@@ -10,6 +10,7 @@ namespace Flow
     {
         List<List<Vector2>> _pipesSolution;
         List<Tuple<Vector2, Vector2>> _wallInfo;
+        Color[] skin;
 
         int _sizeX, _sizeY;
         int numNivel, _numPipes;

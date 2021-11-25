@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   packName: Pack1
   maps: {fileID: 4900000, guid: eb2ed02dfb044df49906912a3485218e, type: 3}
+  skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}

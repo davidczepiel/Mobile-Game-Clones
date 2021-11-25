@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Flow
 {
@@ -61,7 +62,7 @@ namespace Flow
         }
 
         /// <summary>
-        /// Elimina los tiles necesarios cuando la tuberia es cortada por otra
+        /// Elimina los tiles necesarios cuando la tuberia es cortada por otra«
         /// </summary>
         /// <param name="cutted"></param>
         public void temporalCut(Tile cutted)
@@ -83,6 +84,16 @@ namespace Flow
 
             //La tuberia deja de estar cerrada
             _finished = false;
+        }
+
+        public void clearPipe()
+        {
+            removeTilesRange(0, _pipe.Count);
+        }
+
+        public Color getColor()
+        {
+            return _firstTile.getColor();
         }
 
 
