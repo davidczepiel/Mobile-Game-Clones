@@ -7,17 +7,15 @@ namespace Flow
 {
     public class LevelManager : MonoBehaviour
     {
+
+        [SerializeField]
+        BoardManager _board;
         // Start is called before the first frame update
         void Start()
         {
-            GameManager.getInstance().createMap();
+            _board.prepareBoard(GameManager.getInstance().createMap());
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 
 }

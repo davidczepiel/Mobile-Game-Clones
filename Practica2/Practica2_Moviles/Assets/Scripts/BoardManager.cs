@@ -19,7 +19,7 @@ namespace Flow
         public void prepareBoard(Map map)
         {
             _myMap = map;
-            _currentPipes = new List<Pipe>(_myMap.getNumPipes());
+            _currentPipes = new List<Pipe>();
             createBoard();
         }
 
@@ -36,7 +36,7 @@ namespace Flow
             {
                 for (int j = 0; j < sizeX; j++)
                 {
-                    _myTileMap[i, j] = Instantiate(tilePrefab, new Vector3(i, 0, j), Quaternion.identity).GetComponent<Tile>();
+                    _myTileMap[i, j] = Instantiate(tilePrefab, new Vector3(i, j, 0), Quaternion.identity).GetComponent<Tile>();
                     _myTileMap[i, j].setTileType(Tile.TileType.voidTile);
                 }
             }
@@ -51,28 +51,29 @@ namespace Flow
                 List<Vector2> pipeSol = _myMap.getPipeSolution(i);
 
                 //Primer elemento de la tuberia
-                _myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y].setTileType(Tile.TileType.circleTile);
-                _myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y].setColor(_myColors[i]);
+                _myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y].initTile(Tile.TileType.circleTile, _myColors[i]);
 
                 //Ultimo elemento de la tuberia
-                _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].setTileType(Tile.TileType.circleTile);
-                _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].setColor(_myColors[i]);
+                _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].initTile(Tile.TileType.circleTile, _myColors[i]);
 
                 //Nuevo registro de tuberia
-                _currentPipes[i] = new Pipe(_myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y], _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y]);
+                _currentPipes.Add(new Pipe(_myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y], _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y]));
+                Debug.Log(i);
             }
 
             //Obtenemos la informacion de las paredes del mapa
-            List<Tuple<Vector2,Vector2>> wallsInfo = _myMap.getWallsInfo();
-            for (int i = 0; i < wallsInfo.Count; i++)
-            {
-                //Primer y segundo tile entre las que se encuentra la pared
-                Vector2 firstTile = wallsInfo[i].Item1;
-                Vector2 secondTile = wallsInfo[i].Item2;
+            List<Tuple<Vector2, Vector2>> wallsInfo = _myMap.getWallsInfo();
 
-                //Colocar pared entre dos tiles
-                colocaPared(firstTile, secondTile);
-            }
+            if (wallsInfo != null)
+                for (int i = 0; i < wallsInfo.Count; i++)
+                {
+                    //Primer y segundo tile entre las que se encuentra la pared
+                    Vector2 firstTile = wallsInfo[i].Item1;
+                    Vector2 secondTile = wallsInfo[i].Item2;
+
+                    //Colocar pared entre dos tiles
+                    colocaPared(firstTile, secondTile);
+                }
 
         }
 

@@ -61,6 +61,32 @@ namespace Flow
         }
 
         /// <summary>
+        /// Elimina los tiles necesarios cuando la tuberia es cortada por otra
+        /// </summary>
+        /// <param name="cutted"></param>
+        public void temporalCut(Tile cutted)
+        {
+            //Obtener indice del corte
+            int where = _pipe.IndexOf(cutted);
+
+            //Si la tuberia no esta cerrada, se eliminan los tiles desde el corte hasta el final
+            if (!_finished)
+                temporalRemoveTilesRange(where, _pipe.Count);
+            //Si esta cerrada, se corta el trazo con mas cantidad de tiles respecto al corte
+            else
+            {
+                if (where < _pipe.Count - 1 - where)
+                    temporalRemoveTilesRange(0, where);
+                else
+                    temporalRemoveTilesRange(where, _pipe.Count);
+            }
+
+            //La tuberia deja de estar cerrada
+            _finished = false;
+        }
+
+
+        /// <summary>
         /// Elimina y resetea los tiles de la tuberia desde un indice a otro [inicio, final)
         /// </summary>
         /// <param name="beginning"> Indice inicial </param>
@@ -68,7 +94,7 @@ namespace Flow
         private void removeTilesRange(int beginning, int end)
         {
             //Reseteamos los tiles a vacios
-            for(int i = beginning; i < end; ++i)
+            for (int i = beginning; i < end; ++i)
             {
                 _pipe[i].setTileType(Tile.TileType.voidTile); 
             }
@@ -77,6 +103,17 @@ namespace Flow
             _pipe.RemoveRange(beginning, end - beginning);
         }
 
-    }
 
+        /// <summary>
+        /// Elimina y resetea los tiles de la tuberia desde un indice a otro [inicio, final)
+        /// </summary>
+        /// <param name="beginning"> Indice inicial </param>
+        /// <param name="end"> Indice final </param>
+        private void temporalRemoveTilesRange(int beginning, int end)
+        {
+            //Reseteamos los tiles a vacios
+            for (int i = beginning; i < end; ++i)
+                _pipe[i].hide();
+        }
+    }
 }
