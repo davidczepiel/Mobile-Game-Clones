@@ -66,13 +66,21 @@ namespace Flow
             _myType = newType;
         }
 
-        void setColor(Color newColor)
+        public void setTileColor(Color newColor)
         {
             _tileColor = newColor;
             _horizontalPipeRenderer.material.color = _tileColor;
+            _verticalPipeRenderer.material.color = _tileColor;
             _circleRenderer.material.color = _tileColor;
             _backgroundRenderer.material.color = _tileColor;
+        }
 
+        public void setPipeColor(Color newColor)
+        {
+            _tileColor = newColor;
+            _horizontalPipeRenderer.material.color = _tileColor;
+            _verticalPipeRenderer.material.color = _tileColor;
+            _circleRenderer.material.color = _tileColor;
         }
 
         public Color getColor()
@@ -105,13 +113,18 @@ namespace Flow
             return walls[index];
         }
 
+        public Color getBackgroundColor()
+        {
+            return _backgroundRenderer.color;
+        }
+
         /// +--------------------------------------------------------------------------------------+
         /// |                                 METODOS DE CONTROL                                   |
         /// +--------------------------------------------------------------------------------------+
 
         public void initTile(TileType type, Color c)
         {
-            setColor(c);
+            setTileColor(c);
             setTileType(type);
             _circleRenderer.sprite = _bigCircleImage;
 
@@ -140,7 +153,7 @@ namespace Flow
 
         public void onTileEnter(Vector2 dir, Color newColor)
         {
-            setColor(newColor);
+            setTileColor(newColor);
             switch (_myType)
             {
                 case TileType.circleTile:

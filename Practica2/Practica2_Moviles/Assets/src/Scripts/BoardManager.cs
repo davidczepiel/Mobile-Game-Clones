@@ -13,15 +13,45 @@ namespace Flow
         [SerializeField]
         Transform boardGO;
 
+        bool drawing;
+        Color drawingColor;
+        Vector2 lastPosProcessed;
         Tile[,] _myTileMap;
         Map _myMap;
         List<Pipe> _currentPipes;
+        Pipe _drawingPipe;
 
         public void prepareBoard(Map map, Color[] skin)
         {
             _myMap = map;
+            drawing = false;
             _currentPipes = new List<Pipe>();
+            _drawingPipe = new Pipe();
+            lastPosProcessed = new Vector2(0, 0);
             createBoard(skin);
+        }
+
+        public void processTouch(Touch touch)
+        {
+            switch (touch.phase)
+            {
+                //Comienzo del dedo
+                case TouchPhase.Began:
+                    onTouch(touch);
+                    break;
+                //Movimiento del dedo
+                case TouchPhase.Moved:
+                    onTouchMoved(touch);
+                    break;
+                //Ultimo frame del dedo
+                case TouchPhase.Canceled:
+                    onTouchReleased(touch);
+                    break;
+                //Ultimo frame del dedo
+                case TouchPhase.Ended:
+                    onTouchReleased(touch);
+                    break;
+            }
         }
 
         void createBoard(Color[] skin)
@@ -119,9 +149,12 @@ namespace Flow
             }
         }
 
-        private void onTouch(int x, int y)
+        /// //////////////////////////////////////////////////7
+        //TODO : TENEMOS TODO OCN LAS PIPES DEL JUEGO, HAY QUE PONERLO CON LA UNICA PIPE DE DRAWING. MODIFICAR ADD, Y METODOS RECOJAN O AÑADAN 
+        // COSAS (MOVE...RELEASE)
+        private void onTouch(Touch touch)
         {
-            Tile touchedTile = _myTileMap[x, y];
+            Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
             Color col = touchedTile.getColor();
             Pipe touchedPipe = pipeWithColor(col);
             switch (touchedTile.getTileType())
@@ -129,17 +162,107 @@ namespace Flow
                 case Tile.TileType.circleTile:
                     //Animacion
                     touchedPipe.clearPipe();
-                    touchedPipe.addTileToPipe(touchedTile);
+                    _drawingPipe.setFirstAndSecond();
+                    if (touchedPipe.addTileToPipe(touchedTile))
+                    {
+
+                    }
+                    drawing = true;
+                    drawingColor = col;
                     break;
 
                 case Tile.TileType.connectedTile:
                     //Animacion Cabeza
-                    touchedPipe.cut(touchedTile);
+                    touchedPipe.temporalCut(touchedTile);
+                    drawing = true;
+                    drawingColor = col;
                     break;
 
                 case Tile.TileType.pipeHead:
+                    drawing = true;
+                    drawingColor = col;
                     //Animacion
                     break;
+            }
+            lastPosProcessed = new Vector2(touch.position.x, touch.position.y);
+        }
+
+        private void onTouchMoved(Touch touch)
+        {
+            //Si no estoy dibujando no me interesa hacer o cambiar nada
+            if (!drawing) return;
+
+            Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
+
+            switch (touchedTile.getTileType())
+            {
+                case Tile.TileType.circleTile:
+                    if(touchedTile.getColor() == drawingColor)
+                    {
+                        processDirection(touch.position);
+                        pipeWithColor(drawingColor).addTileToPipe(touchedTile);
+                        lastPosProcessed = touch.position;
+                    }
+                    break;
+                case Tile.TileType.voidTile:
+                    touchedTile.setTileType(Tile.TileType.pipeHead);
+                    touchedTile.setTileColor(drawingColor);
+                    processDirection(touch.position);
+                    pipeWithColor(drawingColor).addTileToPipe(touchedTile);
+                    break;
+                case Tile.TileType.connectedTile:
+                    if(touchedTile.getColor() == drawingColor)
+                    {
+                        processDirection(touch.position);
+                        pipeWithColor(drawingColor).addTileToPipe(touchedTile);
+                    }                   
+                    else
+                    {
+                        touchedTile.setTileType(Tile.TileType.pipeHead);
+                        touchedTile.setPipeColor(drawingColor);
+                        processDirection(touch.position);
+                        pipeWithColor(touchedTile.getColor()).temporalCut(touchedTile);
+                    }
+                    break;
+            }
+        }
+
+        private void onTouchReleased(Touch touch)
+        {
+            if (!drawing) return;
+
+            Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
+
+            //Eliminamos todos los tiles que hayan sido cortados
+            foreach(Pipe pipe in _currentPipes)
+            {
+                if (pipe.getColor() != drawingColor)
+                    pipe.clearHiddens();
+            }
+
+            //Confirmamos todos los tiles que hemos dibujado
+            pipeWithColor(drawingColor).confirmSelection();
+
+            drawing = false;
+        }
+
+        private void processDirection(Vector2 currentPos)
+        {
+            Vector2 dir = currentPos - lastPosProcessed;
+            //Derecha
+            if (dir.x == 1)
+                _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(1, 0));
+            else if (dir.x == -1)
+            {
+                _myTileMap[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(1, 0));
+                _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
+            }
+            else if (dir.y == 1)
+                _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 1));
+            else if(dir.y == -1)
+            {
+                _myTileMap[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(0, 1));
+                _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
             }
         }
 

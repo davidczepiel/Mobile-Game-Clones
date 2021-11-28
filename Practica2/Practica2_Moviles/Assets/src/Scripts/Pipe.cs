@@ -12,6 +12,12 @@ namespace Flow
         Tile _secondTile;
         bool _finished;
 
+        public Pipe()
+        {
+            _firstTile = null;
+            _secondTile = null;
+            _finished = false;
+        }
         public Pipe(Tile firstTile, Tile lastTile)
         {
             _firstTile = firstTile;
@@ -19,11 +25,16 @@ namespace Flow
             _finished = false;
         }
 
+        public void setFirstAndSecond(Tile first, Tile second)
+        {
+            this._firstTile = first;
+            this._secondTile = second;
+        }
         /// <summary>
         /// Aniade un nuevo tile a la tuberia
         /// </summary>
         /// <param name="newTile"></param>
-        public void addTileToPipe(Tile newTile)
+        public bool addTileToPipe(Tile newTile)
         {
             //La tuberia no debe contener ya al tile
             if (!_pipe.Contains(newTile))
@@ -33,28 +44,62 @@ namespace Flow
                     _finished = true;
 
                 _pipe.Add(newTile);
+                return false;
+            }
+            else
+            {
+                //TODO Si ya contiene el tile en la lista recorremos desde el final hasta el newTile restableciendo los tiles
+                // dependiendo de su background y establecer el tipo del ultimo como headTile
+
+                removeTilesRange(_pipe.IndexOf(newTile), _pipe.Count - 1);
+
+                return true;
             }
         }
 
         /// <summary>
         /// Elimina los tiles necesarios cuando la tuberia es cortada por otra
         /// </summary>
-        /// <param name="cutted"></param>
-        public void cut(Tile cutted)
+        public void clearHiddens()
         {
-            //Obtener indice del corte
-            int where = _pipe.IndexOf(cutted);
-
-            //Si la tuberia no esta cerrada, se eliminan los tiles desde el corte hasta el final
-            if (!_finished)
-                removeTilesRange(where, _pipe.Count);
-            //Si esta cerrada, se corta el trazo con mas cantidad de tiles respecto al corte
-            else
+            int lastHidden = 0, firstHidden = -1;
+            for(int i = 0; i < _pipe.Count; ++i)
             {
-                if (where < _pipe.Count - 1 - where)
-                    removeTilesRange(0, where);
-                else
-                    removeTilesRange(where, _pipe.Count);
+                if (_pipe[i].isHidden())
+                {
+                    _pipe[i].setTileType(Tile.TileType.voidTile);
+                    _pipe[i].activate();
+
+                    if (firstHidden == -1)
+                        firstHidden = i;
+                    lastHidden = i;
+                }
+            }
+
+            if (firstHidden == -1) return;
+
+            _pipe.RemoveRange(firstHidden, lastHidden);
+
+            //La tuberia deja de estar cerrada
+            _finished = false;
+        }
+
+        /// <summary>
+        /// Restablece el corte provisional del pipe
+        /// </summary>
+        public void restoreHiddens()
+        {
+            for (int i = 0; i < _pipe.Count; ++i)
+            {
+                if (_pipe[i].isHidden())
+                {
+                    _pipe[i].setTileType(Tile.TileType.connectedTile);
+                    if(i == 0)
+                    {
+
+                    }
+                    _pipe[i].activate();
+                }
             }
 
             //La tuberia deja de estar cerrada
@@ -86,6 +131,29 @@ namespace Flow
             _finished = false;
         }
 
+        /// <summary>
+        /// Todos los tiles de la pipe pasan a ser del color y del tipo de esta pipe
+        /// </summary>
+        public void confirmSelection()
+        {
+            //Recorremos cada tile del pipe indicandole su nuevo tipo y color
+            for(int i = 0; i < _pipe.Count; ++i)
+            {
+                if(_pipe[i].getBackgroundColor() != _firstTile.getColor())
+                {
+                    if (_pipe[i].getTileType() != Tile.TileType.circleTile)
+                    {
+                        _pipe[i].setTileType(Tile.TileType.connectedTile);
+                        _pipe[i].setTileColor(_firstTile.getColor());
+                    }
+                }
+            }
+
+            //Si no hemos finalizado el pipe el ultimo es la cabeza
+            if (_pipe[_pipe.Count - 1].getTileType() != Tile.TileType.circleTile)
+                _pipe[_pipe.Count - 1].setTileType(Tile.TileType.pipeHead);
+        }
+
         public void clearPipe()
         {
             removeTilesRange(0, _pipe.Count);
@@ -112,6 +180,9 @@ namespace Flow
 
             //Eliminamos de la lista los tiles dentro del rango
             _pipe.RemoveRange(beginning, end - beginning);
+
+            if (_pipe.Count > 0 && _pipe[_pipe.Count - 1].getTileType() != Tile.TileType.circleTile)
+                _pipe[_pipe.Count - 1].setTileType(Tile.TileType.pipeHead);
         }
 
 
