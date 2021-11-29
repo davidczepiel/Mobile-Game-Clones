@@ -13,20 +13,25 @@ namespace Flow
         [SerializeField]
         Transform boardGO;
 
-        bool drawing;
         Color drawingColor;
         Vector2 lastPosProcessed;
+
         Tile[,] _myTileMap;
-        Map _myMap;
         List<Pipe> _currentPipes;
-        Pipe _drawingPipe;
+
+        Map _myMap;
+        List<Tile> _lastState;
+
+        bool drawing;
 
         public void prepareBoard(Map map, Color[] skin)
         {
             _myMap = map;
             drawing = false;
+
             _currentPipes = new List<Pipe>();
-            _drawingPipe = new Pipe();
+            _lastState = new List<Tile>();
+
             lastPosProcessed = new Vector2(0, 0);
             createBoard(skin);
         }
@@ -103,7 +108,7 @@ namespace Flow
                     Vector2 secondTile = wallsInfo[i].Item2;
 
                     //Colocar pared entre dos tiles
-                    colocaPared(firstTile, secondTile);
+                    putWall(firstTile, secondTile);
                 }
 
         }
@@ -113,7 +118,7 @@ namespace Flow
         /// </summary>
         /// <param name="firstTile"> Primera casilla </param>
         /// <param name="secondTile"> Segunda casilla </param>
-        private void colocaPared(Vector2 firstTile, Vector2 secondTile)
+        private void putWall(Vector2 firstTile, Vector2 secondTile)
         {
             //Si los tiles se encuentran en la misma fila
             if (firstTile.x == secondTile.x)
@@ -149,11 +154,10 @@ namespace Flow
             }
         }
 
-        /// //////////////////////////////////////////////////7
-        //TODO : TENEMOS TODO OCN LAS PIPES DEL JUEGO, HAY QUE PONERLO CON LA UNICA PIPE DE DRAWING. MODIFICAR ADD, Y METODOS RECOJAN O AÑADAN 
-        // COSAS (MOVE...RELEASE)
+      
         private void onTouch(Touch touch)
         {
+            int index;
             Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
             Color col = touchedTile.getColor();
             Pipe touchedPipe = pipeWithColor(col);
@@ -161,12 +165,11 @@ namespace Flow
             {
                 case Tile.TileType.circleTile:
                     //Animacion
-                    touchedPipe.clearPipe();
-                    _drawingPipe.setFirstAndSecond();
-                    if (touchedPipe.addTileToPipe(touchedTile))
-                    {
+                    touchedPipe.clearPipe();         //Limpiamos la pipe que se está dibujando
 
-                    }
+                    _lastState.Add(new Tile(touchedTile));
+                    touchedPipe.addTileToPipe(touchedTile, out index);
+                 
                     drawing = true;
                     drawingColor = col;
                     break;
@@ -174,6 +177,8 @@ namespace Flow
                 case Tile.TileType.connectedTile:
                     //Animacion Cabeza
                     touchedPipe.temporalCut(touchedTile);
+                    touchedPipe.clearHiddens();
+
                     drawing = true;
                     drawingColor = col;
                     break;
@@ -192,30 +197,35 @@ namespace Flow
             //Si no estoy dibujando no me interesa hacer o cambiar nada
             if (!drawing) return;
 
+            int index;
+
             Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
+            _lastState.Add(new Tile(touchedTile));
 
             switch (touchedTile.getTileType())
             {
                 case Tile.TileType.circleTile:
-                    if(touchedTile.getColor() == drawingColor)
+                    if (touchedTile.getColor() == drawingColor)
                     {
                         processDirection(touch.position);
-                        pipeWithColor(drawingColor).addTileToPipe(touchedTile);
-                        lastPosProcessed = touch.position;
+                        if (pipeWithColor(drawingColor).addTileToPipe(touchedTile, out index))
+                            restoreState(index);
+                        else lastPosProcessed = touch.position;
                     }
                     break;
                 case Tile.TileType.voidTile:
                     touchedTile.setTileType(Tile.TileType.pipeHead);
                     touchedTile.setTileColor(drawingColor);
                     processDirection(touch.position);
-                    pipeWithColor(drawingColor).addTileToPipe(touchedTile);
+                    pipeWithColor(drawingColor).addTileToPipe(touchedTile, out index);
                     break;
+
                 case Tile.TileType.connectedTile:
-                    if(touchedTile.getColor() == drawingColor)
+                    if (touchedTile.getColor() == drawingColor)
                     {
-                        processDirection(touch.position);
-                        pipeWithColor(drawingColor).addTileToPipe(touchedTile);
-                    }                   
+                        if (pipeWithColor(drawingColor).addTileToPipe(touchedTile, out index))
+                            restoreState(index);
+                    }
                     else
                     {
                         touchedTile.setTileType(Tile.TileType.pipeHead);
@@ -234,7 +244,7 @@ namespace Flow
             Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
 
             //Eliminamos todos los tiles que hayan sido cortados
-            foreach(Pipe pipe in _currentPipes)
+            foreach (Pipe pipe in _currentPipes)
             {
                 if (pipe.getColor() != drawingColor)
                     pipe.clearHiddens();
@@ -243,9 +253,15 @@ namespace Flow
             //Confirmamos todos los tiles que hemos dibujado
             pipeWithColor(drawingColor).confirmSelection();
 
+            _lastState.Clear();
+
             drawing = false;
         }
 
+
+        //+-----------------------------------------------------------------------------------------------------------------------+
+        //|                                              MÉTODOS AUXILIARES                                                       |
+        //+-----------------------------------------------------------------------------------------------------------------------+
         private void processDirection(Vector2 currentPos)
         {
             Vector2 dir = currentPos - lastPosProcessed;
@@ -259,7 +275,7 @@ namespace Flow
             }
             else if (dir.y == 1)
                 _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 1));
-            else if(dir.y == -1)
+            else if (dir.y == -1)
             {
                 _myTileMap[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(0, 1));
                 _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
@@ -268,10 +284,23 @@ namespace Flow
 
         private Pipe pipeWithColor(Color col)
         {
-            foreach(Pipe p in _currentPipes)
+            foreach (Pipe p in _currentPipes)
                 if (p.getColor() == col) return p;
 
             return null;
+        }
+
+        private void restoreState(int lastIndex)
+        {
+            Pipe currentPipe = pipeWithColor(drawingColor);
+            for (int i = _lastState.Count - 1; i >= lastIndex; --i)
+            {
+                if(_lastState[i].getTileType() != Tile.TileType.voidTile)
+                {
+                    pipeWithColor(_lastState[i].getColor()).restoreHiddens();
+                    currentPipe.changeTileDir(i, _lastState[i].getDirection());
+                }
+            }
         }
     }
 

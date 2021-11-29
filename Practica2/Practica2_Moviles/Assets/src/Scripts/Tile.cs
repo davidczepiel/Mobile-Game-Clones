@@ -6,6 +6,17 @@ namespace Flow
 {
     public class Tile : MonoBehaviour
     {
+        /// <summary>
+        /// Constructora por copia
+        /// </summary>
+        /// <param name="tile"></param>
+        public Tile(Tile tile)
+        {
+            this._myType = tile._myType;
+            this._tileColor = tile._tileColor;
+            this._direction.x = tile._direction.x;
+            this._direction.y = tile._direction.y;
+        }
         public enum TileType { voidTile, connectedTile, pipeHead, circleTile }
 
         [SerializeField]
@@ -147,30 +158,6 @@ namespace Flow
 
             if (_myType == TileType.pipeHead)
                 _circleRenderer.enabled = true;
-
-
-        }
-
-        public void onTileEnter(Vector2 dir, Color newColor)
-        {
-            setTileColor(newColor);
-            switch (_myType)
-            {
-                case TileType.circleTile:
-
-                    break;
-                case TileType.voidTile:
-                    break;
-                case TileType.connectedTile:
-
-                    break;
-            }
-        }
-
-
-        public void onTileExit()
-        {
-
         }
 
         /// +--------------------------------------------------------------------------------------+

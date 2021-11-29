@@ -25,17 +25,31 @@ namespace Flow
             _finished = false;
         }
 
-        public void setFirstAndSecond(Tile first, Tile second)
+        public void changeTileDir(int pos, Vector2 dir)
         {
-            this._firstTile = first;
-            this._secondTile = second;
+            _pipe[pos].setDirection(dir);
         }
+        public Color getColor()
+        { 
+            return _firstTile.getColor();
+        }
+        public System.Tuple<Tile, Tile> getFirstAndSecond()
+        {
+            return new System.Tuple<Tile, Tile>(_firstTile,_secondTile);
+        }
+        public void setFirstAndSecond(System.Tuple<Tile, Tile> pipe)
+        {
+            this._firstTile = pipe.Item1;
+            this._secondTile = pipe.Item2;
+        }
+
         /// <summary>
         /// Aniade un nuevo tile a la tuberia
         /// </summary>
         /// <param name="newTile"></param>
-        public bool addTileToPipe(Tile newTile)
+        public bool addTileToPipe(Tile newTile, out int index)
         {
+            index = _pipe.IndexOf(newTile); 
             //La tuberia no debe contener ya al tile
             if (!_pipe.Contains(newTile))
             {
@@ -48,17 +62,14 @@ namespace Flow
             }
             else
             {
-                //TODO Si ya contiene el tile en la lista recorremos desde el final hasta el newTile restableciendo los tiles
-                // dependiendo de su background y establecer el tipo del ultimo como headTile
-
                 removeTilesRange(_pipe.IndexOf(newTile), _pipe.Count - 1);
-
                 return true;
             }
         }
 
         /// <summary>
         /// Elimina los tiles necesarios cuando la tuberia es cortada por otra
+        /// Restablece la direccion de la lista en caso necesario
         /// </summary>
         public void clearHiddens()
         {
@@ -80,6 +91,11 @@ namespace Flow
 
             _pipe.RemoveRange(firstHidden, lastHidden);
 
+            //Si no soy un circulo significa que hay que darle la media vuelta a la lista para evitar que los que se aniadan nuevos
+            // no se aniadan en el orden incorrecto
+            if(_pipe.Count > 0 && _pipe[0].getTileType() != Tile.TileType.circleTile)
+                _pipe.Reverse();
+
             //La tuberia deja de estar cerrada
             _finished = false;
         }
@@ -92,14 +108,8 @@ namespace Flow
             for (int i = 0; i < _pipe.Count; ++i)
             {
                 if (_pipe[i].isHidden())
-                {
-                    _pipe[i].setTileType(Tile.TileType.connectedTile);
-                    if(i == 0)
-                    {
-
-                    }
-                    _pipe[i].activate();
-                }
+                    _pipe[i].setTileColor(getColor());
+                    _pipe[i].activate();          
             }
 
             //La tuberia deja de estar cerrada
@@ -107,7 +117,7 @@ namespace Flow
         }
 
         /// <summary>
-        /// Elimina los tiles necesarios cuando la tuberia es cortada por otra«
+        /// Elimina los tiles necesarios cuando la tuberia es cortada por otra
         /// </summary>
         /// <param name="cutted"></param>
         public void temporalCut(Tile cutted)
@@ -159,11 +169,10 @@ namespace Flow
             removeTilesRange(0, _pipe.Count);
         }
 
-        public Color getColor()
-        {
-            return _firstTile.getColor();
-        }
 
+        /// +--------------------------------------------------------------------------------------+
+        /// |                                 METODOS AUXILIARES                                   |
+        /// +--------------------------------------------------------------------------------------+
 
         /// <summary>
         /// Elimina y resetea los tiles de la tuberia desde un indice a otro [inicio, final)
