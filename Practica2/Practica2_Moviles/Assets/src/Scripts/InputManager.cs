@@ -14,7 +14,8 @@ namespace Flow
         {
             foreach(Touch touch in Input.touches)
             {
-                boardManager.processTouch(touch);
+                Debug.Log(touch.position);
+                //boardManager.processTouch(touch);
             }
         }
     }

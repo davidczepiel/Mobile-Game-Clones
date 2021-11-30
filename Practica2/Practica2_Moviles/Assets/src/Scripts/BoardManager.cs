@@ -9,96 +9,78 @@ namespace Flow
     public class BoardManager : MonoBehaviour
     {
         [SerializeField]
-        GameObject tilePrefab;
+        GameObject tilePrefab;      //prefab del tile
         [SerializeField]
-        Transform boardGO;
+        Transform boardGO;          //objeto donde se guardan los tiles
 
-        Color drawingColor;
-        Vector2 lastPosProcessed;
+        Color drawingColor;         //color que se esta dibujando 
+        Vector2 lastPosProcessed;   //ultima prosion que se recogio
 
-        Tile[,] _myTileMap;
-        List<Pipe> _currentPipes;
+        Tile[,] _board;             //tablero que guarda los tiles
+        List<Pipe> _currentPipes;   //tuberias del juego
 
-        Map _myMap;
-        List<Tile> _lastState;
+        bool drawing;       //si se esta dibujando o se acaba dejar de dibujar
 
-        bool drawing;
-
+        #region Metodos de creacion
+        /// <summary>
+        /// Crea el tablero, inicializando sus variables dado el mapa y los colores del tema
+        /// </summary>
+        /// <param name="map"> Mapa que se va a mostrar en el juego</param>
+        /// <param name="skin"> Colores de las tuberias para el nivel</param>
         public void prepareBoard(Map map, Color[] skin)
         {
-            _myMap = map;
             drawing = false;
 
             _currentPipes = new List<Pipe>();
-            _lastState = new List<Tile>();
 
             lastPosProcessed = new Vector2(0, 0);
-            createBoard(skin);
+            createBoard(skin, map);
         }
 
-        public void processTouch(Touch touch)
+        /// <summary>
+        /// Instancia objetos de tipo tile dado el mapa
+        /// </summary>
+        /// <param name="skin"></param>
+        /// <param name="map"></param>
+        void createBoard(Color[] skin, Map map)
         {
-            switch (touch.phase)
-            {
-                //Comienzo del dedo
-                case TouchPhase.Began:
-                    onTouch(touch);
-                    break;
-                //Movimiento del dedo
-                case TouchPhase.Moved:
-                    onTouchMoved(touch);
-                    break;
-                //Ultimo frame del dedo
-                case TouchPhase.Canceled:
-                    onTouchReleased(touch);
-                    break;
-                //Ultimo frame del dedo
-                case TouchPhase.Ended:
-                    onTouchReleased(touch);
-                    break;
-            }
-        }
-
-        void createBoard(Color[] skin)
-        {
-            int sizeX = _myMap.getSizeX();
-            int sizeY = _myMap.getSizeY();
+            int sizeX = map.getSizeX();
+            int sizeY = map.getSizeY();
 
             //Se crea el array de Tiles
-            _myTileMap = new Tile[sizeX, sizeY];
+            _board = new Tile[sizeX, sizeY];
 
             //Instanciamos todas las casillas y las inicializamos como vacias
             for (int i = 0; i < sizeX; i++)
             {
                 for (int j = 0; j < sizeX; j++)
                 {
-                    _myTileMap[i, j] = Instantiate(tilePrefab, new Vector3(i, j, 0), Quaternion.identity, boardGO).GetComponent<Tile>();
-                    _myTileMap[i, j].setTileType(Tile.TileType.voidTile);
+                    _board[i, j] = Instantiate(tilePrefab, new Vector3(i, -j, 0), Quaternion.identity, boardGO).GetComponent<Tile>();
+                    _board[i, j].setTileType(Tile.TileType.voidTile);
                 }
             }
 
             //Numero de tuberias del mapa
-            int numPipes = _myMap.getNumPipes();
+            int numPipes = map.getNumPipes();
 
             //Colocar los extremos de las tuberias en los tiles del mapa
             for (int i = 0; i < numPipes; i++)
             {
                 //Obtenemos los valores de las tuberias
-                List<Vector2> pipeSol = _myMap.getPipeSolution(i);
+                List<Vector2> pipeSol = map.getPipeSolution(i);
 
                 //Primer elemento de la tuberia
-                _myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y].initTile(Tile.TileType.circleTile, skin[i]);
+                _board[(int)pipeSol[0].x, (int)pipeSol[0].y].initTile(Tile.TileType.circleTile, skin[i]);
 
                 //Ultimo elemento de la tuberia
-                _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].initTile(Tile.TileType.circleTile, skin[i]);
+                _board[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].initTile(Tile.TileType.circleTile, skin[i]);
 
                 //Nuevo registro de tuberia
-                _currentPipes.Add(new Pipe(_myTileMap[(int)pipeSol[0].x, (int)pipeSol[0].y], _myTileMap[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y]));
-                Debug.Log(i);
+                _currentPipes.Add(new Pipe(_board[(int)pipeSol[0].x, (int)pipeSol[0].y], _board[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y]));
             }
 
             //Obtenemos la informacion de las paredes del mapa
-            List<Tuple<Vector2, Vector2>> wallsInfo = _myMap.getWallsInfo();
+            List<Tuple<Vector2, Vector2>> wallsInfo = map.getWallsInfo();
 
             if (wallsInfo != null)
                 for (int i = 0; i < wallsInfo.Count; i++)
@@ -111,6 +93,8 @@ namespace Flow
                     putWall(firstTile, secondTile);
                 }
 
+            //Colocamos el board en la pantalla
+            placeBoard(sizeX, sizeY);
         }
 
         /// <summary>
@@ -126,14 +110,14 @@ namespace Flow
                 //Si el primer tile esta en la izquierda
                 if (firstTile.x < secondTile.x)
                 {
-                    _myTileMap[(int)firstTile.x, (int)firstTile.y].setWall(3, true);
-                    _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(2, true);
+                    _board[(int)firstTile.x, (int)firstTile.y].setWall(3, true);
+                    _board[(int)secondTile.x, (int)secondTile.y].setWall(2, true);
                 }
                 //Si el primer tile esta en la derecha
                 else
                 {
-                    _myTileMap[(int)firstTile.x, (int)firstTile.y].setWall(2, true);
-                    _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(3, true);
+                    _board[(int)firstTile.x, (int)firstTile.y].setWall(2, true);
+                    _board[(int)secondTile.x, (int)secondTile.y].setWall(3, true);
                 }
             }
             //Si los tiles se encuentran en la misma columna
@@ -142,146 +126,141 @@ namespace Flow
                 //Si el primer tile esta arriba
                 if (firstTile.x < secondTile.y)
                 {
-                    _myTileMap[(int)firstTile.x, (int)firstTile.y].setWall(1, true);
-                    _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(0, true);
+                    _board[(int)firstTile.x, (int)firstTile.y].setWall(1, true);
+                    _board[(int)secondTile.x, (int)secondTile.y].setWall(0, true);
                 }
                 //Si el primer tile esta abajo
                 else
                 {
-                    _myTileMap[(int)firstTile.x, (int)firstTile.y].setWall(0, true);
-                    _myTileMap[(int)secondTile.x, (int)secondTile.y].setWall(1, true);
+                    _board[(int)firstTile.x, (int)firstTile.y].setWall(0, true);
+                    _board[(int)secondTile.x, (int)secondTile.y].setWall(1, true);
                 }
             }
         }
+        #endregion
+        #region Metodos de procesar input
 
-      
-        private void onTouch(Touch touch)
+        //+-----------------------------------------------------------------------------------------------------------------------+
+        //|                                          MÉTODOS PROCESAR INPUT                                                       |
+        //+-----------------------------------------------------------------------------------------------------------------------+
+
+        /// <summary>
+        /// Procesa el input del usuario dependiendo de la casilla que ha sido pulsada y el tipo de 
+        /// evento que recibe
+        /// </summary>
+        /// <param name="touch"> Evento realizado</param>
+        public void processTouch(Touch touch)
         {
-            int index;
-            Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
-            Color col = touchedTile.getColor();
-            Pipe touchedPipe = pipeWithColor(col);
-            switch (touchedTile.getTileType())
-            {
-                case Tile.TileType.circleTile:
-                    //Animacion
-                    touchedPipe.clearPipe();         //Limpiamos la pipe que se está dibujando
-
-                    _lastState.Add(new Tile(touchedTile));
-                    touchedPipe.addTileToPipe(touchedTile, out index);
-                 
-                    drawing = true;
-                    drawingColor = col;
-                    break;
-
-                case Tile.TileType.connectedTile:
-                    //Animacion Cabeza
-                    touchedPipe.temporalCut(touchedTile);
-                    touchedPipe.clearHiddens();
-
-                    drawing = true;
-                    drawingColor = col;
-                    break;
-
-                case Tile.TileType.pipeHead:
-                    drawing = true;
-                    drawingColor = col;
-                    //Animacion
-                    break;
-            }
-            lastPosProcessed = new Vector2(touch.position.x, touch.position.y);
+            Tile touchedTile = _board[(int)touch.position.x, (int)touch.position.y];
+            checkTileType(touchedTile, touch.position);
+            checkEventType(touch, touchedTile);
         }
 
-        private void onTouchMoved(Touch touch)
+        /// <summary>
+        /// Comprueba el tipo de tile que se ha pulsado y realiza la accion correspondiente
+        /// modificando el tablero
+        /// </summary>
+        /// <param name="touched">tile que ha sido tocado</param>
+        /// <param name="pos">posicion del tile en el board</param>
+        void checkTileType(Tile touched, Vector2 pos)
         {
-            //Si no estoy dibujando no me interesa hacer o cambiar nada
-            if (!drawing) return;
-
-            int index;
-
-            Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
-            _lastState.Add(new Tile(touchedTile));
-
-            switch (touchedTile.getTileType())
+            switch (touched.getTileType())
             {
+                case Tile.TileType.pipeHead:
+                    checkHeadTile(touched);
+                    break;
+                case Tile.TileType.connectedTile:
+                    checkConnectionTile(touched, pos);
+                    break;
                 case Tile.TileType.circleTile:
-                    if (touchedTile.getColor() == drawingColor)
-                    {
-                        processDirection(touch.position);
-                        if (pipeWithColor(drawingColor).addTileToPipe(touchedTile, out index))
-                            restoreState(index);
-                        else lastPosProcessed = touch.position;
-                    }
+                    checkCircleTile(touched);
                     break;
                 case Tile.TileType.voidTile:
-                    touchedTile.setTileType(Tile.TileType.pipeHead);
-                    touchedTile.setTileColor(drawingColor);
-                    processDirection(touch.position);
-                    pipeWithColor(drawingColor).addTileToPipe(touchedTile, out index);
-                    break;
-
-                case Tile.TileType.connectedTile:
-                    if (touchedTile.getColor() == drawingColor)
-                    {
-                        if (pipeWithColor(drawingColor).addTileToPipe(touchedTile, out index))
-                            restoreState(index);
-                    }
-                    else
-                    {
-                        touchedTile.setTileType(Tile.TileType.pipeHead);
-                        touchedTile.setPipeColor(drawingColor);
-                        processDirection(touch.position);
-                        pipeWithColor(touchedTile.getColor()).temporalCut(touchedTile);
-                    }
+                    checkVoidTile(touched, pos);
                     break;
             }
         }
-
-        private void onTouchReleased(Touch touch)
+        /// <summary>
+        /// Comprueba el tipo de evento que se ha registrado y realiza la accion correspondiente.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="touchedTile"></param>
+        void checkEventType(Touch e, Tile touchedTile)
         {
-            if (!drawing) return;
-
-            Tile touchedTile = _myTileMap[(int)touch.position.x, (int)touch.position.y];
-
-            //Eliminamos todos los tiles que hayan sido cortados
-            foreach (Pipe pipe in _currentPipes)
+            drawing = false;
+            switch (e.phase)
             {
-                if (pipe.getColor() != drawingColor)
-                    pipe.clearHiddens();
+                case TouchPhase.Began:
+                    if (touchedTile.getTileType() != Tile.TileType.voidTile)
+                    {
+                        //Animacion TileTocado
+                    }
+                    break;
+                case TouchPhase.Moved:
+                    //Nada
+                    break;
+                case TouchPhase.Ended:
+                    //Guardamos el estado del board
+                    foreach (Pipe p in _currentPipes)
+                    {
+                        p.saveFlow();
+                    }
+                    break;
             }
 
-            //Confirmamos todos los tiles que hemos dibujado
-            pipeWithColor(drawingColor).confirmSelection();
-
-            _lastState.Clear();
-
-            drawing = false;
         }
-
-
+        #endregion
+        #region Metodos privados auxiliares 
         //+-----------------------------------------------------------------------------------------------------------------------+
         //|                                              MÉTODOS AUXILIARES                                                       |
         //+-----------------------------------------------------------------------------------------------------------------------+
+
+        private void placeBoard(int sizeX, int sizeY)
+        {
+            int scaleX = Screen.width / sizeX;
+            int scaleY = Screen.height / sizeY;
+
+            if (sizeX == sizeY) //si el tablero no es rectangular
+                scaleY = scaleX;    //asociamos la proporcion de la escala en X
+
+            float posX = -(scaleX * sizeX) / 2;
+            float posY = -(scaleY * sizeY) / 2;
+
+            boardGO.transform.position = new Vector3(posX, posY, 0);
+            boardGO.transform.localScale = new Vector3(scaleX * sizeX, scaleY * sizeY, 0);
+        }
+
+        /// <summary>
+        /// Modifica la direccion de las tuberias de la posicion actual y de la anterior si se da el caso
+        /// </summary>
+        /// <param name="currentPos"></param>
         private void processDirection(Vector2 currentPos)
         {
             Vector2 dir = currentPos - lastPosProcessed;
             //Derecha
             if (dir.x == 1)
-                _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(1, 0));
+                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(1, 0));
+            //Izquierda
             else if (dir.x == -1)
             {
-                _myTileMap[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(1, 0));
-                _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
+                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(1, 0));
+                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
             }
+            //Arriba
             else if (dir.y == 1)
-                _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 1));
+                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 1));
+            //Abajo
             else if (dir.y == -1)
             {
-                _myTileMap[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(0, 1));
-                _myTileMap[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
+                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(0, 1));
+                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
             }
         }
-
+        /// <summary>
+        /// Devuelve la pipe asignada al color. En caso de no encontrarla devuelve null
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
         private Pipe pipeWithColor(Color col)
         {
             foreach (Pipe p in _currentPipes)
@@ -289,19 +268,136 @@ namespace Flow
 
             return null;
         }
-
-        private void restoreState(int lastIndex)
+        /// <summary>
+        /// Restablece los cortes de las pipes en caso de que haya habido alguno
+        /// </summary>
+        private void restoreState()
         {
-            Pipe currentPipe = pipeWithColor(drawingColor);
-            for (int i = _lastState.Count - 1; i >= lastIndex; --i)
+            foreach (Pipe p in _currentPipes)
             {
-                if(_lastState[i].getTileType() != Tile.TileType.voidTile)
+                if (p.getColor() != drawingColor)
                 {
-                    pipeWithColor(_lastState[i].getColor()).restoreHiddens();
-                    currentPipe.changeTileDir(i, _lastState[i].getDirection());
+                    p.restoreFlow();
                 }
             }
         }
-    }
 
+        /// <summary>
+        /// Si esta dibujando aniade el a la pipe correspondiente al color de dibujado actualizando el tile
+        /// </summary>
+        /// <param name="t"> Tile a aniadir</param>
+        /// <param name="pos"> posicion en el board del tile</param>
+        private void checkVoidTile(Tile t, Vector2 pos)
+        {
+            if (!drawing) return;
+
+            Pipe p = pipeWithColor(drawingColor);
+            updateTile(t, pos);
+            p.addTileToPipe(t);
+        }
+
+        /// <summary>
+        /// Si no esta dibujando corta el pipe. Si se esta dibujando, si es del mismo color que el que se esta dibujando, se corta la pipe del dibujado
+        /// y si no, se corta la pipe que ha sido cortada
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="pos"></param>
+        private void checkConnectionTile(Tile t, Vector2 pos)
+        {
+            Pipe p;
+            if (!drawing)   //si no estoy dibujando
+            {
+                drawing = true;
+                drawingColor = t.getColor();
+                p = pipeWithColor(drawingColor);
+                //Cortamos la pipe del color
+                p.cut(t);
+            }
+            else    //Si estoy dibujando
+            {
+                p = pipeWithColor(drawingColor);
+                if (drawingColor == t.getColor())   //Si corto conmigo mismo
+                {
+                    p.addTileToPipe(t); //Lo añado a la pipe y la pipe se encarga de autocortame
+                    restoreState();     //Reset del estado de las pipes
+                }
+                else     //Si corto con otra tuberia
+                {
+                    //Me aniado a mi mismo a mi tuberia
+                    processDirection(pos);
+                    updateTile(t, pos);
+                    p.addTileToPipe(t);
+
+                    //Corto la tuberia con la que he chocado
+                    p = pipeWithColor(t.getColor());
+                    p.cut(t);
+                }
+            }
+        }
+        /// <summary>
+        /// Si estamos dibujando y el tile no es del mismo color de dibujado corta la tuberia del tile.
+        /// </summary>
+        /// <param name="t"></param>
+        private void checkHeadTile(Tile t)
+        {
+            Pipe p;
+            if (drawing)
+            {
+                if (drawingColor != t.getColor())    //si no es del color que estoy dibujando
+                {
+                    p = pipeWithColor(t.getColor());
+                    p.cut(t);                           //cortamos la pipe
+
+                    p = pipeWithColor(drawingColor);    //aniadimos el tile a la pipe de dibujado
+                    p.addTileToPipe(t);
+                }
+            }
+            else
+            {
+                drawing = true;
+                drawingColor = t.getColor();
+            }
+
+        }
+        /// <summary>
+        /// Si no estoy dibujando se limpia la tuberia del color del tile que se ha pulsado. En caso de estar
+        /// dibujando se comprueba si se ha cortado con la tuberia de dibujado. En caso de ser asi, se restauran las 
+        /// tuberias y se elimina la tuberia dibujada.
+        /// </summary>
+        /// <param name="t"></param>
+        private void checkCircleTile(Tile t)
+        {
+            Pipe p;
+            if (drawing)
+            {
+                p = pipeWithColor(drawingColor);
+                if (drawingColor == t.getColor())   //Si corto conmigo mismo
+                {
+                    p.addTileToPipe(t); //Lo añado a la pipe y la pipe se encarga de autocortame
+                    restoreState();     //Reset del estado de las pipes
+                }
+            }
+            else
+            {
+                drawing = true;
+                drawingColor = t.getColor();
+                p = pipeWithColor(t.getColor());
+                p.clearPipe();
+                p.addTileToPipe(t);
+            }
+        }
+
+        /// <summary>
+        /// actualiza los atributos del tile
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="pos"></param>
+        private void updateTile(Tile t, Vector2 pos)
+        {
+            processDirection(pos);
+            t.setTileColor(drawingColor);
+            t.setTileType(Tile.TileType.pipeHead);
+        }
+    }
+    #endregion
 }
