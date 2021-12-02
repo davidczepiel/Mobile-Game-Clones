@@ -9,6 +9,11 @@ namespace Flow
         [SerializeField]
         private BoardManager boardManager;
 
+        public void locateBoard(int initPixel)
+        {
+
+        }
+
         // Update is called once per frame
         void Update()
         {

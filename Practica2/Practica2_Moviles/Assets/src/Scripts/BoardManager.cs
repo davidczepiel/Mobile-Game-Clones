@@ -10,8 +10,6 @@ namespace Flow
     {
         [SerializeField]
         GameObject tilePrefab;      //prefab del tile
-        [SerializeField]
-        Transform boardGO;          //objeto donde se guardan los tiles
 
         Color drawingColor;         //color que se esta dibujando 
         Vector2 lastPosProcessed;   //ultima prosion que se recogio
@@ -55,7 +53,7 @@ namespace Flow
             {
                 for (int j = 0; j < sizeX; j++)
                 {
-                    _board[i, j] = Instantiate(tilePrefab, new Vector3(i, -j, 0), Quaternion.identity, boardGO).GetComponent<Tile>();
+                    _board[i, j] = Instantiate(tilePrefab, new Vector3(i, -j, 0), Quaternion.identity, this.transform).GetComponent<Tile>();
                     _board[i, j].setTileType(Tile.TileType.voidTile);
                 }
             }
@@ -92,9 +90,6 @@ namespace Flow
                     //Colocar pared entre dos tiles
                     putWall(firstTile, secondTile);
                 }
-
-            //Colocamos el board en la pantalla
-            placeBoard(sizeX, sizeY);
         }
 
         /// <summary>
@@ -215,20 +210,6 @@ namespace Flow
         //|                                              MÉTODOS AUXILIARES                                                       |
         //+-----------------------------------------------------------------------------------------------------------------------+
 
-        private void placeBoard(int sizeX, int sizeY)
-        {
-            int scaleX = Screen.width / sizeX;
-            int scaleY = Screen.height / sizeY;
-
-            if (sizeX == sizeY) //si el tablero no es rectangular
-                scaleY = scaleX;    //asociamos la proporcion de la escala en X
-
-            float posX = -(scaleX * sizeX) / 2;
-            float posY = -(scaleY * sizeY) / 2;
-
-            boardGO.transform.position = new Vector3(posX, posY, 0);
-            boardGO.transform.localScale = new Vector3(scaleX * sizeX, scaleY * sizeY, 0);
-        }
 
         /// <summary>
         /// Modifica la direccion de las tuberias de la posicion actual y de la anterior si se da el caso
