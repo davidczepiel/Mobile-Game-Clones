@@ -144,10 +144,10 @@ namespace Flow
         /// evento que recibe
         /// </summary>
         /// <param name="touch"> Evento realizado</param>
-        public void processTouch(Touch touch)
+        public void processTouch(Touch touch, Vector2 pos)
         {
-            Tile touchedTile = _board[(int)touch.position.x, (int)touch.position.y];
-            checkTileType(touchedTile, touch.position);
+            Tile touchedTile = _board[(int)pos.x, (int)pos.y];
+            checkTileType(touchedTile, pos);
             checkEventType(touch, touchedTile);
         }
 

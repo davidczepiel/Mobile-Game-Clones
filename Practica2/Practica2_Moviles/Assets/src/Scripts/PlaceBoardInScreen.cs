@@ -6,6 +6,9 @@ public class PlaceBoardInScreen : MonoBehaviour
 {
     const int OFFSET = 1;
 
+    float scale;
+    float posX, posY;
+
     /// <summary>
     /// Situa el tablero centrado en el espacio del juego
     /// </summary>
@@ -18,18 +21,27 @@ public class PlaceBoardInScreen : MonoBehaviour
         float unitHeight = (canvasHeight * cameraUnit * 2) / Screen.height;
         float uniWidth = (Screen.width * unitHeight) / canvasHeight;
 
-        float scale;
         if (Screen.height > Screen.width)
             scale = uniWidth / boardSizeX;
         else
             scale = unitHeight / boardSizeY;
 
-        this.transform.localScale = new Vector3(scale, scale, 0);
+        transform.localScale = new Vector3(scale, scale, 0); 
 
-        float posX = -(scale * (boardSizeX - OFFSET)) / 2;
-        float posY = (scale * (boardSizeY - OFFSET)) / 2;
+        posX = -(scale * (boardSizeX - OFFSET)) / 2;
+        posY = (scale * (boardSizeY - OFFSET)) / 2;
 
-        this.transform.position = new Vector3(posX, posY, 0);
+        transform.position = new Vector3(posX, posY, 0);
+    }
+
+    public Vector2 getPos()
+    {
+        return new Vector2(posX, posY);
+    }
+
+    public float getScale()
+    {
+        return scale;
     }
 
 
