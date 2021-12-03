@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlaceBoardInScreen : MonoBehaviour
 {
-    const int OFFSET = 1;
+    const float OFFSET = 1f;
 
     float scale;
     float posX, posY;
@@ -26,17 +26,17 @@ public class PlaceBoardInScreen : MonoBehaviour
         else
             scale = unitHeight / boardSizeY;
 
-        transform.localScale = new Vector3(scale, scale, 0); 
+        transform.localScale = new Vector3(scale, scale, 0);
 
-        posX = -(scale * (boardSizeX - OFFSET)) / 2;
-        posY = (scale * (boardSizeY - OFFSET)) / 2;
+        posX = uniWidth / 2 - ((boardSizeX - OFFSET)* scale) / 2 ;
+        posY = cameraUnit + ((boardSizeY - OFFSET )* scale ) / 2;
 
         transform.position = new Vector3(posX, posY, 0);
     }
 
     public Vector2 getPos()
     {
-        return new Vector2(posX, posY);
+        return new Vector2(posX - 0.5f * scale, posY + 0.5f * scale);
     }
 
     public float getScale()
