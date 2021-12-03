@@ -22,16 +22,19 @@ namespace Flow
             this.cameraUnit = cameraUnit;
         }
 
-        // Update is called once per frame
         void Update()
         {
             foreach(Touch touch in Input.touches) //Todo get touches
             {
                 Vector2 tranformatedPos = transformCoord(touch.position);
-                  
+
+                //Si la pulsacion no entra dentro del tablero no la procesamos
+                if (tranformatedPos.x == -1) return;
+
                 boardManager.processTouch(touch, tranformatedPos);
             }
-#if UNITY_EDITOR
+
+#if UNITY_EDITOR    //Procesamiento del raton en el editor de Unity
             Touch touch1 = new Touch();
             bool flag = false;
             if (Input.GetMouseButtonDown(0))
@@ -46,26 +49,39 @@ namespace Flow
             }
             else if (Input.GetMouseButton(0))
             {
-                //flag = true;
+                flag = true;
                 touch1.phase = TouchPhase.Moved;
             }
+
             if (flag)
             {
                 touch1.position = Input.mousePosition;
-                boardManager.processTouch(touch1, transformCoord(touch1.position));
+                Vector2 boardPosition = transformCoord(touch1.position);
+                
+                //Si la pulsacion no entra dentro del tablero no la procesamos
+                if (boardPosition.x == -1) return;
+
+                boardManager.processTouch(touch1, boardPosition);
             }
-
-
 #endif
         }
 
+        /// <summary>
+        /// Transforma coordenadas de pantalla a coordenada en el tablero de tiles
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         private Vector2 transformCoord(Vector2 pos)
         {
-            //Pasamos de pixeles de unidades
+            //Pasamos de pixeles a unidades
             pos.x = (pos.x * cameraUnit * 2) / Screen.height;  
             pos.y =  (pos.y * cameraUnit * 2) / Screen.height;
 
-            if (pos.y <= initUnitPos.y && pos.y >= cameraUnit * 2 - initUnitPos.y)
+            float boardUnitsSize = (initUnitPos.y - cameraUnit) * 2;
+
+            //Si la posicion se encuentra en el tablero de juego
+            if ((pos.y <= initUnitPos.y && pos.y >= cameraUnit * 2 - initUnitPos.y) &&
+                (pos.x >= initUnitPos.x && pos.x <= boardUnitsSize))
             {
                 //Pasamos de unidades de Unity a unidades en el tablero
                 pos = initUnitPos - pos;

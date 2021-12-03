@@ -107,6 +107,20 @@ namespace Flow
         public void setDirection(Vector2 newDir)
         {
             _direction = newDir;
+            _horizontalPipeRenderer.enabled = _direction.x == 1;
+            _verticalPipeRenderer.enabled = _direction.y == 1;
+        }
+
+        public void setHorizontalConnection(bool active)
+        {
+            _direction.x = active ? 1 : 0;
+            _horizontalPipeRenderer.enabled = active;
+        }
+
+        public void setVerticalConnection(bool active)
+        {
+            _direction.y = active ? 1 : 0;
+            _verticalPipeRenderer.enabled = active;
         }
 
         public bool isHidden()

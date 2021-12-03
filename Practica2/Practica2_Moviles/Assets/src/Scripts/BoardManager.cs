@@ -17,7 +17,7 @@ namespace Flow
         Tile[,] _board;             //tablero que guarda los tiles
         List<Pipe> _currentPipes;   //tuberias del juego
 
-        bool drawing;       //si se esta dibujando o se acaba dejar de dibujar
+        bool drawing;       //si el jugador esta dibujando actualmente en el tablero
 
         #region Metodos de creacion
         /// <summary>
@@ -133,10 +133,11 @@ namespace Flow
             }
         }
         #endregion
+
         #region Metodos de procesar input
 
         //+-----------------------------------------------------------------------------------------------------------------------+
-        //|                                          MÉTODOS PROCESAR INPUT                                                       |
+        //|                                          METODOS PROCESAR INPUT                                                       |
         //+-----------------------------------------------------------------------------------------------------------------------+
 
         /// <summary>
@@ -146,9 +147,17 @@ namespace Flow
         /// <param name="touch"> Evento realizado</param>
         public void processTouch(Touch touch, Vector2 pos)
         {
+            //Obtener el tile correspondiente a la pulsacion
             Tile touchedTile = _board[(int)pos.x, (int)pos.y];
+            
+            //Acciones a hacer segun el tipo de tile pulsado
             checkTileType(touchedTile, pos);
+
+            //Acciones a hacer segun el tipo de evento producido
             checkEventType(touch, touchedTile);
+
+            //Registramos la posicion actual como la ultima procesada
+            lastPosProcessed = pos;
         }
 
         /// <summary>
@@ -175,6 +184,7 @@ namespace Flow
                     break;
             }
         }
+
         /// <summary>
         /// Comprueba el tipo de evento que se ha registrado y realiza la accion correspondiente.
         /// </summary>
@@ -182,7 +192,6 @@ namespace Flow
         /// <param name="touchedTile"></param>
         void checkEventType(Touch e, Tile touchedTile)
         {
-            drawing = false;
             switch (e.phase)
             {
                 case TouchPhase.Began:
@@ -195,6 +204,8 @@ namespace Flow
                     //Nada
                     break;
                 case TouchPhase.Ended:
+                    //Terminamos de pintar
+                    drawing = false;
                     //Guardamos el estado del board
                     foreach (Pipe p in _currentPipes)
                     {
@@ -205,9 +216,10 @@ namespace Flow
 
         }
         #endregion
+
         #region Metodos privados auxiliares 
         //+-----------------------------------------------------------------------------------------------------------------------+
-        //|                                              MÉTODOS AUXILIARES                                                       |
+        //|                                              METODOS AUXILIARES                                                       |
         //+-----------------------------------------------------------------------------------------------------------------------+
 
 
@@ -220,22 +232,24 @@ namespace Flow
             Vector2 dir = currentPos - lastPosProcessed;
             //Derecha
             if (dir.x == 1)
+            {
                 _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(1, 0));
+            }
             //Izquierda
             else if (dir.x == -1)
             {
-                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(1, 0));
                 _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
+                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setHorizontalConnection(true);
             }
             //Arriba
-            else if (dir.y == 1)
-                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 1));
-            //Abajo
             else if (dir.y == -1)
             {
-                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setDirection(new Vector2(0, 1));
                 _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
+                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setVerticalConnection(true);
             }
+            //Abajo
+            else if (dir.y == 1)
+                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 1));
         }
         /// <summary>
         /// Devuelve la pipe asignada al color. En caso de no encontrarla devuelve null
@@ -304,9 +318,9 @@ namespace Flow
                 }
                 else     //Si corto con otra tuberia
                 {
-                    //Me aniado a mi mismo a mi tuberia
                     processDirection(pos);
                     updateTile(t, pos);
+                    //Me aniado a mi mismo a mi tuberia
                     p.addTileToPipe(t);
 
                     //Corto la tuberia con la que he chocado
