@@ -14,6 +14,7 @@ namespace Flow
         LevelManager _levelManager;
 
         int currentLevel;
+        int hints;
         int package;
 
         static GameManager _instance;
@@ -66,6 +67,16 @@ namespace Flow
         public int getCurrentPackage()
         {
             return package;
+        }
+
+        public void setHint(int a)
+        {
+            hints = a;
+        }
+
+        public int getHints()
+        {
+            return hints;
         }
 
         public Color[] getSkin()

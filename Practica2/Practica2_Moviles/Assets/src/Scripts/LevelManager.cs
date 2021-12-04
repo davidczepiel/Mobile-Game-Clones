@@ -8,10 +8,6 @@ namespace Flow
     public class LevelManager : MonoBehaviour
     {
         [SerializeField]
-        int topSideOffset;
-        [SerializeField]
-        int sideWidth;
-        [SerializeField]
         BoardManager _board;
         [SerializeField]
         PlaceBoardInScreen _screenPlacer;
@@ -20,13 +16,18 @@ namespace Flow
         [SerializeField]
         CameraPlacer _cameraPlacer;
 
+        [SerializeField]
+        int topSideOffset;
+        [SerializeField]
+        int sideWidth;
+
         // Start is called before the first frame update
         void Start()
         {
             //Crea el mapa e instancia los objetos en la escena
             Map map = GameManager.getInstance().createMap();
             _board.prepareBoard(map, GameManager.getInstance().getSkin());
-
+            //Coloca los objetos de la escena
             locateObjects(map);
         }
 

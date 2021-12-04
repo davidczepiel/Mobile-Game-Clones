@@ -593,7 +593,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 280}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &303028930
@@ -1507,7 +1507,7 @@ GameObject:
   - component: {fileID: 1179587908}
   - component: {fileID: 1179587907}
   m_Layer: 5
-  m_Name: Text
+  m_Name: HintsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1728,12 +1728,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3615ada92b8c3284e90cb7537c9dceb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topSideOffset: 280
-  sideWidth: 1080
   _board: {fileID: 1541700901}
   _screenPlacer: {fileID: 1541700903}
   _inputManager: {fileID: 605622344}
   _cameraPlacer: {fileID: 1658979707}
+  topSideOffset: 280
+  sideWidth: 1080
 --- !u!4 &1337091064
 Transform:
   m_ObjectHideFlags: 0
@@ -1760,6 +1760,7 @@ GameObject:
   - component: {fileID: 1353022090}
   - component: {fileID: 1353022089}
   - component: {fileID: 1353022088}
+  - component: {fileID: 1353022092}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1849,6 +1850,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1353022092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353022087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4798809799c02b44ab50f70aa94ca738, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lvlText: {fileID: 1257083643}
+  sizeText: {fileID: 368755802}
+  hintsText: {fileID: 1179587907}
+  flowsText: {fileID: 549199011}
+  moveText: {fileID: 1960561995}
+  pipeText: {fileID: 36142200}
 --- !u!1 &1372067675
 GameObject:
   m_ObjectHideFlags: 0
