@@ -6,17 +6,6 @@ namespace Flow
 {
     public class Tile : MonoBehaviour
     {
-        /// <summary>
-        /// Constructora por copia
-        /// </summary>
-        /// <param name="tile"></param>
-        public Tile(Tile tile)
-        {
-            this._myType = tile._myType;
-            this._tileColor = tile._tileColor;
-            this._direction.x = tile._direction.x;
-            this._direction.y = tile._direction.y;
-        }
         public enum TileType { voidTile, connectedTile, pipeHead, circleTile }
 
         [SerializeField]
@@ -36,11 +25,8 @@ namespace Flow
         Sprite _pipeImage;
 
         TileType _myType = TileType.voidTile;  //El tipo actual de este tile
-
         Color _tileColor; //Color de la tuberia/circulo
-
         Vector2 _direction; //Dir en la que  se esta mostrando este pipe
-
 
         bool _hidden = false; //Indica si no se esta mostrando, aunque no sea vacio
 
@@ -48,7 +34,7 @@ namespace Flow
 
         //TODO private Animation animacion;
 
-
+        #region Getters y setters
         /// +--------------------------------------------------------------------------------------+
         /// |                                 GETTERS Y SETTERS                                    |
         /// +--------------------------------------------------------------------------------------+
@@ -143,6 +129,10 @@ namespace Flow
             return _backgroundRenderer.color;
         }
 
+        #endregion
+
+        #region Metodos de control
+
         /// +--------------------------------------------------------------------------------------+
         /// |                                 METODOS DE CONTROL                                   |
         /// +--------------------------------------------------------------------------------------+
@@ -174,6 +164,17 @@ namespace Flow
                 _circleRenderer.enabled = true;
         }
 
+        public void setTileAttributes(TileInfo tileInfo)
+        {
+            _myType = tileInfo.type;
+            _tileColor = tileInfo.color;
+            _direction = tileInfo.direction;
+        }
+
+        #endregion
+
+        #region Metodos Auxiliares
+
         /// +--------------------------------------------------------------------------------------+
         /// |                                 METODOS AUXILIARES                                   |
         /// +--------------------------------------------------------------------------------------+
@@ -184,6 +185,22 @@ namespace Flow
             _verticalPipeRenderer.enabled = verPipe;
             _circleRenderer.enabled = circlerend;
             _backgroundRenderer.enabled = backG;
+        }
+
+        #endregion
+    }
+
+    public struct TileInfo
+    {
+        public Tile.TileType type;
+        public Color color; 
+        public Vector2 direction;
+
+        public TileInfo(Tile tile)
+        {
+            type = tile.getTileType();
+            color = tile.getColor();
+            direction = tile.getDirection();
         }
     }
 }

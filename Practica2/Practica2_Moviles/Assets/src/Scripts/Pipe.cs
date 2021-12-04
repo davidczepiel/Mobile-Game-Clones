@@ -8,59 +8,59 @@ namespace Flow
     public class Pipe
     {
         List<Tile> _currentPipe;
-        List<Tile> _lastPipe;
+        List<TileInfo> _lastPipe;
 
         Tile _firstTile;
         Tile _secondTile;
         bool _finished;
         bool haveBeenReversed;
 
-        public Pipe()
-        {
-            _firstTile = null;
-            _secondTile = null;
-            _finished = false;
-            _lastPipe = new List<Tile>();
-            _currentPipe = new List<Tile>();
-        }
         public Pipe(Tile firstTile, Tile lastTile)
         {
             _firstTile = firstTile;
             _secondTile = lastTile;
             _finished = false;
-            _lastPipe = new List<Tile>();
+            _lastPipe = new List<TileInfo>();
             _currentPipe = new List<Tile>();
         }
+
+        #region Metodos de control
 
         public Color getColor()
         {
             return _firstTile.getColor();
         }
+
         public void clearPipe()
         {
             removeTilesRange(0, _currentPipe.Count);
         }
+
         /// <summary>
-        /// Aniade un nuevo tile a la tuberia
+        /// Aniade un nuevo tile a la tuberia, devuelve true si se ha cortado a si misma
         /// </summary>
         /// <param name="newTile"></param>
         public bool addTileToPipe(Tile newTile)
         {
-            //La tuberia no debe contener ya al tile
+            //La tuberia no debe contener ya al tile ni estar terminada aun para meter nuevos tiles
             if (!_currentPipe.Contains(newTile))
             {
                 //Si el nuevo tile es uno de los extremos y ya habia tiles en la tuberia, significa que se ha cerrado
-                if ((newTile == _secondTile || newTile == _firstTile) && _currentPipe.Count > 0)
+                if ((newTile == _secondTile || newTile == _firstTile) && _currentPipe.Count > 1)
                     _finished = true;
 
                 _currentPipe.Add(newTile);
+
+                Debug.Log("Nuevo tile a tuberia " + _firstTile.getColor() + ", count: " + _currentPipe.Count);
                 return false;
             }
-            else
+            else if (_currentPipe.Count > 1 && newTile != _secondTile && newTile != _firstTile)     //Volver atras solo si hay mas tiles en la lista que el primer circulo
             {
                 removeTilesRange(_currentPipe.IndexOf(newTile), _currentPipe.Count);
+                Debug.Log("Tile eliminado de la tuberia " + _firstTile.getColor() + ", count: " + _currentPipe.Count);
                 return true;
             }
+            else return false;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Flow
             _lastPipe.Clear();
             foreach (Tile t in _currentPipe)
             {
-                _lastPipe.Add(new Tile(t));
+                _lastPipe.Add(new TileInfo(t));
             }
         }
 
@@ -109,16 +109,10 @@ namespace Flow
 
             if (!_finished)
             {
-                for (int i = _lastPipe.Count; i != 0; --i)
+                for (int i = _lastPipe.Count - 1; i >= 0; --i)
                 {
                     if (_currentPipe[i].getTileType() == Tile.TileType.voidTile)
-                    {
-                        _currentPipe[i].setPipeColor(_lastPipe[i].getColor());
-                        _currentPipe[i].setDirection(_lastPipe[i].getDirection());
-                        _currentPipe[i].setPipeColor(_lastPipe[i].getColor());
-                        _currentPipe[i].setTileType(_lastPipe[i].getTileType());
-
-                    }
+                        _currentPipe[i].setTileAttributes(_lastPipe[i]);
                     else
                         break;
                 }
@@ -134,20 +128,16 @@ namespace Flow
                 for (int i = _lastPipe.Count - 1; i >= 0; --i)
                 {
                     if (_currentPipe[i].getTileType() == Tile.TileType.voidTile)
-                    {
-                        _currentPipe[i].setPipeColor(_lastPipe[i].getColor());
-                        _currentPipe[i].setDirection(_lastPipe[i].getDirection());
-                        _currentPipe[i].setPipeColor(_lastPipe[i].getColor());
-                        _currentPipe[i].setTileType(_lastPipe[i].getTileType());
-
-                    }
+                        _currentPipe[i].setTileAttributes(_lastPipe[i]);
                     else
                         break;
                 }
             }
         }
 
+        #endregion
 
+        #region Metodos auxiliares
         /// +--------------------------------------------------------------------------------------+
         /// |                                 METODOS AUXILIARES                                   |
         /// +--------------------------------------------------------------------------------------+
@@ -159,10 +149,11 @@ namespace Flow
         /// <param name="end"> Indice final </param>
         private void removeTilesRange(int beginning, int end)
         {
-            //Reseteamos los tiles a vacios
+            //Reseteamos los tiles no circulos a vacios
             for (int i = beginning; i < end; ++i)
             {
-                _currentPipe[i].setTileType(Tile.TileType.voidTile);
+                if(_currentPipe[i].getTileType() != Tile.TileType.circleTile)
+                    _currentPipe[i].setTileType(Tile.TileType.voidTile);
             }
 
             //Eliminamos de la lista los tiles dentro del rango
@@ -171,5 +162,7 @@ namespace Flow
             if (_currentPipe.Count > 0 && _currentPipe[_currentPipe.Count - 1].getTileType() != Tile.TileType.circleTile)
                 _currentPipe[_currentPipe.Count - 1].setTileType(Tile.TileType.pipeHead);
         }
+
+        #endregion
     }
 }
