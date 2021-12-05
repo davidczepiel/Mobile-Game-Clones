@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 688fab1391f049b4b84e4e1d6e5ff37f, type: 3}
-  m_Name: Package1Info
+  m_Name: Paquete Adicional
   m_EditorClassIdentifier: 
-  packName: Pack1
-  maps: {fileID: 4900000, guid: eb2ed02dfb044df49906912a3485218e, type: 3}
+  levelsCompleted: 0
+  packName: Paquete Adicional
+  maps: {fileID: 4900000, guid: 98ce8ca23af699349b0eec1f68e9b74b, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}

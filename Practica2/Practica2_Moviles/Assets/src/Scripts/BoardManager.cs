@@ -9,7 +9,7 @@ namespace Flow
     public class BoardManager : MonoBehaviour
     {
         [SerializeField]
-        GameObject tilePrefab;      //prefab del tile
+        Tile tilePrefab;      //prefab del tile
 
         Color drawingColor;         //color que se esta dibujando 
         Vector2 lastPosProcessed;   //ultima prosion que se recogio
@@ -53,7 +53,7 @@ namespace Flow
             {
                 for (int j = 0; j < sizeX; j++)
                 {
-                    _board[i, j] = Instantiate(tilePrefab, new Vector3(i, -j, 0), Quaternion.identity, this.transform).GetComponent<Tile>();
+                    _board[i, j] = Instantiate(tilePrefab, new Vector3(i, -j, 0), Quaternion.identity, this.transform);
                     _board[i, j].setTileType(Tile.TileType.voidTile);
                 }
             }
