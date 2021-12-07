@@ -45,7 +45,7 @@ namespace Flow
         {
             int sizeX = map.getSizeX();
             int sizeY = map.getSizeY();
-            boardSize = new Vector2(sizeX,sizeY);
+            boardSize = new Vector2(sizeX, sizeY);
 
             //Se crea el array de Tiles
             _board = new Tile[sizeX, sizeY];
@@ -151,7 +151,7 @@ namespace Flow
         {
             //Obtener el tile correspondiente a la pulsacion
             Tile touchedTile = _board[(int)pos.x, (int)pos.y];
-            
+
             //Acciones a hacer segun el tipo de tile pulsado
             checkTileType(touchedTile, pos);
 
@@ -208,6 +208,8 @@ namespace Flow
                 case TouchPhase.Ended:
                     //Terminamos de pintar
                     drawing = false;
+                    drawingColor = Color.black;
+
                     //Guardamos el estado del board
                     foreach (Pipe p in _currentPipes)
                         p.saveFlow();
@@ -229,7 +231,14 @@ namespace Flow
         /// <param name="currentPos"></param>
         private void processDirection(Vector2 currentPos)
         {
-            Vector2 dir = currentPos - lastPosProcessed;
+            //Detras
+            Pipe p = pipeWithColor(drawingColor);
+            Tile t = p.getTileBehind(_board[(int)currentPos.x, (int)currentPos.y]);
+            if (t == null) return;
+
+            Vector2 pos = getPosOfTile(t);
+            Vector2 dir = currentPos - pos;
+
             //Derecha
             if (dir.x == 1)
             {
@@ -239,13 +248,13 @@ namespace Flow
             else if (dir.x == -1)
             {
                 _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
-                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setHorizontalConnection(true);
+                _board[(int)pos.x, (int)pos.y].setHorizontalConnection(true);
             }
             //Arriba
             else if (dir.y == -1)
             {
                 _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
-                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setVerticalConnection(true);
+                _board[(int)pos.x, (int)pos.y].setVerticalConnection(true);
             }
             //Abajo
             else if (dir.y == 1)
@@ -289,12 +298,17 @@ namespace Flow
 
             Pipe p = pipeWithColor(drawingColor);
             updateTile(t);
-            processDirection(pos);
             p.addTileToPipe(t);
+            processDirection(pos);
+
+            //Saco el que esta detras mia y le pongo en modo conected
+            Tile behind = p.getTileBehind(t);
+            if (behind.getTileType() != Tile.TileType.circleTile)
+                behind.setTileType(Tile.TileType.connectedTile);
 
             //Ya que hemos avanzado hacia una nueva casilla, hay que indicar a la anterior que ahora es un conected tile
-            if(_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
-                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
+            //if(_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
+            //    _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
 
             //Registramos la posicion actual como la ultima procesada
             lastPosProcessed = pos;
@@ -314,10 +328,7 @@ namespace Flow
                 drawing = true;
                 drawingColor = t.getColor();
                 p = pipeWithColor(drawingColor);
-                //Cortamos la pipe del color
-
                 prepareHead(t, p.establishNewHead(t));
-
             }
             else    //Si estoy dibujando
             {
@@ -348,11 +359,11 @@ namespace Flow
             //Saco las posiciones en el tablero tanto de la cabeza como del anterior
             Vector2 posHead = new Vector2();
             Vector2 posBehind = new Vector2();
-            for(int i=0; i< boardSize.x; i++)
+            for (int i = 0; i < boardSize.x; i++)
             {
                 for (int j = 0; j < boardSize.y; j++)
                 {
-                    if(_board[i,j] == newHead)
+                    if (_board[i, j] == newHead)
                     {
                         posHead.x = i;
                         posHead.y = j;
@@ -364,7 +375,26 @@ namespace Flow
                     }
                 }
             }
-            newHead.setDirection(posHead-posBehind);
+            newHead.setDirection(posHead - posBehind);
+        }
+
+        private Vector2 getPosOfTile(Tile tile)
+        {
+            //Saco las posiciones en el tablero tanto de la cabeza como del anterior
+            Vector2 pos = new Vector2();
+            for (int i = 0; i < boardSize.x; i++)
+            {
+                for (int j = 0; j < boardSize.y; j++)
+                {
+                    if (_board[i, j] == tile)
+                    {
+                        pos.x = i;
+                        pos.y = j;
+                    }
+
+                }
+            }
+            return pos;
         }
 
 

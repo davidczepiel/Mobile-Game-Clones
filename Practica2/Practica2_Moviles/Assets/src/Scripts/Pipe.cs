@@ -125,7 +125,7 @@ namespace Flow
                 }
                 else
                 {
-                    removeTilesRange(where+1, _currentPipe.Count);
+                    removeTilesRange(where + 1, _currentPipe.Count);
                 }
             }
             //La tuberia deja de estar cerrada
@@ -191,11 +191,15 @@ namespace Flow
         /// <param name="end"> Indice final </param>
         private void removeTilesRange(int beginning, int end)
         {
+            Vector2 reset = new Vector2(0, 0);
             //Reseteamos los tiles no circulos a vacios
             for (int i = beginning; i < end; ++i)
             {
                 if (_currentPipe[i].getTileType() != Tile.TileType.circleTile)
+                {
+                    _currentPipe[i].setDirection(reset);
                     _currentPipe[i].setTileType(Tile.TileType.voidTile);
+                }
             }
 
             //Eliminamos de la lista los tiles dentro del rango
@@ -203,6 +207,15 @@ namespace Flow
 
             if (_currentPipe.Count > 0 && _currentPipe[_currentPipe.Count - 1].getTileType() != Tile.TileType.circleTile)
                 _currentPipe[_currentPipe.Count - 1].setTileType(Tile.TileType.pipeHead);
+        }
+
+        public Tile getTileBehind(Tile ahead)
+        {
+            int i = 0;
+            while (i<_currentPipe.Count && _currentPipe[i] != ahead) i++;
+
+            if (i == 0 || i == _currentPipe.Count) return null;
+            else return _currentPipe[i - 1];
         }
 
         #endregion
