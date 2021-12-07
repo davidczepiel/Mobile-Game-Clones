@@ -18,6 +18,7 @@ namespace Flow
         List<Pipe> _currentPipes;   //tuberias del juego
 
         bool drawing;       //si el jugador esta dibujando actualmente en el tablero
+        Vector2 boardSize;
 
         #region Metodos de creacion
         /// <summary>
@@ -44,6 +45,7 @@ namespace Flow
         {
             int sizeX = map.getSizeX();
             int sizeY = map.getSizeY();
+            boardSize = new Vector2(sizeX,sizeY);
 
             //Se crea el array de Tiles
             _board = new Tile[sizeX, sizeY];
@@ -313,7 +315,9 @@ namespace Flow
                 drawingColor = t.getColor();
                 p = pipeWithColor(drawingColor);
                 //Cortamos la pipe del color
-                p.cut(t);
+
+                prepareHead(t, p.establishNewHead(t));
+
             }
             else    //Si estoy dibujando
             {
@@ -337,6 +341,33 @@ namespace Flow
                 }
             }
         }
+
+
+        private void prepareHead(Tile newHead, Tile behind)
+        {
+            //Saco las posiciones en el tablero tanto de la cabeza como del anterior
+            Vector2 posHead = new Vector2();
+            Vector2 posBehind = new Vector2();
+            for(int i=0; i< boardSize.x; i++)
+            {
+                for (int j = 0; j < boardSize.y; j++)
+                {
+                    if(_board[i,j] == newHead)
+                    {
+                        posHead.x = i;
+                        posHead.y = j;
+                    }
+                    else if (_board[i, j] == behind)
+                    {
+                        posBehind.x = i;
+                        posBehind.y = j;
+                    }
+                }
+            }
+            newHead.setDirection(posHead-posBehind);
+        }
+
+
         /// <summary>
         /// Si estamos dibujando y el tile no es del mismo color de dibujado corta la tuberia del tile.
         /// </summary>

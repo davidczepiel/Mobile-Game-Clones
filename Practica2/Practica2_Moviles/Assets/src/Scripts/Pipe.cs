@@ -31,9 +31,17 @@ namespace Flow
             return _firstTile.getColor();
         }
 
+        /// <summary>
+        /// Metodo que limpia la pipe por completo
+        /// </summary>
         public void clearPipe()
         {
+            //Me deshago de todos los tiles
             removeTilesRange(0, _currentPipe.Count);
+
+            //Los tiles que representan los circulos hay que avisarles de que ya no tienen ninguna dir para que escondan sus renderers
+            _firstTile.setDirection(new Vector2(0, 0));
+            _secondTile.setDirection(new Vector2(0, 0));
         }
 
         /// <summary>
@@ -90,6 +98,40 @@ namespace Flow
 
             //La tuberia deja de estar cerrada
             _finished = false;
+        }
+
+        /// <summary>
+        /// Elimina los tiles necesarios cuando la tuberia es cortada por otra
+        /// </summary>
+        /// <param name="newHead"></param>
+        public Tile establishNewHead(Tile newHead)
+        {
+            //Obtener indice del corte
+            int where = _currentPipe.IndexOf(newHead);
+            Tile behind;
+            //Si la tuberia no esta cerrada, se eliminan los tiles desde el corte hasta el final
+            if (!_finished)
+            {
+                removeTilesRange(where + 1, _currentPipe.Count);
+            }
+            //Si esta cerrada, se corta el trazo con mas cantidad de tiles respecto al corte
+            else
+            {
+                if (where < _currentPipe.Count - 1 - where)
+                {
+                    removeTilesRange(0, where);
+                    _currentPipe.Reverse();
+                    haveBeenReversed = true;
+                }
+                else
+                {
+                    removeTilesRange(where+1, _currentPipe.Count);
+                }
+            }
+            //La tuberia deja de estar cerrada
+            _finished = false;
+            behind = _currentPipe[_currentPipe.IndexOf(newHead) - 1];
+            return behind;
         }
 
 
@@ -152,7 +194,7 @@ namespace Flow
             //Reseteamos los tiles no circulos a vacios
             for (int i = beginning; i < end; ++i)
             {
-                if(_currentPipe[i].getTileType() != Tile.TileType.circleTile)
+                if (_currentPipe[i].getTileType() != Tile.TileType.circleTile)
                     _currentPipe[i].setTileType(Tile.TileType.voidTile);
             }
 
