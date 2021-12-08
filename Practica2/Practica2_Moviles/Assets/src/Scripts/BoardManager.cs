@@ -310,7 +310,6 @@ namespace Flow
                 //Registramos la posicion actual como la ultima procesada
                 lastPosProcessed = pos;
             }
-            else Debug.Log("Toy completa asik no pinto");
         }
 
         /// <summary>
@@ -339,9 +338,25 @@ namespace Flow
                 }
                 else     //Si corto con otra tuberia
                 {
+                    //Si la tuberia que estoy dibujando esta completa no sigo expandiendo
+                    if (pipeWithColor(drawingColor).imCompleted()) return;
+
                     //Corto la tuberia con la que he chocado
-                    Pipe cuttedPipe = pipeWithColor(t.getColor());
-                    cuttedPipe.cut(t);
+                    Pipe cutPipe = pipeWithColor(t.getColor());
+                    cutPipe.cut(t);
+
+                    //Recoger el el utimo tile de la pipe y ver en que posicion se encuentra en relacion con pos,
+                    //activando o desactivando sus conexiones dependiendo de la direccion
+                    Tile lastTile = cutPipe.getLastTile();
+                    if(lastTile != null)
+                    {
+                        //Derecha
+                        if (pos.x < _board.GetLength(0) - 1 && _board[(int)pos.x + 1, (int)pos.y] == lastTile)
+                            lastTile.setHorizontalConnection(false);
+                        //Abajo
+                        else if (pos.y < _board.GetLength(1) - 1 && _board[(int)pos.x, (int)pos.y + 1] == lastTile)
+                            lastTile.setVerticalConnection(false);
+                    }
 
                     updateTile(t);
                     p.addTileToPipe(t);
@@ -383,16 +398,30 @@ namespace Flow
         /// <summary>
         /// Si estamos dibujando y el tile no es del mismo color de dibujado corta la tuberia del tile.
         /// </summary>
-        /// <param name="t"></param>
         private void checkHeadTile(Tile t, Vector2 pos)
-        {
+        {            
             Pipe p;
             if (drawing)
             {
                 if (drawingColor != t.getColor())    //si no es del color que estoy dibujando
                 {
+                    if (pipeWithColor(drawingColor).imCompleted()) return;
+
                     p = pipeWithColor(t.getColor());
                     p.cut(t);                           //cortamos la pipe
+
+                    //Recoger el el utimo tile de la pipe y ver en que posicion se encuentra en relacion con pos,
+                    //activando o desactivando sus conexiones dependiendo de la direccion
+                    Tile lastTile = p.getLastTile();
+                    if (lastTile != null)
+                    {
+                        //Derecha
+                        if (pos.x < _board.GetLength(0) - 1 && _board[(int)pos.x + 1, (int)pos.y] == lastTile)
+                            lastTile.setHorizontalConnection(false);
+                        //Abajo
+                        else if (pos.y < _board.GetLength(1) - 1 && _board[(int)pos.x, (int)pos.y + 1] == lastTile)
+                            lastTile.setVerticalConnection(false);
+                    }
 
                     p = pipeWithColor(drawingColor);    //aniadimos el tile a la pipe de dibujado
                     p.addTileToPipe(t);

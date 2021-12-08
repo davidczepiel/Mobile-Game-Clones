@@ -43,6 +43,7 @@ namespace Flow
             _firstTile.setDirection(new Vector2(0, 0));
             _secondTile.setDirection(new Vector2(0, 0));
 
+            //La pipe pasa a estar incompleta
             _finished = false;
         }
 
@@ -88,13 +89,15 @@ namespace Flow
             {
                 if (where < _currentPipe.Count - 1 - where)
                 {
-                    removeTilesRange(0, where);
+                    removeTilesRange(0, where + 1);
                     _currentPipe.Reverse();
                     haveBeenReversed = true;
                 }
                 else
                     removeTilesRange(where, _currentPipe.Count);
             }
+
+
 
             //La tuberia deja de estar cerrada
             _finished = false;
@@ -178,9 +181,21 @@ namespace Flow
             }
         }
 
+        /// <summary>
+        /// Devuelve si la tuberia esta completa
+        /// </summary>
         public bool imCompleted()
         {
             return _finished;
+        }
+
+        /// <summary>
+        /// Devuelve el ultimo tile almacenado en la lista si existe
+        /// </summary>
+        public Tile getLastTile() 
+        {
+            if (_currentPipe.Count > 0) return _currentPipe[_currentPipe.Count - 1];
+            else return null;
         }
 
         #endregion
