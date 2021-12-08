@@ -57,7 +57,7 @@ namespace Flow
                     changeTileAppearance(false, false, false, false);
                     break;
                 case TileType.connectedTile:
-                    changeTileAppearance(_direction.x == 1, _direction.y == 1, false, false);
+                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true, false);
                     break;
             }
             _myType = newType;
@@ -70,14 +70,6 @@ namespace Flow
             _verticalPipeRenderer.material.color = _tileColor;
             _circleRenderer.material.color = _tileColor;
             _backgroundRenderer.material.color = _tileColor;
-        }
-
-        public void setPipeColor(Color newColor)
-        {
-            _tileColor = newColor;
-            _horizontalPipeRenderer.material.color = _tileColor;
-            _verticalPipeRenderer.material.color = _tileColor;
-            _circleRenderer.material.color = _tileColor;
         }
 
         public Color getColor()
@@ -167,7 +159,7 @@ namespace Flow
         public void setTileAttributes(TileInfo tileInfo)
         {
             _myType = tileInfo.type;
-            _tileColor = tileInfo.color;
+            setTileColor(tileInfo.color);
             _direction = tileInfo.direction;
         }
 
