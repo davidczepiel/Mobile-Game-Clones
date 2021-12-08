@@ -62,9 +62,9 @@ namespace Flow
                 Debug.Log("Nuevo tile a tuberia " + _firstTile.getColor() + ", count: " + _currentPipe.Count);
                 return false;
             }
-            else if (_currentPipe.Count > 1 && newTile != _secondTile && newTile != _firstTile)     //Volver atras solo si hay mas tiles en la lista que el primer circulo
+            else if (_currentPipe.Count > 1)     //Volver atras solo si hay mas tiles en la lista que el primer circulo
             {
-                removeTilesRange(_currentPipe.IndexOf(newTile), _currentPipe.Count);
+                removeTilesRange(_currentPipe.IndexOf(newTile) + 1, _currentPipe.Count);
                 Debug.Log("Tile eliminado de la tuberia " + _firstTile.getColor() + ", count: " + _currentPipe.Count);
                 return true;
             }
@@ -191,6 +191,7 @@ namespace Flow
         /// <param name="end"> Indice final </param>
         private void removeTilesRange(int beginning, int end)
         {
+            Debug.Log("Voy a quitar " + Mathf.Abs(beginning - end) + " de " + _currentPipe.Count);
             Vector2 reset = new Vector2(0, 0);
             //Reseteamos los tiles no circulos a vacios
             for (int i = beginning; i < end; ++i)

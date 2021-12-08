@@ -231,13 +231,7 @@ namespace Flow
         /// <param name="currentPos"></param>
         private void processDirection(Vector2 currentPos)
         {
-            //Detras
-            Pipe p = pipeWithColor(drawingColor);
-            Tile t = p.getTileBehind(_board[(int)currentPos.x, (int)currentPos.y]);
-            if (t == null) return;
-
-            Vector2 pos = getPosOfTile(t);
-            Vector2 dir = currentPos - pos;
+            Vector2 dir = currentPos - lastPosProcessed;
 
             //Derecha
             if (dir.x == 1)
@@ -248,18 +242,19 @@ namespace Flow
             else if (dir.x == -1)
             {
                 _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
-                _board[(int)pos.x, (int)pos.y].setHorizontalConnection(true);
+                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setHorizontalConnection(true);
             }
             //Arriba
             else if (dir.y == -1)
             {
                 _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
-                _board[(int)pos.x, (int)pos.y].setVerticalConnection(true);
+                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setVerticalConnection(true);
             }
             //Abajo
             else if (dir.y == 1)
                 _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 1));
         }
+
         /// <summary>
         /// Devuelve la pipe asignada al color. En caso de no encontrarla devuelve null
         /// </summary>
@@ -302,13 +297,13 @@ namespace Flow
             processDirection(pos);
 
             //Saco el que esta detras mia y le pongo en modo conected
-            Tile behind = p.getTileBehind(t);
-            if (behind.getTileType() != Tile.TileType.circleTile)
-                behind.setTileType(Tile.TileType.connectedTile);
+            //Tile behind = p.getTileBehind(t);
+            //if (behind.getTileType() != Tile.TileType.circleTile)
+            //    behind.setTileType(Tile.TileType.connectedTile);
 
             //Ya que hemos avanzado hacia una nueva casilla, hay que indicar a la anterior que ahora es un conected tile
-            //if(_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
-            //    _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
+            if (_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
+                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
 
             //Registramos la posicion actual como la ultima procesada
             lastPosProcessed = pos;
@@ -341,16 +336,18 @@ namespace Flow
                 }
                 else     //Si corto con otra tuberia
                 {
-                    updateTile(t);
-                    processDirection(pos);
-                    //Me aniado a mi mismo a mi tuberia
-                    p.addTileToPipe(t);
-
                     //Corto la tuberia con la que he chocado
-                    p = pipeWithColor(t.getColor());
-                    p.cut(t);
+                    Pipe cuttedPipe = pipeWithColor(t.getColor());
+                    cuttedPipe.cut(t);
+
+                    updateTile(t);
+                    p.addTileToPipe(t);
+                    processDirection(pos);
                 }
             }
+
+            //Registramos la posicion actual como la ultima procesada
+            lastPosProcessed = pos;
         }
 
 
@@ -376,25 +373,6 @@ namespace Flow
                 }
             }
             newHead.setDirection(posHead - posBehind);
-        }
-
-        private Vector2 getPosOfTile(Tile tile)
-        {
-            //Saco las posiciones en el tablero tanto de la cabeza como del anterior
-            Vector2 pos = new Vector2();
-            for (int i = 0; i < boardSize.x; i++)
-            {
-                for (int j = 0; j < boardSize.y; j++)
-                {
-                    if (_board[i, j] == tile)
-                    {
-                        pos.x = i;
-                        pos.y = j;
-                    }
-
-                }
-            }
-            return pos;
         }
 
 
