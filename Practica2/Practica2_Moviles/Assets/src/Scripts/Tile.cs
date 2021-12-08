@@ -195,12 +195,14 @@ namespace Flow
         public Tile.TileType type;
         public Color color; 
         public Vector2 direction;
+        public Tile associatedTile;
 
         public TileInfo(Tile tile)
         {
             type = tile.getTileType();
             color = tile.getColor();
             direction = tile.getDirection();
+            associatedTile = tile;
         }
     }
 }
