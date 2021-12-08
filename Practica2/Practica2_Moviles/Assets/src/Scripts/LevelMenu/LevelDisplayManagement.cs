@@ -61,12 +61,12 @@ public class LevelDisplayManagement : MonoBehaviour
             GameObject newVer = Instantiate(verticalLayoutPrefab, contentFather.transform);
             //Meto un titulo
             GameObject groupTitle = Instantiate(levelGroupTitle, newVer.transform);
-            groupTitle.GetComponent<TitleBehaviour>().initData("grupo " + (i+1).ToString(),new Color(0,0,0,0));
+            groupTitle.GetComponent<TitleBehaviour>().initData("grupo " + (i + 1).ToString(), new Color(0, 0, 0, 0));
 
             //Añado de 5 en 5, botones que representen los niveles disponibles en cada subrupo
             for (int j = 0; j < (levels.Length / 30); j++)
             {
-                prepareABlock(j* numFila, (j* numFila) + numFila, i+1, newVer);
+                prepareABlock(j * numFila, (j * numFila) + numFila, i + 1, newVer);
             }
         }
 
@@ -81,17 +81,23 @@ public class LevelDisplayManagement : MonoBehaviour
     /// <param name="end">Numero del nivel que representa el ultimo boton</param>
     /// <param name="group">Numero del grupo al que pertenecen los nuevos botones</param>
     /// <param name="verticalLayout"> Contenedor de todo lo que se cree en este metodo</param>
-    void prepareABlock(int init, int end, int group,  GameObject verticalLayout)
+    void prepareABlock(int init, int end, int group, GameObject verticalLayout)
     {
         //Preparo un contenedor horizontal para los botones y lo hago hijo del contenedor vertical que me llega
         GameObject newHor = Instantiate(horizontalLayoutPrefab, verticalLayout.transform);
-
+        float extraSpace = 0f;
+        float actualSpace = 0f;
+        float spacing = newHor.GetComponent<HorizontalLayoutGroup>().spacing;
         //Creo los botones de una fila y les configuro para que cada uno represente un nivel distinto
-        for (int i = init + 1; i <= end ; i++)
+        for (int i = init + 1; i <= end; i++)
         {
             GameObject newButton = Instantiate(levelButtonPrefab, newHor.transform);
-            newButton.GetComponent<LevelButtonBehaviour>().initData((i).ToString(),i,group); 
+            if (actualSpace == 0f) actualSpace = newButton.GetComponent<RectTransform>().sizeDelta.x;
+
+            extraSpace = extraSpace + spacing + actualSpace;
+            newButton.GetComponent<LevelButtonBehaviour>().initData((i).ToString(), i, group);
         }
+        newHor.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, actualSpace + extraSpace);
     }
 
 }
