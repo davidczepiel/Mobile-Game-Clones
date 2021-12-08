@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelsCompleted: 0
   packName: 9x9 Mania
-  maps: {fileID: 4900000, guid: aaf835729b5865347b9f8c72be659d62, type: 3}
+  maps: {fileID: 4900000, guid: d96961ac8abe97945b252c16edbc4409, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
+  numLevels: 0

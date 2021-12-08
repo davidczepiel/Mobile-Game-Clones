@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelsCompleted: 0
   packName: 7x7 Mania
-  maps: {fileID: 4900000, guid: ec004bef2e13d494db1fba03e2951995, type: 3}
+  maps: {fileID: 4900000, guid: f4418dbccc392204bb4dce4f80e0b9be, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
+  numLevels: 0

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 688fab1391f049b4b84e4e1d6e5ff37f, type: 3}
-  m_Name: 8x8Mania
+  m_Name: Paquete Reloj de Arena
   m_EditorClassIdentifier: 
   levelsCompleted: 0
-  packName: 8x8 Mania
-  maps: {fileID: 4900000, guid: 4d2d79100d4b3a3499d22219b7f5e9e9, type: 3}
+  packName: Reloj de Arena
+  maps: {fileID: 4900000, guid: 5335b9791f6b9664b8896ef58b895399, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
   numLevels: 0

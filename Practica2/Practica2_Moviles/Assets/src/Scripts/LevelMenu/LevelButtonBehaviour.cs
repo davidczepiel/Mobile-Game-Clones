@@ -13,15 +13,20 @@ public class LevelButtonBehaviour : MonoBehaviour
     //Nivel que representa este boton
     int mylevel;
 
+    int myGroup;
 
-    public void initData(string text, int level)
+
+
+    public void initData(string text, int level, int levelGroup)
     {
         mylevel = level;
         buttonText.text = text;
+        myGroup = levelGroup;
     }
 
     public void selectLevel()
     {
-        print("Yo represento el nivel ");
+        print("Yo represento el nivel Nivel" + mylevel.ToString() + " con grupo " + myGroup.ToString());
+        //Llamada correspondiente a quien tenga que mandarnos a un nivel concreto
     }
 }

@@ -228,22 +228,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 14996696}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a5a26277eb4b7b45a0de223e27963a3, type: 3}
+  m_Script: {fileID: 11500000, guid: e34dc5948e439034e96176b8c4ecaa32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalGameObject: {fileID: 719597785}
-  categoryGameObject: {fileID: 7729461869228909785, guid: 89e6398dc5e82624a91a5f97f16c5465, type: 3}
-  titlePrefab: {fileID: -5796611428735117045, guid: 9c6f670e9bdaf5d469981d01b2bae6f8, type: 3}
-  buttonPrefab: {fileID: 2966528619420538165, guid: 6ffa5d51789317c48a9ee0b7cb525e1e, type: 3}
+  contentFather: {fileID: 719597785}
   scrollableCanvas: {fileID: 719597786}
-  categoriesData:
-  - {fileID: 11400000, guid: 4b43a23a35b6fc849abd4df8efe96e90, type: 2}
-  - {fileID: 11400000, guid: 96dec499e1ca4944d991294732c06471, type: 2}
-  - {fileID: 11400000, guid: 7eaaa3f10a1d83d40a07b233a8aa7f88, type: 2}
-  - {fileID: 11400000, guid: 7eaaa3f10a1d83d40a07b233a8aa7f88, type: 2}
-  - {fileID: 11400000, guid: 7eaaa3f10a1d83d40a07b233a8aa7f88, type: 2}
-  - {fileID: 11400000, guid: 7eaaa3f10a1d83d40a07b233a8aa7f88, type: 2}
-  - {fileID: 11400000, guid: 7eaaa3f10a1d83d40a07b233a8aa7f88, type: 2}
+  uiText: {fileID: 1833083964}
+  verticalLayoutPrefab: {fileID: 766446756600341422, guid: 24303b3ef514bcf4d8dcf8f73fc3802a, type: 3}
+  horizontalLayoutPrefab: {fileID: 1034018254874331922, guid: f80cc8ece239d2145a3ac853b14b7cda, type: 3}
+  levelGroupTitle: {fileID: 7004170190012115398, guid: 8e9de65003674264cab9067b798439b5, type: 3}
+  levelButtonPrefab: {fileID: 2730960756465484261, guid: 004aba7413d2a884380b700abe7189b0, type: 3}
+  levelData: {fileID: 11400000, guid: 681cf9b853bfa28498883bb92c49a2f2, type: 2}
 --- !u!114 &14996698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,8 +311,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1740442841}
   - {fileID: 424581323}
+  - {fileID: 1740442841}
   - {fileID: 550103771}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -483,7 +478,7 @@ RectTransform:
   m_Children:
   - {fileID: 1914974002}
   m_Father: {fileID: 14996701}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -780,7 +775,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 14996701}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -905,7 +900,7 @@ GameObject:
   - component: {fileID: 1833083965}
   - component: {fileID: 1833083964}
   m_Layer: 5
-  m_Name: TextoPistas
+  m_Name: PackTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -929,7 +924,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1080, y: 69.062}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1833083964
 MonoBehaviour:
   m_ObjectHideFlags: 0

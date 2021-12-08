@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelsCompleted: 0
   packName: Paquete Adicional
-  maps: {fileID: 4900000, guid: 98ce8ca23af699349b0eec1f68e9b74b, type: 3}
+  maps: {fileID: 4900000, guid: 676ab3962a94a484c8af47c007ca2bac, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
+  numLevels: 0
