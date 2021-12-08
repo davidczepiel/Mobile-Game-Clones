@@ -154,9 +154,9 @@ namespace Flow
 
             //Acciones a hacer segun el tipo de tile pulsado
             checkTileType(touchedTile, pos);
-
             //Acciones a hacer segun el tipo de evento producido
             checkEventType(touch, touchedTile);
+
         }
 
         /// <summary>
@@ -292,21 +292,25 @@ namespace Flow
             if (!drawing) return;
 
             Pipe p = pipeWithColor(drawingColor);
-            updateTile(t);
-            p.addTileToPipe(t);
-            processDirection(pos);
+            if (!p.imCompleted())
+            {
+                updateTile(t);
+                p.addTileToPipe(t);
+                processDirection(pos);
 
-            //Saco el que esta detras mia y le pongo en modo conected
-            //Tile behind = p.getTileBehind(t);
-            //if (behind.getTileType() != Tile.TileType.circleTile)
-            //    behind.setTileType(Tile.TileType.connectedTile);
+                //Saco el que esta detras mia y le pongo en modo conected
+                //Tile behind = p.getTileBehind(t);
+                //if (behind.getTileType() != Tile.TileType.circleTile)
+                //    behind.setTileType(Tile.TileType.connectedTile);
 
-            //Ya que hemos avanzado hacia una nueva casilla, hay que indicar a la anterior que ahora es un conected tile
-            if (_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
-                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
+                //Ya que hemos avanzado hacia una nueva casilla, hay que indicar a la anterior que ahora es un conected tile
+                if (_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
+                    _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
 
-            //Registramos la posicion actual como la ultima procesada
-            lastPosProcessed = pos;
+                //Registramos la posicion actual como la ultima procesada
+                lastPosProcessed = pos;
+            }
+            else Debug.Log("Toy completa asik no pinto");
         }
 
         /// <summary>
@@ -332,7 +336,6 @@ namespace Flow
                 if (drawingColor == t.getColor())   //Si corto conmigo mismo
                 {
                     p.addTileToPipe(t); //Lo añado a la pipe y la pipe se encarga de autocortame
-                    restoreState();     //Reset del estado de las pipes
                 }
                 else     //Si corto con otra tuberia
                 {
@@ -344,6 +347,7 @@ namespace Flow
                     p.addTileToPipe(t);
                     processDirection(pos);
                 }
+                restoreState();     //Reset del estado de las pipes
             }
 
             //Registramos la posicion actual como la ultima procesada
@@ -423,7 +427,13 @@ namespace Flow
                     //Lo aniado a la pipe de su color y si se ha cortado a si misma tenemos que resetear el estado del tablero
                     if (p.addTileToPipe(t))
                         restoreState();
-                    else processDirection(pos);
+                    else
+                    {
+                        processDirection(pos);
+                        //Ya que hemos avanzado hacia una nueva casilla, hay que indicar a la anterior que ahora es un conected tile
+                        if (_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
+                            _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
+                    }
 
                     //Registramos la posicion actual como la ultima procesada
                     lastPosProcessed = pos;

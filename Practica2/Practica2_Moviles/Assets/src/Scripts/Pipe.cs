@@ -42,6 +42,8 @@ namespace Flow
             //Los tiles que representan los circulos hay que avisarles de que ya no tienen ninguna dir para que escondan sus renderers
             _firstTile.setDirection(new Vector2(0, 0));
             _secondTile.setDirection(new Vector2(0, 0));
+
+            _finished = false;
         }
 
         /// <summary>
@@ -59,13 +61,11 @@ namespace Flow
 
                 _currentPipe.Add(newTile);
 
-                Debug.Log("Nuevo tile a tuberia " + _firstTile.getColor() + ", count: " + _currentPipe.Count);
                 return false;
             }
             else if (_currentPipe.Count > 1)     //Volver atras solo si hay mas tiles en la lista que el primer circulo
             {
                 removeTilesRange(_currentPipe.IndexOf(newTile) + 1, _currentPipe.Count);
-                Debug.Log("Tile eliminado de la tuberia " + _firstTile.getColor() + ", count: " + _currentPipe.Count);
                 return true;
             }
             else return false;
@@ -149,32 +149,38 @@ namespace Flow
         {
             if (_currentPipe.Count == _lastPipe.Count) return;
 
-            if (!_finished)
+            //Damos la vuelta a lastPipe en caso de haberse invertido tambien currentPipe
+            if (haveBeenReversed)
             {
-                for (int i = _lastPipe.Count - 1; i >= 0; --i)
-                {
-                    if (_currentPipe[i].getTileType() == Tile.TileType.voidTile)
-                        _currentPipe[i].setTileAttributes(_lastPipe[i]);
-                    else
-                        break;
-                }
+                _lastPipe.Reverse();
+                haveBeenReversed = false;
             }
-            else
+
+            for (int i = 0; i < _lastPipe.Count; ++i)
             {
-                if (haveBeenReversed)
+                //Si el tile ya se encuentra en el pipe seguimos con la siguiente
+                if (_currentPipe.Contains(_lastPipe[i].associatedTile))
                 {
-                    _lastPipe.Reverse();
-                    haveBeenReversed = false;
+                    _currentPipe[i].setTileAttributes(_lastPipe[i]);
+                    _currentPipe[i].setTileType(_lastPipe[i].type);
+                    continue;
                 }
 
-                for (int i = _lastPipe.Count - 1; i >= 0; --i)
+                //Si el tipo del tile es vacio, lo volvemos a ocupar con la info guardada
+                if (_lastPipe[i].associatedTile.getTileType() == Tile.TileType.voidTile)
                 {
-                    if (_currentPipe[i].getTileType() == Tile.TileType.voidTile)
-                        _currentPipe[i].setTileAttributes(_lastPipe[i]);
-                    else
-                        break;
+                    _currentPipe.Add(_lastPipe[i].associatedTile);
+                    _currentPipe[i].setTileAttributes(_lastPipe[i]);
+                    _currentPipe[i].setTileType(_lastPipe[i].type);
                 }
+                else
+                    break;
             }
+        }
+
+        public bool imCompleted()
+        {
+            return _finished;
         }
 
         #endregion
@@ -191,7 +197,6 @@ namespace Flow
         /// <param name="end"> Indice final </param>
         private void removeTilesRange(int beginning, int end)
         {
-            Debug.Log("Voy a quitar " + Mathf.Abs(beginning - end) + " de " + _currentPipe.Count);
             Vector2 reset = new Vector2(0, 0);
             //Reseteamos los tiles no circulos a vacios
             for (int i = beginning; i < end; ++i)
