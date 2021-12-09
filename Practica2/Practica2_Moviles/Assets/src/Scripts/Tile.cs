@@ -158,9 +158,9 @@ namespace Flow
 
         public void setTileAttributes(TileInfo tileInfo)
         {
-            _myType = tileInfo.type;
             setTileColor(tileInfo.color);
             _direction = tileInfo.direction;
+            setTileType(tileInfo.type);
         }
 
         #endregion

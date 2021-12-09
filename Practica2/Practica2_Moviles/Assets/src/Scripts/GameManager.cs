@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 namespace Flow
 {
     public class GameManager : MonoBehaviour
@@ -23,8 +21,6 @@ namespace Flow
         {
             return _instance;
         }
-
-
 
         void Awake()
         {

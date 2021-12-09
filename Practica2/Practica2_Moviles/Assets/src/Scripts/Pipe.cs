@@ -163,22 +163,16 @@ namespace Flow
                 haveBeenReversed = false;
             }
 
-            for (int i = 0; i < _lastPipe.Count; ++i)
+            for (int i = _currentPipe.Count; i < _lastPipe.Count; ++i)
             {
-                //Si el tile ya se encuentra en el pipe seguimos con la siguiente
-                if (_currentPipe.Contains(_lastPipe[i].associatedTile))
-                {
-                    _currentPipe[i].setTileAttributes(_lastPipe[i]);
-                    _currentPipe[i].setTileType(_lastPipe[i].type);
-                    continue;
-                }
-
                 //Si el tipo del tile es vacio, lo volvemos a ocupar con la info guardada
                 if (_lastPipe[i].associatedTile.getTileType() == Tile.TileType.voidTile)
                 {
                     _currentPipe.Add(_lastPipe[i].associatedTile);
                     _currentPipe[i].setTileAttributes(_lastPipe[i]);
                     _currentPipe[i].setTileType(_lastPipe[i].type);
+
+                    _currentPipe[i - 1].setTileAttributes(_lastPipe[i - 1]);
                 }
                 else
                     break;

@@ -375,6 +375,10 @@ namespace Flow
                     updateTile(t);
                     p.addTileToPipe(t);
                     processDirection(pos);
+
+                    //Ya que hemos avanzado hacia una nueva casilla, hay que indicar a la anterior que ahora es un conected tile
+                    if (_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
+                        _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
                 }
             }
 
