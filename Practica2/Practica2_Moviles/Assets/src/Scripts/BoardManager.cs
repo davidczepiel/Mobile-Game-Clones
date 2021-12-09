@@ -20,6 +20,27 @@ namespace Flow
         bool drawing;       //si el jugador esta dibujando actualmente en el tablero
         Vector2 boardSize;
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                for(int i = 0; i < _board.GetLength(0); ++i)
+                {
+                    string line = "";
+                    for(int j = 0; j < _board.GetLength(1); ++j)
+                    {
+                        line += _board[j, i].getTileType() + "  ";
+                    }
+                    Debug.Log(line);
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Debug.Log("Dibujando: " + drawing + " Color: " + drawingColor + " LastPosProcessed: " + lastPosProcessed);
+            }
+
+        }
+
         #region Metodos de creacion
         /// <summary>
         /// Crea el tablero, inicializando sus variables dado el mapa y los colores del tema
@@ -76,7 +97,8 @@ namespace Flow
                 _board[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y].initTile(Tile.TileType.circleTile, skin[i]);
 
                 //Nuevo registro de tuberia
-                _currentPipes.Add(new Pipe(_board[(int)pipeSol[0].x, (int)pipeSol[0].y], _board[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y]));
+                _currentPipes.Add(new Pipe(_board[(int)pipeSol[0].x, (int)pipeSol[0].y], _board[(int)pipeSol[pipeSol.Count - 1].x, (int)pipeSol[pipeSol.Count - 1].y],
+                                            skin[i]));
             }
 
             //Obtenemos la informacion de las paredes del mapa
@@ -153,9 +175,11 @@ namespace Flow
             Tile touchedTile = _board[(int)pos.x, (int)pos.y];
 
             //Acciones a hacer segun el tipo de tile pulsado
-            checkTileType(touchedTile, pos);
+            checkTileType(touchedTile, new Vector2Int((int)pos.x, (int)pos.y));
             //Acciones a hacer segun el tipo de evento producido
             checkEventType(touch, touchedTile);
+
+            //updateboard!!!!!!!!!!!!!!!!!!!!!!!!
 
         }
 
@@ -165,7 +189,7 @@ namespace Flow
         /// </summary>
         /// <param name="touched">tile que ha sido tocado</param>
         /// <param name="pos">posicion del tile en el board</param>
-        void checkTileType(Tile touched, Vector2 pos)
+        void checkTileType(Tile touched, Vector2Int pos)
         {
             //No nos interesa procesar un touch que esta a mas de 1 casilla de la ultima procesada
             if (drawing && (lastPosProcessed - pos).magnitude > 1) return;
@@ -226,36 +250,6 @@ namespace Flow
 
 
         /// <summary>
-        /// Modifica la direccion de las tuberias de la posicion actual y de la anterior si se da el caso
-        /// </summary>
-        /// <param name="currentPos"></param>
-        private void processDirection(Vector2 currentPos)
-        {
-            Vector2 dir = currentPos - lastPosProcessed;
-
-            //Derecha
-            if (dir.x == 1)
-            {
-                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(1, 0));
-            }
-            //Izquierda
-            else if (dir.x == -1)
-            {
-                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
-                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setHorizontalConnection(true);
-            }
-            //Arriba
-            else if (dir.y == -1)
-            {
-                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 0));
-                _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setVerticalConnection(true);
-            }
-            //Abajo
-            else if (dir.y == 1)
-                _board[(int)currentPos.x, (int)currentPos.y].setDirection(new Vector2(0, 1));
-        }
-
-        /// <summary>
         /// Devuelve la pipe asignada al color. En caso de no encontrarla devuelve null
         /// </summary>
         /// <param name="col"></param>
@@ -275,10 +269,7 @@ namespace Flow
         {
             foreach (Pipe p in _currentPipes)
             {
-                if (p.getColor() != drawingColor)
-                {
-                    p.restoreFlow();
-                }
+               //CHORPRECHA
             }
         }
 
@@ -287,25 +278,14 @@ namespace Flow
         /// </summary>
         /// <param name="t"> Tile a aniadir</param>
         /// <param name="pos"> posicion en el board del tile</param>
-        private void checkVoidTile(Tile t, Vector2 pos)
+        private void checkVoidTile(Tile t, Vector2Int pos)
         {
             if (!drawing) return;
 
             Pipe p = pipeWithColor(drawingColor);
             if (!p.isCompleted())
             {
-                updateTile(t);
-                p.addTileToPipe(t);
-                processDirection(pos);
-
-                //Saco el que esta detras mia y le pongo en modo conected
-                //Tile behind = p.getTileBehind(t);
-                //if (behind.getTileType() != Tile.TileType.circleTile)
-                //    behind.setTileType(Tile.TileType.connectedTile);
-
-                //Ya que hemos avanzado hacia una nueva casilla, hay que indicar a la anterior que ahora es un conected tile
-                if (_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
-                    _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
+                p.addTileToPipe(pos);
 
                 //Registramos la posicion actual como la ultima procesada
                 lastPosProcessed = pos;
@@ -318,15 +298,13 @@ namespace Flow
         /// </summary>
         /// <param name="t"></param>
         /// <param name="pos"></param>
-        private void checkConnectionTile(Tile t, Vector2 pos)
+        private void checkConnectionTile(Tile t, Vector2Int pos)
         {
             Pipe p;
             if (!drawing)   //si no estoy dibujando
             {
                 drawing = true;
                 drawingColor = t.getColor();
-                p = pipeWithColor(drawingColor);
-                prepareHead(t, p.establishNewHead(t));
             }
             else    //Si estoy dibujando
             {
@@ -334,21 +312,8 @@ namespace Flow
 
                 if (drawingColor == t.getColor())   //Si corto conmigo mismo
                 {
-                    p.addTileToPipe(t); //Lo añado a la pipe y la pipe se encarga de autocortame
+                    p.addTileToPipe(pos); //Lo añado a la pipe y la pipe se encarga de autocortame
                     restoreState();     //Reset del estado de las pipes
-
-                    //Comprobamos si hay que eliminar las conexiones del primer tile del corte
-                    Tile firstRemoved = p.getFirstRemoved();
-
-                    if(firstRemoved != null)
-                    {
-                        //Izquierda
-                        if (pos.x > 0 && _board[(int)pos.x - 1, (int)pos.y] == firstRemoved)
-                            t.setHorizontalConnection(false);
-                        //Arriba
-                        else if (pos.y > 0 && _board[(int)pos.x, (int)pos.y - 1] == firstRemoved)
-                            t.setVerticalConnection(false);
-                    }
                 }
                 else     //Si corto con otra tuberia
                 {
@@ -357,58 +322,14 @@ namespace Flow
 
                     //Corto la tuberia con la que he chocado
                     Pipe cutPipe = pipeWithColor(t.getColor());
-                    cutPipe.cut(t);
+                    cutPipe.cut(pos);
 
-                    //Recoger el el utimo tile de la pipe y ver en que posicion se encuentra en relacion con pos,
-                    //activando o desactivando sus conexiones dependiendo de la direccion
-                    Tile lastTile = cutPipe.getLastTile();
-                    if(lastTile != null)
-                    {
-                        //Derecha
-                        if (pos.x < _board.GetLength(0) - 1 && _board[(int)pos.x + 1, (int)pos.y] == lastTile)
-                            lastTile.setHorizontalConnection(false);
-                        //Abajo
-                        else if (pos.y < _board.GetLength(1) - 1 && _board[(int)pos.x, (int)pos.y + 1] == lastTile)
-                            lastTile.setVerticalConnection(false);
-                    }
-
-                    updateTile(t);
-                    p.addTileToPipe(t);
-                    processDirection(pos);
-
-                    //Ya que hemos avanzado hacia una nueva casilla, hay que indicar a la anterior que ahora es un conected tile
-                    if (_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
-                        _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
+                    p.addTileToPipe(pos);
                 }
             }
 
             //Registramos la posicion actual como la ultima procesada
             lastPosProcessed = pos;
-        }
-
-
-        private void prepareHead(Tile newHead, Tile behind)
-        {
-            //Saco las posiciones en el tablero tanto de la cabeza como del anterior
-            Vector2 posHead = new Vector2();
-            Vector2 posBehind = new Vector2();
-            for (int i = 0; i < boardSize.x; i++)
-            {
-                for (int j = 0; j < boardSize.y; j++)
-                {
-                    if (_board[i, j] == newHead)
-                    {
-                        posHead.x = i;
-                        posHead.y = j;
-                    }
-                    else if (_board[i, j] == behind)
-                    {
-                        posBehind.x = i;
-                        posBehind.y = j;
-                    }
-                }
-            }
-            newHead.setDirection(posHead - posBehind);
         }
 
 
@@ -444,6 +365,10 @@ namespace Flow
                     p.addTileToPipe(t);
                     updateTile(t);
                     processDirection(pos);
+
+                    //Si el anterior tile no es un circulo le cambiaremos a conected
+                    if(_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].getTileType() != Tile.TileType.circleTile)
+                        _board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setTileType(Tile.TileType.connectedTile);
                 }
             }
             else
@@ -498,17 +423,6 @@ namespace Flow
                 //Registramos la posicion actual como la ultima procesada
                 lastPosProcessed = pos;
             }
-        }
-
-        /// <summary>
-        /// actualiza los atributos del tile en funcion del color que el jugador esta dibujando
-        /// </summary>
-        /// <param name="t"></param>
-        /// <param name="pos"></param>
-        private void updateTile(Tile t)
-        {
-            t.setTileColor(drawingColor);
-            t.setTileType(Tile.TileType.pipeHead);
         }
     }
     #endregion
