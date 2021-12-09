@@ -58,12 +58,11 @@ namespace Flow
             return new Vector2(x / size, x % size);
         }
 
-
-
         public int getSizeX()
         {
             return _sizeX;
         }
+
         public int getSizeY()
         {
             return _sizeY;

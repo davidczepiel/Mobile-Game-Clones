@@ -16,6 +16,12 @@ namespace Flow
         bool _finished;
         Color _color;
 
+        /// <summary>
+        /// Constructora de clase
+        /// </summary>
+        /// <param name="firstTile"> Posicion del primer circulo de la tuberia </param>
+        /// <param name="lastTile"> Posicion del ultimo circulo de la tuberia </param>
+        /// <param name="color"> Color de la tuberia </param>
         public Pipe(Vector2Int firstTile, Vector2Int lastTile, Color color)
         {
             _firstTile = firstTile;
@@ -58,7 +64,7 @@ namespace Flow
         /// Aniade un nuevo tile a la tuberia, devuelve true si se ha cortado a si misma
         /// </summary>
         /// <param name="newTile"></param>
-        public bool addTileToPipe(Vector2Int newTile)
+        public void addTileToPipe(Vector2Int newTile)
         {
             //La tuberia no debe contener ya al tile ni estar terminada aun para meter nuevos tiles
             if (!_currentPipe.Contains(newTile))
@@ -68,15 +74,13 @@ namespace Flow
                     _finished = true;
 
                 _currentPipe.Add(newTile);
-
-                return false;
             }
             else if (_currentPipe.Count > 1)     //Volver atras solo si hay mas tiles en la lista que el primer circulo
             {
                 removeTilesRange(_currentPipe.IndexOf(newTile) + 1, _currentPipe.Count);
-                return true;
+                //La pipe pasa a estar incompleta
+                _finished = false;
             }
-            else return false;
         }
 
         /// <summary>
@@ -133,8 +137,6 @@ namespace Flow
         {
             //Eliminamos de la lista los tiles dentro del rango
             _currentPipe.RemoveRange(beginning, end - beginning);
-            //La pipe pasa a estar incompleta
-            _finished = false;
         }
         #endregion
     }
