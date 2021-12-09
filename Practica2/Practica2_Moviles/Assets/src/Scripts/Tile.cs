@@ -57,7 +57,7 @@ namespace Flow
                     changeTileAppearance(false, false, false, false);
                     break;
                 case TileType.connectedTile:
-                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true, false);
+                    changeTileAppearance(_direction.x == 1, _direction.y == 1, false, false);
                     break;
             }
             _myType = newType;

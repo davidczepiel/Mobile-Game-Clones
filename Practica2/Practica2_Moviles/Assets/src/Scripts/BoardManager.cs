@@ -292,7 +292,7 @@ namespace Flow
             if (!drawing) return;
 
             Pipe p = pipeWithColor(drawingColor);
-            if (!p.imCompleted())
+            if (!p.isCompleted())
             {
                 updateTile(t);
                 p.addTileToPipe(t);
@@ -335,11 +335,25 @@ namespace Flow
                 if (drawingColor == t.getColor())   //Si corto conmigo mismo
                 {
                     p.addTileToPipe(t); //Lo añado a la pipe y la pipe se encarga de autocortame
+                    restoreState();     //Reset del estado de las pipes
+
+                    //Comprobamos si hay que eliminar las conexiones del primer tile del corte
+                    Tile firstRemoved = p.getFirstRemoved();
+
+                    if(firstRemoved != null)
+                    {
+                        //Izquierda
+                        if (pos.x > 0 && _board[(int)pos.x - 1, (int)pos.y] == firstRemoved)
+                            t.setHorizontalConnection(false);
+                        //Arriba
+                        else if (pos.y > 0 && _board[(int)pos.x, (int)pos.y - 1] == firstRemoved)
+                            t.setVerticalConnection(false);
+                    }
                 }
                 else     //Si corto con otra tuberia
                 {
                     //Si la tuberia que estoy dibujando esta completa no sigo expandiendo
-                    if (pipeWithColor(drawingColor).imCompleted()) return;
+                    if (pipeWithColor(drawingColor).isCompleted()) return;
 
                     //Corto la tuberia con la que he chocado
                     Pipe cutPipe = pipeWithColor(t.getColor());
@@ -362,7 +376,6 @@ namespace Flow
                     p.addTileToPipe(t);
                     processDirection(pos);
                 }
-                restoreState();     //Reset del estado de las pipes
             }
 
             //Registramos la posicion actual como la ultima procesada
@@ -405,7 +418,7 @@ namespace Flow
             {
                 if (drawingColor != t.getColor())    //si no es del color que estoy dibujando
                 {
-                    if (pipeWithColor(drawingColor).imCompleted()) return;
+                    if (pipeWithColor(drawingColor).isCompleted()) return;
 
                     p = pipeWithColor(t.getColor());
                     p.cut(t);                           //cortamos la pipe
@@ -425,11 +438,8 @@ namespace Flow
 
                     p = pipeWithColor(drawingColor);    //aniadimos el tile a la pipe de dibujado
                     p.addTileToPipe(t);
-
+                    updateTile(t);
                     processDirection(pos);
-
-                    //Registramos la posicion actual como la ultima procesada
-                    lastPosProcessed = pos;
                 }
             }
             else
@@ -438,6 +448,8 @@ namespace Flow
                 drawingColor = t.getColor();
             }
 
+            //Registramos la posicion actual como la ultima procesada
+            lastPosProcessed = pos;
         }
         /// <summary>
         /// Si no estoy dibujando se limpia la tuberia del color del tile que se ha pulsado. En caso de estar
@@ -451,7 +463,7 @@ namespace Flow
             if (drawing)
             {
                 p = pipeWithColor(drawingColor);
-                if (drawingColor == t.getColor())   //Si corto conmigo mismo
+                if (drawingColor == t.getColor() && !p.isCompleted())   //Si corto conmigo mismo
                 {
                     //Lo aniado a la pipe de su color y si se ha cortado a si misma tenemos que resetear el estado del tablero
                     if (p.addTileToPipe(t))
@@ -473,7 +485,10 @@ namespace Flow
                 drawing = true;
                 drawingColor = t.getColor();
                 p = pipeWithColor(t.getColor());
-                p.clearPipe();
+
+                if(!p.isEmpty())
+                    p.clearPipe();
+
                 p.addTileToPipe(t);
 
                 //Registramos la posicion actual como la ultima procesada

@@ -12,8 +12,10 @@ namespace Flow
 
         Tile _firstTile;
         Tile _secondTile;
+        Tile _firstRemoved;
         bool _finished;
         bool haveBeenReversed;
+
 
         public Pipe(Tile firstTile, Tile lastTile)
         {
@@ -22,6 +24,7 @@ namespace Flow
             _finished = false;
             _lastPipe = new List<TileInfo>();
             _currentPipe = new List<Tile>();
+            _firstRemoved = null;
         }
 
         #region Metodos de control
@@ -142,6 +145,7 @@ namespace Flow
         {
             haveBeenReversed = false;
             _lastPipe.Clear();
+            _firstRemoved = null;
             foreach (Tile t in _currentPipe)
             {
                 _lastPipe.Add(new TileInfo(t));
@@ -184,7 +188,7 @@ namespace Flow
         /// <summary>
         /// Devuelve si la tuberia esta completa
         /// </summary>
-        public bool imCompleted()
+        public bool isCompleted()
         {
             return _finished;
         }
@@ -196,6 +200,20 @@ namespace Flow
         {
             if (_currentPipe.Count > 0) return _currentPipe[_currentPipe.Count - 1];
             else return null;
+        }
+
+        /// <summary>
+        /// Devuelve el primer tile a continuacion del ultimo corte realizado
+        /// </summary>
+        /// <returns></returns>
+        public Tile getFirstRemoved()
+        {
+            return _firstRemoved;
+        }
+
+        public bool isEmpty()
+        {
+            return _currentPipe.Count == 0;
         }
 
         #endregion
@@ -218,16 +236,26 @@ namespace Flow
             {
                 if (_currentPipe[i].getTileType() != Tile.TileType.circleTile)
                 {
-                    _currentPipe[i].setDirection(reset);
                     _currentPipe[i].setTileType(Tile.TileType.voidTile);
                 }
+                _currentPipe[i].setDirection(reset);
             }
+
+            if (beginning == end) Debug.Log("Beginning y end son iguales en " + _firstTile.getColor());
+
+            //Guardamos el primer tile a continuacion del corte realizado
+            _firstRemoved = _currentPipe[beginning];
 
             //Eliminamos de la lista los tiles dentro del rango
             _currentPipe.RemoveRange(beginning, end - beginning);
 
             if (_currentPipe.Count > 0 && _currentPipe[_currentPipe.Count - 1].getTileType() != Tile.TileType.circleTile)
                 _currentPipe[_currentPipe.Count - 1].setTileType(Tile.TileType.pipeHead);
+
+            if (_currentPipe.Count > 0 && _currentPipe[_currentPipe.Count - 1].getTileType() == Tile.TileType.circleTile)
+            {
+                _currentPipe[_currentPipe.Count - 1].setDirection(new Vector2(0, 0));
+            }
         }
 
         public Tile getTileBehind(Tile ahead)
