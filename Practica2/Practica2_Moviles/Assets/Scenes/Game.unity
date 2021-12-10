@@ -988,6 +988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lvlManager: {fileID: 1337091062}
 --- !u!1 &406499413
 GameObject:
   m_ObjectHideFlags: 0
@@ -1337,6 +1338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lvlManager: {fileID: 1337091062}
 --- !u!1 &860188367
 GameObject:
   m_ObjectHideFlags: 0
@@ -1625,6 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lvlManager: {fileID: 1337091062}
 --- !u!1 &1179587905
 GameObject:
   m_ObjectHideFlags: 0
@@ -1862,6 +1865,7 @@ MonoBehaviour:
   _screenPlacer: {fileID: 1541700903}
   _inputManager: {fileID: 605622344}
   _cameraPlacer: {fileID: 1658979707}
+  _guiManager: {fileID: 1353022092}
   topSideOffset: 280
   sideWidth: 1080
 --- !u!4 &1337091064
@@ -2184,6 +2188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 6219430451198709010, guid: 01753a972f8165a42af92fe4d5cf684c, type: 3}
+  levelManager: {fileID: 1337091062}
 --- !u!4 &1541700902
 Transform:
   m_ObjectHideFlags: 0
@@ -2355,6 +2360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lvlManager: {fileID: 1337091062}
 --- !u!1 &1658979703
 GameObject:
   m_ObjectHideFlags: 0
@@ -2597,6 +2603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lvlManager: {fileID: 1337091062}
 --- !u!1 &1769969658
 GameObject:
   m_ObjectHideFlags: 0
@@ -2609,7 +2616,6 @@ GameObject:
   - component: {fileID: 1769969662}
   - component: {fileID: 1769969661}
   - component: {fileID: 1769969660}
-  - component: {fileID: 1769969663}
   m_Layer: 5
   m_Name: RewindButton
   m_TagString: Untagged
@@ -2675,12 +2681,12 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1769969661}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1769969663}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ButtonsBehaviour, Assembly-CSharp
         m_MethodName: RewindAction
         m_Mode: 1
@@ -2705,7 +2711,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2730,18 +2736,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1769969658}
   m_CullTransparentMesh: 1
---- !u!114 &1769969663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1769969658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1773908477
 GameObject:
   m_ObjectHideFlags: 0
@@ -2887,6 +2881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lvlManager: {fileID: 1337091062}
 --- !u!1 &1960561993
 GameObject:
   m_ObjectHideFlags: 0
