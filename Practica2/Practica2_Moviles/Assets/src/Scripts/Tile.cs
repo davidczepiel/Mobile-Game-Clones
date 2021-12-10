@@ -6,7 +6,7 @@ namespace Flow
 {
     public class Tile : MonoBehaviour
     {
-        public enum TileType { voidTile, connectedTile, pipeHead, circleTile }
+        public enum TileType { voidTile, connectedTile, circleTile }
 
         [SerializeField]
         SpriteRenderer _horizontalPipeRenderer;
@@ -28,8 +28,6 @@ namespace Flow
         Color _tileColor; //Color de la tuberia/circulo
         Vector2 _direction; //Dir en la que  se esta mostrando este pipe
 
-        bool _hidden = false; //Indica si no se esta mostrando, aunque no sea vacio
-
         bool[] walls = { false, false, false, false }; //Arriba,abajo,izquierda,derecha
 
         //TODO private Animation animacion;
@@ -47,9 +45,6 @@ namespace Flow
         {
             switch (newType)
             {
-                case TileType.pipeHead:
-                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true, false);
-                    break;
                 case TileType.circleTile:
                     changeTileAppearance(_direction.x == 1, _direction.y == 1, true, false);
                     break;
@@ -101,11 +96,6 @@ namespace Flow
             _verticalPipeRenderer.enabled = active;
         }
 
-        public bool isHidden()
-        {
-            return _hidden;
-        }
-
         public void setWall(int index, bool value)
         {
             walls[index] = value;
@@ -114,6 +104,11 @@ namespace Flow
         public bool getWall(int index)
         {
             return walls[index];
+        }
+
+        public void setHead(bool b)
+        {
+            _circleRenderer.enabled = b;
         }
 
         public Color getBackgroundColor()
@@ -137,31 +132,7 @@ namespace Flow
 
         }
 
-        public void hide()
-        {
-            _hidden = true;
-            changeTileAppearance(true,false,false,false);
-        }
 
-        public void activate()
-        {
-            _hidden = false;
-            _backgroundRenderer.enabled = true;
-            if (_direction.x == 1)
-                _horizontalPipeRenderer.enabled = true;
-            if (_direction.y == 1)
-                _verticalPipeRenderer.enabled = true;
-
-            if (_myType == TileType.pipeHead)
-                _circleRenderer.enabled = true;
-        }
-
-        public void setTileAttributes(TileInfo tileInfo)
-        {
-            setTileColor(tileInfo.color);
-            _direction = tileInfo.direction;
-            setTileType(tileInfo.type);
-        }
 
         #endregion
 
