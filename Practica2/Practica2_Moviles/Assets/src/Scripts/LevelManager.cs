@@ -15,11 +15,17 @@ namespace Flow
         InputManager _inputManager;
         [SerializeField]
         CameraPlacer _cameraPlacer;
+        [SerializeField]
+        GUIManager _guiManager;
 
         [SerializeField]
         int topSideOffset;
         [SerializeField]
         int sideWidth;
+
+        int _bestMoves = 0, _moves = 0;
+
+
 
         // Start is called before the first frame update
         void Start()
@@ -29,6 +35,23 @@ namespace Flow
             _board.prepareBoard(map, GameManager.getInstance().getSkin());
             //Coloca los objetos de la escena
             locateObjects(map);
+        }
+
+        public void processPlay(int flow, int perc, int moves, bool hasEnded)
+        {
+            _moves = moves;
+            _guiManager.changeMoves(moves, _bestMoves);
+            _guiManager.changeNFlow(flow);
+            _guiManager.changeLvlPercentage(perc);
+        }
+
+        public void getAHint()
+        {
+            if (GameManager.getInstance().useHint())
+            {
+                _guiManager.changeHint(GameManager.getInstance().getHints());
+                _board.applyHint();
+            }
         }
 
         private void locateObjects(Map map)

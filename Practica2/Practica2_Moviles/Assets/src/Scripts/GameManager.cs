@@ -12,7 +12,7 @@ namespace Flow
         LevelManager _levelManager;
 
         int currentLevel;
-        int hints;
+        int hints = 3;
         int package;
 
         static GameManager _instance;
@@ -39,7 +39,7 @@ namespace Flow
 
         public Map createMap()
         {
-            Map newMap = new Map(myLevels[package].maps, 0);
+            Map newMap = new Map(myLevels[package].maps, 1);
 
             return newMap;
         }
@@ -60,15 +60,20 @@ namespace Flow
             package = a;
         }
 
+        public bool useHint()
+        {
+            if(hints > 0)
+            {
+                hints--;
+                return true;
+            }
+            return false;
+        }
         public int getCurrentPackage()
         {
             return package;
         }
 
-        public void setHint(int a)
-        {
-            hints = a;
-        }
 
         public int getHints()
         {

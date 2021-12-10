@@ -51,6 +51,14 @@ public class GUIManager : MonoBehaviour
 
     public void changeMoves(int moves, int bestMoves)
     {
-        moveText.text = "moves:" + moves + "best: " + bestMoves;
+        if(bestMoves != 0)
+            moveText.text = "moves:" + moves + " best: " + bestMoves;
+        else
+            moveText.text = "moves:" + moves + " best: - ";
+    }
+
+    public void changeHint(int hint)
+    {
+        hintsText.text = hint + "x";
     }
 }

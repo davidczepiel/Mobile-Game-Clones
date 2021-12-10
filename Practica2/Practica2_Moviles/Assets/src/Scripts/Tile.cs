@@ -67,6 +67,11 @@ namespace Flow
             _backgroundRenderer.material.color = _tileColor;
         }
 
+        public void setStar(bool t)
+        {
+            _hintRenderer.enabled = t;
+        }
+
         public Color getColor()
         {
             return _tileColor;
@@ -77,9 +82,9 @@ namespace Flow
             return _direction;
         }
 
-        public void setDirection(Vector2 newDir)
+        public void setDirection(int x, int y)
         {
-            _direction = newDir;
+            _direction.x = x;   _direction.y = y;
             _horizontalPipeRenderer.enabled = _direction.x == 1;
             _verticalPipeRenderer.enabled = _direction.y == 1;
         }

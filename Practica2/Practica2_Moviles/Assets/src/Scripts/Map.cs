@@ -8,7 +8,7 @@ namespace Flow
 {
     public class Map
     {
-        List<List<Vector2>> _pipesSolution;
+        List<List<Vector2Int>> _pipesSolution;
         List<Tuple<Vector2, Vector2>> _wallInfo;
         Color[] skin;
 
@@ -17,7 +17,7 @@ namespace Flow
 
         public Map(TextAsset map, int level)
         {
-            _pipesSolution = new List<List<Vector2>>();
+            _pipesSolution = new List<List<Vector2Int>>();
             //Leer mapa
             string info = map.ToString();
             string[] levels = info.Split('\n');
@@ -34,7 +34,7 @@ namespace Flow
             for (int i = 0; i < _numPipes; i++)
             {
                 string[] pipe = levels[i + 1].Split(',');
-                _pipesSolution.Add(new List<Vector2>());
+                _pipesSolution.Add(new List<Vector2Int>());
                 for (int j = 0; j < pipe.Length; j++)
                 {
                     _pipesSolution[i].Add(transformCoord(int.Parse(pipe[j]), _sizeX));
@@ -53,9 +53,9 @@ namespace Flow
         /// <param name="x"> Posicion unidimensional</param>
         /// <param name="size"> Ancho de la matriz</param>
         /// <returns> Vector2 de la (x) e (y) para un array bidimensional</returns>
-        private Vector2 transformCoord(int x, int size)
+        private Vector2Int transformCoord(int x, int size)
         {
-            return new Vector2(x / size, x % size);
+            return new Vector2Int(x / size, x % size);
         }
 
         public int getSizeX()
@@ -73,7 +73,7 @@ namespace Flow
             return numNivel;
         }
 
-        public List<Vector2> getPipeSolution(int index)
+        public List<Vector2Int> getPipeSolution(int index)
         {
             return _pipesSolution[index];
         }

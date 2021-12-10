@@ -9,6 +9,7 @@ namespace Flow
     {
         List<Vector2Int> _currentPipe;
         List<Vector2Int> _lastPipe;
+        List<Vector2Int> _solutionPipe;
 
         Vector2Int _firstTile;
         Vector2Int _secondTile;
@@ -22,7 +23,7 @@ namespace Flow
         /// <param name="firstTile"> Posicion del primer circulo de la tuberia </param>
         /// <param name="lastTile"> Posicion del ultimo circulo de la tuberia </param>
         /// <param name="color"> Color de la tuberia </param>
-        public Pipe(Vector2Int firstTile, Vector2Int lastTile, Color color)
+        public Pipe(Vector2Int firstTile, Vector2Int lastTile, Color color, List<Vector2Int> solutionPipe)
         {
             _firstTile = firstTile;
             _secondTile = lastTile;
@@ -30,9 +31,9 @@ namespace Flow
             _lastPipe = new List<Vector2Int>();
             _currentPipe = new List<Vector2Int>();
             _color = color;
+            _solutionPipe = solutionPipe;
         }
 
-        #region Metodos de control
 
         public List<Vector2Int> getCurrentPipe()
         {
@@ -49,6 +50,15 @@ namespace Flow
             return _color;
         }
 
+        public void useHint()
+        {
+            clearPipe();
+            _finished = true;
+            foreach (Vector2Int v in _solutionPipe)
+                _currentPipe.Add(new Vector2Int(v.x, v.y));
+        }
+
+        #region Metodos de control
         /// <summary>
         /// Metodo que limpia la pipe por completo
         /// </summary>
@@ -135,9 +145,6 @@ namespace Flow
         /// <param name="end"> Indice final </param>
         private List<Vector2Int> removeTilesRange(int beginning, int end)
         {
-            int a = 0;
-            if (beginning < 0)
-                a = 0;
             //Eliminamos de la lista los tiles dentro del rango
             List<Vector2Int> aux = new List<Vector2Int>(_currentPipe);
             aux.RemoveRange(0, beginning);
