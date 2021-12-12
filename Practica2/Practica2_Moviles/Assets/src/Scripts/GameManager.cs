@@ -1,19 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Flow
 {
     public class GameManager : MonoBehaviour
     {
         [SerializeField]
-        LevelsInfo[] myLevels;
-        [SerializeField]
         LevelManager _levelManager;
+
+        LevelsInfo myLevelPack;
 
         int currentLevel;
         int hints = 3;
-        int package;
 
         static GameManager _instance;
 
@@ -36,10 +36,14 @@ namespace Flow
             }
         }
 
+        public void changeScene(string name)
+        {
+            SceneManager.LoadScene(name);
+        }
 
         public Map createMap()
         {
-            Map newMap = new Map(myLevels[package].maps, 1);
+            Map newMap = new Map(myLevelPack.maps, currentLevel);
 
             return newMap;
         }
@@ -47,17 +51,24 @@ namespace Flow
         public void prepareLevel(int a)
         {
             currentLevel = a;
-            //TODO cambio de escena
+            changeScene("Game");
         }
+
 
         public int getCurrentLevel()
         {
             return currentLevel;
         }
 
-        public void setCurrentPackage(int a)
+        public void setCurrentPackage(LevelsInfo levelPack)
         {
-            package = a;
+            myLevelPack = levelPack;
+
+        }
+
+        public LevelsInfo getCurrentPackage()
+        { 
+            return myLevelPack;
         }
 
         public bool useHint()
@@ -69,10 +80,6 @@ namespace Flow
             }
             return false;
         }
-        public int getCurrentPackage()
-        {
-            return package;
-        }
 
 
         public int getHints()
@@ -82,7 +89,7 @@ namespace Flow
 
         public Color[] getSkin()
         {
-            return myLevels[currentLevel].skin.levelColors;
+            return myLevelPack.skin.levelColors;
         }
 
     }

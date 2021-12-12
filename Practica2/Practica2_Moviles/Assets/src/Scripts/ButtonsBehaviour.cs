@@ -7,9 +7,9 @@ namespace Flow{
     {
         [SerializeField]
         LevelManager lvlManager;
-        public void GoToSelectMenu()
+        public void GoToSelectMenu(string scene)
         {
-            //
+            GameManager.getInstance().changeScene(scene);
         }
 
         public void GetHint()

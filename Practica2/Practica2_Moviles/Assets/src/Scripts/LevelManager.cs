@@ -33,6 +33,12 @@ namespace Flow
             //Crea el mapa e instancia los objetos en la escena
             Map map = GameManager.getInstance().createMap();
             _board.prepareBoard(map, GameManager.getInstance().getSkin());
+
+            _guiManager.initGUI(GameManager.getInstance().getCurrentLevel(),
+                                map.getSizeX(), map.getSizeY(),
+                                GameManager.getInstance().getHints(),
+                                _bestMoves);
+
             //Coloca los objetos de la escena
             locateObjects(map);
         }

@@ -9,9 +9,10 @@ public class TitleBehaviour : MonoBehaviour
     Text text;
     [SerializeField]
     Image background;
-    public void initData(string textA, Color color)
+    public void initData(string textA,Color textColor, Color backgroundolor)
     {
         text.text = textA;
-        background.color = color;
+        text.color = textColor;
+        background.color = backgroundolor;
     }
 }

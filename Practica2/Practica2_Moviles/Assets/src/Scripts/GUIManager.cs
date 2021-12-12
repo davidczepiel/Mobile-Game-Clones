@@ -30,7 +30,7 @@ public class GUIManager : MonoBehaviour
     /// <param name="bestMoves"></param>
     public void initGUI(int lvl, int sizeX, int sizeY, int hints, int bestMoves)
     {
-        lvlText.text = "Level " + lvl;
+        lvlText.text = "Level " + (lvl%30);
         sizeText.text = sizeX + "x" + sizeY;
         hintsText.text = hints + "x";
 
