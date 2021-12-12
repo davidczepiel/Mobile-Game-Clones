@@ -38,7 +38,7 @@ namespace Flow
         LevelButtonBehaviour levelButtonPrefab;
 
         [SerializeField]
-        LevelsInfo defaultPack;
+        int defaultPack;
 
         [SerializeField]
         int numLevelsByGroup=30;
@@ -53,7 +53,7 @@ namespace Flow
         {
 
 #if UNITY_EDITOR
-            GameManager.getInstance().setCurrentPackage(defaultPack);
+            GameManager.getInstance().setCurrentPackage(defaultPack,0);
 #endif
 
             LevelsInfo levelData = GameManager.getInstance().getCurrentPackage();
@@ -67,24 +67,24 @@ namespace Flow
             string[] levels = info.Split('\n');
             int numBloquesNiveles = levels.Length / numLevelsByGroup;
 
-            float extraHorizontalSpace = 0;
+            float horizontalSpace = 0;
             //Todos estos niveles se meten en contenedores que tendran un titulo y 30 niveles (agrupados de 5 en 5)
             for (int i = 0; i < numBloquesNiveles; i++)
             {
                 //Preparo el contenedor vertical
                 RectTransform newVer = Instantiate(verticalLayoutPrefab, contentFather.transform);
                 //Meto un titulo
-                TitleBehaviour groupTitle = Instantiate(levelGroupTitle, newVer.transform);
-                groupTitle.initData("grupo " + (i + 1).ToString(), levelData.skin.levelColors[i], new Color(0, 0, 0, 0));
+                //TitleBehaviour groupTitle = Instantiate(levelGroupTitle, newVer.transform);
+                //groupTitle.initData("grupo " + (i + 1).ToString(), levelData.skin.levelColors[i], new Color(0, 0, 0, 0));
 
                 //Añado de 5 en 5, botones que representen los niveles disponibles en cada subrupo
                 for (int j = 0; j <  numLevelsByGroup/numButtonsRow; j++)
                 {
-                    extraHorizontalSpace = prepareABlock(j * numFila, (j * numFila) + numFila, i + 1, newVer.gameObject, levelData);
+                    horizontalSpace = prepareABlock(j * numFila, (j * numFila) + numFila, i + 1, newVer.gameObject, levelData);
                 }
-                newVer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, extraHorizontalSpace);
+                newVer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, horizontalSpace);
 
-                extraWidth += extraHorizontalSpace;
+                extraWidth += horizontalSpace;
             }
 
             //Le digo al contenedor de todos estos elementos que se haga mas grande para poder hacer el scroll
@@ -104,20 +104,20 @@ namespace Flow
         {
             //Preparo un contenedor horizontal para los botones y lo hago hijo del contenedor vertical que me llega
             HorizontalLayoutGroup newHor = Instantiate(horizontalLayoutPrefab, verticalLayout.transform);
-            float extraSpace = 0f;
-            float actualSpace = 0f;
+            float space = 0f;
+            float buttonWidth = 0f;
             float spacing = newHor.spacing;
             //Creo los botones de una fila y les configuro para que cada uno represente un nivel distinto
             for (int i = init + 1; i <= end; i++)
             {
                 LevelButtonBehaviour newButton = Instantiate(levelButtonPrefab, newHor.transform);
-                if (actualSpace == 0f) actualSpace = newButton.getRectTransform().sizeDelta.x;
+                if (buttonWidth == 0f) buttonWidth = newButton.getRectTransform().sizeDelta.x;
                 newButton.initData((i).ToString(), i, group, levelData.skin.levelColors[group - 1]);
 
-                extraSpace = extraSpace + spacing + actualSpace;
+                space = space + spacing + buttonWidth;
             }
-            newHor.gameObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, actualSpace + extraSpace);
-            return actualSpace + extraSpace;
+            newHor.gameObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, space);
+            return space;
         }
 
     }

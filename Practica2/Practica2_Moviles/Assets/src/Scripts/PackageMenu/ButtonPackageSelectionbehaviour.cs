@@ -17,21 +17,21 @@ namespace Flow
         Text numLevelsCompleted;
 
         //Info que almacenamos sobre el paquete de niveles que representamos
-        LevelsInfo package;
+        int package, category;
 
 
         /// <summary>
         /// Recibe la info del paquete de niveles que representa este boton 
         /// </summary>
         /// <param name="p"> Info del paquete de niveles </param>
-        public void initData(LevelsInfo p, Color textColor)
+        public void initData(LevelsInfo p, int indexPack, int indexCategory, Color textColor)
         {
             //Ajusto la UI para que muestre los datos del paquete
             packageTitle.text = p.packName;
             packageTitle.color = textColor;
             numLevelsCompleted.text = p.levelsCompleted.ToString() + "/" + p.numLevels.ToString();
             //Me guardo la info para mas adelante
-            package = p;
+            package = indexPack;    category = indexCategory;
         }
 
         /// <summary>
@@ -40,11 +40,9 @@ namespace Flow
         /// de niveles que representa este boton
         /// </summary>
         public void LoadLevelPackage()
-        {
-            print("Se ha seleccionado el paquete " + package.packName);
-            GameManager.getInstance().setCurrentPackage(package);
+        {    
+            GameManager.getInstance().setCurrentPackage(package, category);
             GameManager.getInstance().changeScene("LevelSelectionMenu");
-
         }
     }
 

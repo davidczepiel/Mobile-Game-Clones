@@ -21,23 +21,23 @@ namespace Flow
         [SerializeField]
         RectTransform scrollableCanvas;
 
-        [SerializeField]
-        CategoryData[] categoriesData;
-
         void Start()
         {
+            CategoryData[] categoriesData = GameManager.getInstance().getCategoryData();
             float extraHeight = 0f;
-            foreach (CategoryData c in categoriesData)
+            for (int i  = 0; i< categoriesData.Length; ++i)
             {
+                CategoryData c = categoriesData[i];
                 GameObject category = Instantiate(categoryGameObject, new Vector3(0, 0, 0), Quaternion.identity, verticalGameObject.transform);
                 TitleBehaviour t = Instantiate(titlePrefab, new Vector3(0, 0, 0), Quaternion.identity, category.transform);
                 t.initData(c.categoryName, new Color(1, 1, 1, 1), c.categoryColor);
                 extraHeight += t.GetComponent<RectTransform>().sizeDelta.y;
 
-                foreach (LevelsInfo l in c.packagesData)
+                for (int j = 0; j < c.packagesData.Length; ++j)
                 {
+                    LevelsInfo l = c.packagesData[j];
                     ButtonPackageSelectionbehaviour b = Instantiate(buttonPrefab, new Vector3(0, 0, 0), Quaternion.identity, category.transform);
-                    b.initData(l, c.categoryColor);
+                    b.initData(l, j, i, c.categoryColor);
                     extraHeight += b.GetComponent<RectTransform>().sizeDelta.y;
                 }
             }

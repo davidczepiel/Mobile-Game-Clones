@@ -9,11 +9,12 @@ namespace Flow
     {
         [SerializeField]
         LevelManager _levelManager;
-
-        LevelsInfo myLevelPack;
+        [SerializeField]
+        CategoryData[] myLevelCategory;
+        
         PlayerProgress progress;
 
-        int currentLevel;
+        int currentLevel, package, category;
         int hints = 3;
 
         static GameManager _instance;
@@ -60,8 +61,7 @@ namespace Flow
 
         public Map createMap()
         {
-            Map newMap = new Map(myLevelPack.maps, currentLevel);
-
+            Map newMap = new Map(myLevelCategory[category].packagesData[package].maps, currentLevel);
             return newMap;
         }
 
@@ -77,15 +77,15 @@ namespace Flow
             return currentLevel;
         }
 
-        public void setCurrentPackage(LevelsInfo levelPack)
+        public void setCurrentPackage(int levelPack, int category)
         {
-            myLevelPack = levelPack;
-
+            package = levelPack;
+            this.category = category;
         }
 
         public LevelsInfo getCurrentPackage()
         { 
-            return myLevelPack;
+            return myLevelCategory[category].packagesData[package];
         }
 
         public bool useHint()
@@ -106,9 +106,13 @@ namespace Flow
 
         public Color[] getSkin()
         {
-            return myLevelPack.skin.levelColors;
+            return myLevelCategory[category].packagesData[package].skin.levelColors;
         }
 
+        public CategoryData[] getCategoryData()
+        {
+            return myLevelCategory;
+        }
     }
 
 }
