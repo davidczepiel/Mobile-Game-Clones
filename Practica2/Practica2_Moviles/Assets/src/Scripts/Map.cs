@@ -9,11 +9,11 @@ namespace Flow
     public class Map
     {
         List<List<Vector2Int>> _pipesSolution;
-        List<Tuple<Vector2, Vector2>> _wallInfo;
-        Color[] skin;
+        List<Vector2Int> _emptySquares;
+        List<Tuple<Vector2Int, Vector2Int>> _wallInfo;
 
         int _sizeX, _sizeY;
-        int numNivel, _numPipes;
+        int _numLevel, _numPipes;
 
         public Map(TextAsset map, int level)
         {
@@ -25,12 +25,55 @@ namespace Flow
             string[] header = levels[0].Split(',');
 
             //En caso de que sea un cuadrado
-            _sizeX = int.Parse(header[0]);
-            _sizeY = int.Parse(header[0]);
+            if (!header[0].Contains(":"))
+            {
+                _sizeX = int.Parse(header[0]);
+                _sizeY = int.Parse(header[0]);
+            }
+            //Caso rectangulo
+            else
+            {
+                string[] size = header[0].Split(':');
+                _sizeX = int.Parse(size[0]);
+                _sizeY = int.Parse(size[1]);
+            }
 
-            numNivel = int.Parse(header[2]);
+            _numLevel = int.Parse(header[2]);
             _numPipes = int.Parse(header[3]);
 
+            //Si el header contiene mas de 3 campos significa que hay campos opcionales por procesar
+            if(header.Length > 4)
+            {
+                //Puentes (indice 4)
+
+                //Celdas huecas
+                if(header[5] != "")
+                {
+                    string[] emptySquares = header[5].Split(':');
+                    for (int i = 0; i < emptySquares.Length; ++i)
+                    {
+                        _emptySquares.Add(transformCoord(int.Parse(emptySquares[i]), _sizeX));
+                    }
+                }
+
+                //Muros y opcionales
+                if(header[6] != "")
+                {
+                    _wallInfo = new List<Tuple<Vector2Int, Vector2Int>>();
+                    string[] walls = header[6].Split(':');
+                    for (int i = 0; i < walls.Length; ++i)
+                    {
+                        string[] wall = walls[i].Split('|');
+                        int firstWall = int.Parse(wall[0]);
+                        int secondWall = int.Parse(wall[1]);
+
+                        _wallInfo.Add(new Tuple<Vector2Int, Vector2Int>(transformCoord(firstWall, _sizeX), transformCoord(secondWall, _sizeX)));
+                    }
+                }
+            }
+            
+
+            //Pipes
             for (int i = 0; i < _numPipes; i++)
             {
                 string[] pipe = levels[i + 1].Split(',');
@@ -40,9 +83,6 @@ namespace Flow
                     _pipesSolution[i].Add(transformCoord(int.Parse(pipe[j]), _sizeX));
                 }
             }
-
-            //Muros y csas opcionales
-
 
             //mapInfo = new int[sizeX][sizeY];
         }
@@ -70,7 +110,7 @@ namespace Flow
 
         public int getNumLevel()
         {
-            return numNivel;
+            return _numLevel;
         }
 
         public List<Vector2Int> getPipeSolution(int index)
@@ -83,10 +123,14 @@ namespace Flow
             return _numPipes;
         }
 
-        public List<Tuple<Vector2, Vector2>> getWallsInfo()
+        public List<Tuple<Vector2Int, Vector2Int>> getWallsInfo()
         {
             return _wallInfo;
         }
 
+        public List<Vector2Int> getEmptySquares()
+        {
+            return _emptySquares;
+        }
     }
 }

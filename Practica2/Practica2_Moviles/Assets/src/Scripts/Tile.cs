@@ -18,6 +18,14 @@ namespace Flow
         SpriteRenderer _backgroundRenderer;
         [SerializeField]
         SpriteRenderer _hintRenderer;
+        [SerializeField]
+        SpriteRenderer _upWallRenderer;
+        [SerializeField]
+        SpriteRenderer _downWallRenderer;
+        [SerializeField]
+        SpriteRenderer _leftWallRenderer;
+        [SerializeField]
+        SpriteRenderer _rightWallRenderer;
 
         [SerializeField]
         Sprite _bigCircleImage;
@@ -104,6 +112,14 @@ namespace Flow
         public void setWall(int index, bool value)
         {
             walls[index] = value;
+
+            switch (index)
+            {
+                case 0: _upWallRenderer.enabled = value; break;
+                case 1: _downWallRenderer.enabled = value; break;
+                case 2: _leftWallRenderer.enabled = value; break;
+                case 3: _rightWallRenderer.enabled = value; break;
+            }
         }
 
         public bool getWall(int index)

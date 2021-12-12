@@ -105,6 +105,22 @@ namespace Flow
                 }
             }
 
+            //Colocar casillas vacias si existen
+
+            //Colocamos las paredes si existen en el nivel
+            List<Tuple<Vector2Int, Vector2Int>> wallsInfo = map.getWallsInfo();
+
+            if (wallsInfo != null)
+                for (int i = 0; i < wallsInfo.Count; i++)
+                {
+                    //Primer y segundo tile entre las que se encuentra la pared
+                    Vector2Int firstTile = wallsInfo[i].Item1;
+                    Vector2Int secondTile = wallsInfo[i].Item2;
+
+                    //Colocar pared entre dos tiles
+                    putWall(firstTile, secondTile);
+                }
+
             //Numero de tuberias del mapa
             int numPipes = map.getNumPipes();
 
@@ -126,20 +142,6 @@ namespace Flow
                                          skin[i],
                                          pipeSol));
             }
-
-            //Obtenemos la informacion de las paredes del mapa
-            List<Tuple<Vector2, Vector2>> wallsInfo = map.getWallsInfo();
-
-            if (wallsInfo != null)
-                for (int i = 0; i < wallsInfo.Count; i++)
-                {
-                    //Primer y segundo tile entre las que se encuentra la pared
-                    Vector2 firstTile = wallsInfo[i].Item1;
-                    Vector2 secondTile = wallsInfo[i].Item2;
-
-                    //Colocar pared entre dos tiles
-                    putWall(firstTile, secondTile);
-                }
         }
 
         /// <summary>
@@ -147,38 +149,38 @@ namespace Flow
         /// </summary>
         /// <param name="firstTile"> Primera casilla </param>
         /// <param name="secondTile"> Segunda casilla </param>
-        private void putWall(Vector2 firstTile, Vector2 secondTile)
+        private void putWall(Vector2Int firstTile, Vector2Int secondTile)
         {
             //Si los tiles se encuentran en la misma fila
             if (firstTile.x == secondTile.x)
             {
                 //Si el primer tile esta en la izquierda
-                if (firstTile.x < secondTile.x)
+                if (firstTile.y < secondTile.y)
                 {
-                    _board[(int)firstTile.x, (int)firstTile.y].setWall(3, true);
-                    _board[(int)secondTile.x, (int)secondTile.y].setWall(2, true);
+                    _board[firstTile.y, firstTile.x].setWall(3, true);
+                    _board[secondTile.y, secondTile.x].setWall(2, true);
                 }
                 //Si el primer tile esta en la derecha
                 else
                 {
-                    _board[(int)firstTile.x, (int)firstTile.y].setWall(2, true);
-                    _board[(int)secondTile.x, (int)secondTile.y].setWall(3, true);
+                    _board[firstTile.y, firstTile.x].setWall(2, true);
+                    _board[secondTile.y, secondTile.x].setWall(3, true);
                 }
             }
             //Si los tiles se encuentran en la misma columna
             else
             {
                 //Si el primer tile esta arriba
-                if (firstTile.x < secondTile.y)
+                if (firstTile.x < secondTile.x)
                 {
-                    _board[(int)firstTile.x, (int)firstTile.y].setWall(1, true);
-                    _board[(int)secondTile.x, (int)secondTile.y].setWall(0, true);
+                    _board[firstTile.y, firstTile.x].setWall(1, true);
+                    _board[secondTile.y, secondTile.x].setWall(0, true);
                 }
                 //Si el primer tile esta abajo
                 else
                 {
-                    _board[(int)firstTile.x, (int)firstTile.y].setWall(0, true);
-                    _board[(int)secondTile.x, (int)secondTile.y].setWall(1, true);
+                    _board[firstTile.y, firstTile.x].setWall(0, true);
+                    _board[secondTile.y, secondTile.x].setWall(1, true);
                 }
             }
         }
@@ -223,9 +225,12 @@ namespace Flow
             //No nos interesa procesar un touch que esta a mas de 1 casilla de la ultima procesada
             if (drawing && (lastPosProcessed - pos).magnitude > 1) return;
 
-            //si estoy dibujando y no me he movido ya ha sido procesado este input
+            //Si estoy dibujando y no me he movido ya ha sido procesado este input
             if (drawing && lastPosProcessed.x == pos.x && lastPosProcessed.y == pos.y)
                 return;
+
+            //Si hay una pared entre el tile que quiero dibujar y el anterior no se procesa el input
+            if (drawing && isWallBetween(pos, lastPosProcessed)) return;
 
             switch (touched.getTileType())
             {
@@ -512,6 +517,29 @@ namespace Flow
             drawingColor = t.getColor();
         }
 
+        /// <summary>
+        /// Comprueba si existe una pared entre los dos tiles dados
+        /// </summary>
+        /// <param name="dest"> Posicion del tile origen</param>
+        /// <param name="source"> Posicion del tile destino</param>
+        /// <returns> True si existe una pared, false en caso contrario</returns>
+        private bool isWallBetween(Vector2Int dest, Vector2Int source)
+        {
+            Vector2Int dir = dest - source;
+
+            //Arriba
+            if (dir.y == -1)
+                return _board[dest.x, dest.y].getWall(1);
+            //Abajo
+            else if (dir.y == 1)
+                return _board[dest.x, dest.y].getWall(0);
+            //Izquierda
+            else if (dir.x == -1)
+                return _board[dest.x, dest.y].getWall(3);
+            //Derecha
+            else
+                return _board[dest.x, dest.y].getWall(2);
+        }
 
     #endregion
     }
