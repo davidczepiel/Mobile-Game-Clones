@@ -27,9 +27,9 @@ namespace Flow
         public void initData(LevelsInfo p, int indexPack, int indexCategory, Color textColor)
         {
             //Ajusto la UI para que muestre los datos del paquete
-            packageTitle.text = p.packName;
+            packageTitle.text = "\t" + p.packName;
             packageTitle.color = textColor;
-            numLevelsCompleted.text = p.levelsCompleted.ToString() + "/" + p.numLevels.ToString();
+            numLevelsCompleted.text = p.levelsCompleted.ToString() + "/" + p.numLevels.ToString() + "\t";
             //Me guardo la info para mas adelante
             package = indexPack;    category = indexCategory;
         }

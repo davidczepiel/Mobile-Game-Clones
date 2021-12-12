@@ -18,6 +18,12 @@ public class GUIManager : MonoBehaviour
     Text moveText;      //texto con el numero de movimientos realizados y la mejor puntuación
     [SerializeField]
     Text pipeText;      //texto donde aparece el porcentaje del nivel superado
+    [SerializeField]
+    GameObject panel;   //panel que aparece una vez superado el nivel
+    [SerializeField]
+    GameObject previusLvl;  //boton de nivel anterior.
+    [SerializeField]
+    GameObject nextLvlButton, finishNextButton;    //botones de nivel siguiente.
 
     /// <summary>
     /// Inicializa la UI con la informacion requerida. El resto de elementos de la interfaz
@@ -28,20 +34,28 @@ public class GUIManager : MonoBehaviour
     /// <param name="sizeY"></param>
     /// <param name="hints"></param>
     /// <param name="bestMoves"></param>
-    public void initGUI(int lvl, int sizeX, int sizeY, int hints, int bestMoves)
+    public void initGUI(int lvl, int sizeX, int sizeY, int hints, int bestMoves, bool ended, bool firstLevel)
     {
-        lvlText.text = "Level " + (lvl%30);
+        lvlText.text = "Level " + (lvl%30 + 1);
         sizeText.text = sizeX + "x" + sizeY;
         hintsText.text = hints + "x";
 
         flowsText.text = "flows: 0/4";
         moveText.text = "moves:0 best: " + bestMoves;
         pipeText.text = "pipe: 0%";
+
+        if (ended)
+        {
+            nextLvlButton.SetActive(false);
+            finishNextButton.SetActive(false);
+        }
+        if (firstLevel)
+            previusLvl.SetActive(false);
     }
 
-    public void changeNFlow(int flow)
+    public void changeNFlow(int flow, int maxFlows)
     {
-        flowsText.text = "flows: " + flow + "/4";
+        flowsText.text = "flows: " + flow + "/" + maxFlows;
     }
 
     public void changeLvlPercentage(int percentage)
@@ -60,5 +74,10 @@ public class GUIManager : MonoBehaviour
     public void changeHint(int hint)
     {
         hintsText.text = hint + "x";
+    }
+
+    public void activeFinishPane()
+    {
+        panel.SetActive(true);
     }
 }

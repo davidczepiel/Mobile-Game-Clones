@@ -32,27 +32,36 @@ namespace Flow
         {
             //Crea el mapa e instancia los objetos en la escena
             Map map = GameManager.getInstance().createMap();
+
+            int nLevel = GameManager.getInstance().getCurrentLevel();
+            int totalLevels = GameManager.getInstance().getCurrentPackage().numLevels;
+            bool endedPackage = (nLevel == totalLevels - 1);
+
             _board.prepareBoard(map, GameManager.getInstance().getSkin());
 
-            _guiManager.initGUI(GameManager.getInstance().getCurrentLevel(),
+            _guiManager.initGUI(nLevel,
                                 map.getSizeX(), map.getSizeY(),
                                 GameManager.getInstance().getHints(),
-                                _bestMoves);
+                                _bestMoves,
+                                endedPackage,
+                                nLevel == 0);
 
             //Coloca los objetos de la escena
             locateObjects(map);
         }
 
-        public void processPlay(int flow, int perc, int moves, bool hasEnded)
+        public void processPlay(int flow, int maxFlow, int perc, int moves)
         {
             _moves = moves;
             _guiManager.changeMoves(moves, _bestMoves);
-            _guiManager.changeNFlow(flow);
+            _guiManager.changeNFlow(flow, maxFlow);
             _guiManager.changeLvlPercentage(perc);
 
-            //Avisar al GameManager en caso de haber completado el nivel
-            if (hasEnded)
-                GameManager.getInstance().levelCompleted(moves);
+            if(flow == maxFlow)
+            {
+                 _guiManager.activeFinishPane();
+                 GameManager.getInstance().levelCompleted(moves);
+            }
         }
 
         public void getAHint()

@@ -54,16 +54,17 @@ namespace Flow
             switch (newType)
             {
                 case TileType.circleTile:
-                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true, false);
+                    changeTileAppearance(_direction.x == 1, _direction.y == 1, true);
                     break;
                 case TileType.voidTile:
-                    changeTileAppearance(false, false, false, false);
+                    changeTileAppearance(false, false, false);
+                    _backgroundRenderer.enabled = false;
                     break;
                 case TileType.connectedTile:
-                    changeTileAppearance(_direction.x == 1, _direction.y == 1, false, false);
+                    changeTileAppearance(_direction.x == 1, _direction.y == 1, false);
                     break;
                 case TileType.emptyTile:
-                    changeTileAppearance(false, false, false, false);
+                    changeTileAppearance(false, false, false);
                     setWall(0, true);
                     setWall(1, true);
                     setWall(2, true);
@@ -85,6 +86,11 @@ namespace Flow
         public void setStar(bool t)
         {
             _hintRenderer.enabled = t;
+        }
+
+        public void setBackGround(bool t)
+        {
+            _backgroundRenderer.enabled = t;
         }
 
         public Color getColor()
@@ -134,16 +140,6 @@ namespace Flow
             return walls[index];
         }
 
-        public void setHead(bool b)
-        {
-            _circleRenderer.enabled = b;
-        }
-
-        public Color getBackgroundColor()
-        {
-            return _backgroundRenderer.color;
-        }
-
         #endregion
 
         #region Metodos de control
@@ -170,12 +166,11 @@ namespace Flow
         /// |                                 METODOS AUXILIARES                                   |
         /// +--------------------------------------------------------------------------------------+
 
-        private void changeTileAppearance(bool horPipe, bool verPipe, bool circlerend, bool backG) 
+        private void changeTileAppearance(bool horPipe, bool verPipe, bool circlerend) 
         {
             _horizontalPipeRenderer.enabled = horPipe;
             _verticalPipeRenderer.enabled = verPipe;
             _circleRenderer.enabled = circlerend;
-            _backgroundRenderer.enabled = backG;
         }
 
         #endregion

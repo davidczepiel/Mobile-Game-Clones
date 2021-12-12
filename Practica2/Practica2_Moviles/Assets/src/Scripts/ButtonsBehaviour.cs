@@ -29,17 +29,22 @@ namespace Flow{
 
         public void NextLvl()
         {
-            //
+            GameManager.getInstance().prepareLevel(GameManager.getInstance().getCurrentLevel() + 1);
         }
 
         public void PreviousLvl()
         {
-            //
+            GameManager.getInstance().prepareLevel(GameManager.getInstance().getCurrentLevel() - 1);
         }
 
         public void RestartLvl()
         {
             //
+        }
+
+        public void ClosePanel(GameObject panel)
+        {
+            panel.SetActive(false);
         }
     }
 }

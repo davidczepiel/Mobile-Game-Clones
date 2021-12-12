@@ -11,7 +11,7 @@ public class TitleBehaviour : MonoBehaviour
     Image background;
     public void initData(string textA,Color textColor, Color backgroundolor)
     {
-        text.text = textA;
+        text.text = "\t" + textA;
         text.color = textColor;
         background.color = backgroundolor;
     }

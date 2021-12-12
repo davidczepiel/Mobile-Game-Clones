@@ -26,7 +26,7 @@ namespace Flow
 
         public void initData(string text, int level, int levelGroup, Color backgroundColor)
         {
-            mylevel = level;
+            mylevel = level - 1;
             buttonText.text = text;
             myGroup = levelGroup;
             buttonImage.color = backgroundColor;

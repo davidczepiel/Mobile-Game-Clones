@@ -16,4 +16,4 @@ MonoBehaviour:
   packName: 6x6 Mania
   maps: {fileID: 4900000, guid: abcc42e1d8ff76646b86ee5d39addc8e, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
-  numLevels: 0
+  numLevels: 150

@@ -23,6 +23,28 @@ namespace Flow
         bool drawing;       //si el jugador esta dibujando actualmente en el tablero
         int moves;          //movimientos que ha realizado el jugador
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                for (int i = 0; i < _board.GetLength(0); ++i)
+                {
+                    string line = "";
+                    for (int j = 0; j < _board.GetLength(1); ++j)
+                    {
+                        line += _board[j, i].getTileType() + "  ";
+                    }
+                    Debug.Log(line);
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                foreach (Pipe p in _levelPipes)
+                {
+                    Debug.Log(p.getCurrentPipe().Count + " Color" + p.getColor() + "   FINISH: " + p.isCompleted());
+                }
+            }
+        }
 
         #region Metodos de creacion
         /// <summary>
@@ -63,12 +85,12 @@ namespace Flow
             _board[aux.getCurrentPipe()[aux.getCurrentPipe().Count - 1].x, aux.getCurrentPipe()[aux.getCurrentPipe().Count - 1].y].setStar(true);
 
             //Vemos si al aplicar la pista hemos cortado otras pipes
-            foreach ( Vector2Int v in aux.getCurrentPipe())
+            foreach (Vector2Int v in aux.getCurrentPipe())
             {
-                if(_board[v.x,v.y].getTileType() == Tile.TileType.connectedTile &&  //Si es de tipo conected
+                if (_board[v.x, v.y].getTileType() == Tile.TileType.connectedTile &&  //Si es de tipo conected
                    _board[v.x, v.y].getColor() != aux.getColor())                   //Y no es del color del pipe de la hint
                 {
-                    Pipe p =  pipeWithColor(_board[v.x, v.y].getColor());
+                    Pipe p = pipeWithColor(_board[v.x, v.y].getColor());
                     List<Vector2Int> cutted = p.cut(v);
                     if (cutted != null)
                         setVoids(cutted);
@@ -77,7 +99,7 @@ namespace Flow
             //Guardamos el estado del board
             foreach (Pipe p in _levelPipes)
                 p.saveFlow();
-            updateVisualBoard();          
+            updateVisualBoard();
 
         }
 
@@ -107,8 +129,8 @@ namespace Flow
 
             //Colocar casillas vacias si existen
             List<Vector2Int> emptyInfo = map.getEmptySquares();
-            if(emptyInfo != null)
-                for(int i = 0; i < emptyInfo.Count; ++i)
+            if (emptyInfo != null)
+                for (int i = 0; i < emptyInfo.Count; ++i)
                 {
                     _board[emptyInfo[i].y, emptyInfo[i].x].setTileType(Tile.TileType.emptyTile);
                 }
@@ -143,7 +165,7 @@ namespace Flow
 
                 //Nuevo registro de tuberia
                 _levelPipes.Add(new Pipe(new Vector2Int(pipeSol[0].x, pipeSol[0].y),
-                                         new Vector2Int(pipeSol[pipeSol.Count - 1].x, pipeSol[pipeSol.Count - 1].y), 
+                                         new Vector2Int(pipeSol[pipeSol.Count - 1].x, pipeSol[pipeSol.Count - 1].y),
                                          skin[i],
                                          pipeSol));
             }
@@ -275,7 +297,11 @@ namespace Flow
                 case TouchPhase.Ended:
                     //Terminamos de pintar
                     drawing = false;
-
+                    foreach(Vector2Int v in pipeWithColor(drawingColor).getCurrentPipe())
+                    {
+                        Tile t = _board[v.x, v.y];
+                        t.setBackGround(true);
+                    }
                     //Guardamos el estado del board
                     foreach (Pipe p in _levelPipes)
                         p.saveFlow();
@@ -332,16 +358,20 @@ namespace Flow
         {
             foreach (Pipe p in _levelPipes) //recorremos las pipes
             {
-                if (p.getColor() == drawingColor) continue;     //si es la pipe que pintamos continuamos
+                if (p.getColor() == drawingColor) continue;         //si es la pipe que pintamos continuamos
                 for (int i = 0; i < p.getLastPipe().Count; ++i)     //para cada posicion en el pipe antiguo
                 {
                     Tile tile = _board[p.getLastPipe()[i].x, p.getLastPipe()[i].y];
 
-                    if (tile.getTileType() == Tile.TileType.voidTile)       //si es void ahora se ocupa
+                    if (tile.getTileType() == Tile.TileType.voidTile)
+                    {       //si es void ahora se ocupa
                         p.addTileToPipe(p.getLastPipe()[i]);
+                        tile.setBackGround(true);
+                    }
 
-                    else if (p.getLastPipe().Count > 1 && 
-                            i == p.getLastPipe().Count - 1 && tile.getTileType() == Tile.TileType.circleTile)      //si es el ultimo circulo
+                    else if (p.getLastPipe().Count > 1 && i == p.getLastPipe().Count - 1 &&
+                            tile.getTileType() == Tile.TileType.circleTile && //si es el ultimo circulo
+                             !p.isCompleted())
                         p.addTileToPipe(p.getLastPipe()[i]);
 
                     else if (tile.getColor() != p.getColor())   //si llegas a otro color pasas
@@ -464,7 +494,10 @@ namespace Flow
                 if (_board[p.x, p.y].getTileType() != Tile.TileType.circleTile)
                     _board[p.x, p.y].setTileType(Tile.TileType.voidTile);
                 else
+                {
                     _board[p.x, p.y].setDirection(0, 0);
+                    _board[p.x, p.y].setBackGround(false);
+                }
             }
         }
 
@@ -505,7 +538,7 @@ namespace Flow
         {
             float numFinish = 0, numTiles = 0;
 
-            foreach(Pipe p in _levelPipes)
+            foreach (Pipe p in _levelPipes)
             {
                 if (p.isCompleted())
                     numFinish++;
@@ -513,7 +546,7 @@ namespace Flow
             }
             int perc = (int)(100.0f * numTiles / (boardSize.x * boardSize.y));
 
-            levelManager.processPlay((int)numFinish, perc, moves, numFinish == _levelPipes.Count);
+            levelManager.processPlay((int)numFinish, _levelPipes.Count, perc, moves);
 
         }
 
@@ -549,7 +582,7 @@ namespace Flow
                 return _board[dest.x, dest.y].getWall(2);
         }
 
-    #endregion
+        #endregion
     }
 
 
