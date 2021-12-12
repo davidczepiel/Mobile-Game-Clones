@@ -16,3 +16,4 @@ MonoBehaviour:
   packName: Paquete Adicional
   maps: {fileID: 4900000, guid: 33bf5a7b06972a84e90eed5e5a9c1c88, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
+  numLevels: 150

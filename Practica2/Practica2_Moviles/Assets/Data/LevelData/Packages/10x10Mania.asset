@@ -16,4 +16,4 @@ MonoBehaviour:
   packName: 10x10 Mania
   maps: {fileID: 4900000, guid: ebf76357ab2dc994583443382f8d21f2, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
-  numLevels: 0
+  numLevels: 150

@@ -43,6 +43,14 @@ namespace Flow
         private void Start()
         {
             loadPlayerProgress();
+
+            for(int i = 0; i < myLevelCategory.Length; ++i)
+            {
+                for(int j = 0; j < myLevelCategory[i].packagesData.Length; ++j)
+                {
+                    myLevelCategory[i].packagesData[j].levelsCompleted = progress.categoryProgress[i].packProgress[j].completedLevels;
+                }
+            }
         }
 
         /// <summary>
@@ -53,13 +61,25 @@ namespace Flow
         {
             //Ultimo mejor score registrado para el nivel que se acaba de jugar
             int lastScore = progress.categoryProgress[category].packProgress[package].levelTopScore[currentLevel];
-            
+
+            //Niveles completados actualmente en el paquete
+            int levelsCompleted = progress.categoryProgress[category].packProgress[package].completedLevels;
+
+            bool saveRequired = false;
             //Solo si no se habia registrado antes un score o si es un nuevo record se guarda
             if (lastScore == 0 || lastScore > score)
             {
                 progress.categoryProgress[category].packProgress[package].levelTopScore[currentLevel] = score;
-                savePlayerProgress();
+                saveRequired = true;
             }
+            //De igual forma ocurre con el numero de niveles completados para el paquete
+            if(levelsCompleted < currentLevel)
+            {
+                progress.categoryProgress[category].packProgress[package].completedLevels = currentLevel;
+                saveRequired = true;
+            }
+            
+            if(saveRequired) savePlayerProgress();
         }
 
         public void changeScene(string name)

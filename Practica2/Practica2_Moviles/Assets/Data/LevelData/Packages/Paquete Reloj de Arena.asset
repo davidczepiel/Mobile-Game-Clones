@@ -16,4 +16,4 @@ MonoBehaviour:
   packName: Reloj de Arena
   maps: {fileID: 4900000, guid: 5335b9791f6b9664b8896ef58b895399, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
-  numLevels: 0
+  numLevels: 501
