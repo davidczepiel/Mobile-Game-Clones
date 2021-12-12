@@ -6,7 +6,7 @@ namespace Flow
 {
     public class Tile : MonoBehaviour
     {
-        public enum TileType { voidTile, connectedTile, circleTile }
+        public enum TileType { voidTile, connectedTile, circleTile, emptyTile }
 
         [SerializeField]
         SpriteRenderer _horizontalPipeRenderer;
@@ -61,6 +61,13 @@ namespace Flow
                     break;
                 case TileType.connectedTile:
                     changeTileAppearance(_direction.x == 1, _direction.y == 1, false, false);
+                    break;
+                case TileType.emptyTile:
+                    changeTileAppearance(false, false, false, false);
+                    setWall(0, true);
+                    setWall(1, true);
+                    setWall(2, true);
+                    setWall(3, true);
                     break;
             }
             _myType = newType;
@@ -172,22 +179,6 @@ namespace Flow
         }
 
         #endregion
-    }
-
-    public struct TileInfo
-    {
-        public Tile.TileType type;
-        public Color color; 
-        public Vector2 direction;
-        public Tile associatedTile;
-
-        public TileInfo(Tile tile)
-        {
-            type = tile.getTileType();
-            color = tile.getColor();
-            direction = tile.getDirection();
-            associatedTile = tile;
-        }
     }
 }
 

@@ -49,6 +49,7 @@ namespace Flow
                 //Celdas huecas
                 if(header[5] != "")
                 {
+                    _emptySquares = new List<Vector2Int>();
                     string[] emptySquares = header[5].Split(':');
                     for (int i = 0; i < emptySquares.Length; ++i)
                     {

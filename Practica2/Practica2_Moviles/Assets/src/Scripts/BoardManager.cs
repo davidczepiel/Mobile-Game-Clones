@@ -106,10 +106,15 @@ namespace Flow
             }
 
             //Colocar casillas vacias si existen
+            List<Vector2Int> emptyInfo = map.getEmptySquares();
+            if(emptyInfo != null)
+                for(int i = 0; i < emptyInfo.Count; ++i)
+                {
+                    _board[emptyInfo[i].y, emptyInfo[i].x].setTileType(Tile.TileType.emptyTile);
+                }
 
             //Colocamos las paredes si existen en el nivel
             List<Tuple<Vector2Int, Vector2Int>> wallsInfo = map.getWallsInfo();
-
             if (wallsInfo != null)
                 for (int i = 0; i < wallsInfo.Count; i++)
                 {
