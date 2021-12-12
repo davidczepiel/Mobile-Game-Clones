@@ -248,6 +248,9 @@ namespace Flow
                 case Tile.TileType.voidTile:
                     checkVoidTile(touched, pos);
                     break;
+                case Tile.TileType.emptyTile:
+                    //Casilla no accesible
+                    break;
             }
         }
 

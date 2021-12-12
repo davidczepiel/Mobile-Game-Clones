@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Flow
@@ -69,9 +70,7 @@ namespace Flow
         {
             PlayerProgress defaultValue = new PlayerProgress();
             defaultValue.availableHints = 0;
-            defaultValue.pack1_progress = 0;
-            defaultValue.pack2_progress = 0;
-            defaultValue.pack3_progress = 0;
+            defaultValue.packsProgress = new List<PackProgress>();
 
             return defaultValue;
         }
@@ -81,9 +80,21 @@ namespace Flow
     public struct PlayerProgress
     {
         public int availableHints;
-        public int pack1_progress;
-        public int pack2_progress;
-        public int pack3_progress;
+        public List<PackProgress> packsProgress;
+
         public string hash;
+    }
+
+    [Serializable]
+    public class PackProgress
+    {
+        public int completedLevels;
+        public List<int> levelTopScore;
+
+        public PackProgress(int completedLvls, List<int> levelTopScr)
+        {
+            completedLevels = completedLvls;
+            levelTopScore = levelTopScr;
+        }
     }
 }

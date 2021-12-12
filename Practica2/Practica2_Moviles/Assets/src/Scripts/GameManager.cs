@@ -11,6 +11,7 @@ namespace Flow
         LevelManager _levelManager;
 
         LevelsInfo myLevelPack;
+        PlayerProgress progress;
 
         int currentLevel;
         int hints = 3;
@@ -34,6 +35,22 @@ namespace Flow
                 _instance._levelManager = _levelManager;
                 Destroy(this);
             }
+        }
+
+        /// <summary>
+        /// Lee el progreso del jugador del disco
+        /// </summary>
+        private void loadPlayerProgress()
+        {
+            progress = ProgressSerialization.loadProgress();
+        }
+
+        /// <summary>
+        /// Guarda el progreso actual del juego
+        /// </summary>
+        private void savePlayerProgress()
+        {
+            ProgressSerialization.saveProgress(progress);
         }
 
         public void changeScene(string name)
