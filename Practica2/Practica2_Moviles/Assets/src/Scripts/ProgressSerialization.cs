@@ -42,7 +42,7 @@ namespace Flow
             string filePath = Application.persistentDataPath + fileName;
 
             //Si no existe el archivo devolvemos valores por defecto
-            if (!File.Exists(filePath)) return getDefaultPlayerProgress();
+            if (!File.Exists(filePath)) return null;
 
             //Leemos el archivo json
             string json = File.ReadAllText(filePath);
@@ -57,32 +57,41 @@ namespace Flow
             string currentHash = Hash128.Compute(json).ToString();
 
             //Si no resulta ser el mismo hash devolvemos valores por defecto
-            if (readHash != currentHash) return getDefaultPlayerProgress();
+            if (readHash != currentHash) return null;
 
             return progressRead;
-        }
-
-        /// <summary>
-        /// Devuelve un struct relleno con valores por defecto
-        /// </summary>
-        /// <returns></returns>
-        private static PlayerProgress getDefaultPlayerProgress()
-        {
-            PlayerProgress defaultValue = new PlayerProgress();
-            defaultValue.availableHints = 0;
-            defaultValue.packsProgress = new List<PackProgress>();
-
-            return defaultValue;
         }
     }   
 
     [Serializable]
-    public struct PlayerProgress
+    public class PlayerProgress
     {
         public int availableHints;
-        public List<PackProgress> packsProgress;
+        public List<CategoryProgress> categoryProgress;
 
         public string hash;
+
+        /// <summary>
+        /// Constructora por defecto
+        /// </summary>
+        public PlayerProgress()
+        {
+            categoryProgress = new List<CategoryProgress>();
+        }
+    }
+
+    [Serializable]
+    public class CategoryProgress
+    {
+        public List<PackProgress> packProgress;
+
+        /// <summary>
+        /// Constructora por defecto
+        /// </summary>
+        public CategoryProgress()
+        {
+            packProgress = new List<PackProgress>();
+        }
     }
 
     [Serializable]
@@ -91,10 +100,17 @@ namespace Flow
         public int completedLevels;
         public List<int> levelTopScore;
 
-        public PackProgress(int completedLvls, List<int> levelTopScr)
+        /// <summary>
+        /// Constructora para inicializar desde 0 la clase
+        /// </summary>
+        /// <param name="numLevels"></param>
+        public PackProgress(int numLevels)
         {
-            completedLevels = completedLvls;
-            levelTopScore = levelTopScr;
+            completedLevels = 0;
+            levelTopScore = new List<int>();
+
+            for (int i = 0; i < numLevels; ++i)
+                levelTopScore.Add(0);
         }
     }
 }

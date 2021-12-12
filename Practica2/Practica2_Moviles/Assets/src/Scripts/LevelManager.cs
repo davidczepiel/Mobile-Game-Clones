@@ -49,6 +49,10 @@ namespace Flow
             _guiManager.changeMoves(moves, _bestMoves);
             _guiManager.changeNFlow(flow);
             _guiManager.changeLvlPercentage(perc);
+
+            //Avisar al GameManager en caso de haber completado el nivel
+            if (hasEnded)
+                GameManager.getInstance().levelCompleted(moves);
         }
 
         public void getAHint()
