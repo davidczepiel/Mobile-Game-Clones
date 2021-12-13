@@ -36,15 +36,18 @@ namespace Flow
             int nLevel = GameManager.getInstance().getCurrentLevel();
             int totalLevels = GameManager.getInstance().getCurrentPackage().numLevels;
             bool endedPackage = (nLevel == totalLevels - 1);
+            bool nextLvLAvailable = GameManager.getInstance().isCurrentCategoryLocked() && GameManager.getInstance().getCurrentCompletedLevels() < nLevel + 1;
 
             _board.prepareBoard(map, GameManager.getInstance().getSkin());
 
             _guiManager.initGUI(nLevel,
+                                GameManager.getInstance().getPackColor(),
                                 map.getSizeX(), map.getSizeY(),
                                 GameManager.getInstance().getHints(),
                                 _bestMoves,
                                 endedPackage,
-                                nLevel == 0);
+                                nLevel == 0,
+                                nextLvLAvailable);
 
             //Coloca los objetos de la escena
             locateObjects(map);
@@ -73,6 +76,11 @@ namespace Flow
             }
         }
 
+        public void restartLevel()
+        {
+            _board.restartLevel();
+        }
+
         private void locateObjects(Map map)
         {
             //Movemos la posicion de la camara a una posicion positiva
@@ -86,6 +94,8 @@ namespace Flow
             //Manda informacion necesaria al input
             _inputManager.setData(_screenPlacer.getPos(), _screenPlacer.getScale(), _cameraPlacer.getOrthographicSize());
         }
+
+
 
     }
 

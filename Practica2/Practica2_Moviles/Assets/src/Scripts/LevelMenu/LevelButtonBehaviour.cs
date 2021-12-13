@@ -12,32 +12,41 @@ namespace Flow
         //Texto que va a variar y representara el nivel al que lleva este boton
         [SerializeField]
         Text buttonText;
-
+        //Rect de la posicion del boton
         [SerializeField]
         RectTransform myRectTr;
-
+        //Imagen del boton
         [SerializeField]
         Image buttonImage;
+        //Imagen que muestra el candado
+        [SerializeField]
+        Image lockImage;
+        //Componente de boton
+        [SerializeField]
+        Button button;
 
         //Nivel que representa este boton
         int mylevel;
 
-        int myGroup;
-
         public void initData(string text, int level, int levelGroup, Color backgroundColor)
         {
-            mylevel = level - 1;
+            mylevel = (level - 1) + ((levelGroup - 1) * 30);
             buttonText.text = text;
-            myGroup = levelGroup;
-            buttonImage.color = backgroundColor;
+
+            if (GameManager.getInstance().isCurrentCategoryLocked() && GameManager.getInstance().getCurrentCompletedLevels() < mylevel)
+            {
+                lockImage.enabled = true;
+                button.interactable = false;
+                buttonText.text = "";
+            }
+            else
+                buttonImage.color = backgroundColor;
         }
 
 
         public void selectLevel()
         {
-            print("Yo represento el nivel Nivel" + mylevel.ToString() + " con grupo " + myGroup.ToString());
-            //Llamada correspondiente a quien tenga que mandarnos a un nivel concreto
-            GameManager.getInstance().prepareLevel(mylevel+ ((myGroup-1)*30));
+            GameManager.getInstance().prepareLevel(mylevel);
         }
 
         public RectTransform getRectTransform()

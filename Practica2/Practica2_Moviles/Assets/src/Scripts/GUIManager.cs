@@ -34,9 +34,10 @@ public class GUIManager : MonoBehaviour
     /// <param name="sizeY"></param>
     /// <param name="hints"></param>
     /// <param name="bestMoves"></param>
-    public void initGUI(int lvl, int sizeX, int sizeY, int hints, int bestMoves, bool ended, bool firstLevel)
+    public void initGUI(int lvl, Color colorText, int sizeX, int sizeY, int hints, int bestMoves, bool ended, bool firstLevel, bool nextLvl)
     {
         lvlText.text = "Level " + (lvl%30 + 1);
+        lvlText.color = colorText;
         sizeText.text = sizeX + "x" + sizeY;
         hintsText.text = hints + "x";
 
@@ -44,6 +45,7 @@ public class GUIManager : MonoBehaviour
         moveText.text = "moves:0 best: " + bestMoves;
         pipeText.text = "pipe: 0%";
 
+        nextLvlButton.SetActive(!nextLvl);
         if (ended)
         {
             nextLvlButton.SetActive(false);

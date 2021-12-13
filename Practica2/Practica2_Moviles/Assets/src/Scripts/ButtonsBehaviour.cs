@@ -39,7 +39,7 @@ namespace Flow{
 
         public void RestartLvl()
         {
-            //
+            lvlManager.restartLevel();
         }
 
         public void ClosePanel(GameObject panel)

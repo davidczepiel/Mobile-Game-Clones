@@ -26,6 +26,8 @@ namespace Flow
         SpriteRenderer _leftWallRenderer;
         [SerializeField]
         SpriteRenderer _rightWallRenderer;
+        [SerializeField]
+        Animator animator;
 
         [SerializeField]
         Sprite _bigCircleImage;
@@ -39,6 +41,14 @@ namespace Flow
         bool[] walls = { false, false, false, false }; //Arriba,abajo,izquierda,derecha
 
         //TODO private Animation animacion;
+
+        public void initTile(TileType type, Color c)
+        {
+            setTileColor(c);
+            setTileType(type);
+            _circleRenderer.sprite = _bigCircleImage;
+
+        }
 
         #region Getters y setters
         /// +--------------------------------------------------------------------------------------+
@@ -65,10 +75,6 @@ namespace Flow
                     break;
                 case TileType.emptyTile:
                     changeTileAppearance(false, false, false);
-                    setWall(0, true);
-                    setWall(1, true);
-                    setWall(2, true);
-                    setWall(3, true);
                     break;
             }
             _myType = newType;
@@ -81,6 +87,11 @@ namespace Flow
             _verticalPipeRenderer.material.color = _tileColor;
             _circleRenderer.material.color = _tileColor;
             _backgroundRenderer.material.color = _tileColor;
+        }
+
+        public void startAnimation()
+        {
+            animator.Play("circle");
         }
 
         public void setStar(bool t)
@@ -147,15 +158,6 @@ namespace Flow
         /// +--------------------------------------------------------------------------------------+
         /// |                                 METODOS DE CONTROL                                   |
         /// +--------------------------------------------------------------------------------------+
-
-        public void initTile(TileType type, Color c)
-        {
-            setTileColor(c);
-            setTileType(type);
-            _circleRenderer.sprite = _bigCircleImage;
-
-        }
-
 
 
         #endregion

@@ -39,7 +39,6 @@ namespace Flow
                 Destroy(this);
             }
         }
-
         private void Start()
         {
             loadPlayerProgress();
@@ -73,9 +72,9 @@ namespace Flow
                 saveRequired = true;
             }
             //De igual forma ocurre con el numero de niveles completados para el paquete
-            if(levelsCompleted < currentLevel)
+            if(levelsCompleted <= currentLevel)
             {
-                progress.categoryProgress[category].packProgress[package].completedLevels = currentLevel;
+                progress.categoryProgress[category].packProgress[package].completedLevels = currentLevel + 1;
                 saveRequired = true;
             }
             
@@ -99,6 +98,19 @@ namespace Flow
             changeScene("Game");
         }
 
+        public int getCurrentCompletedLevels()
+        {
+            return progress.categoryProgress[category].packProgress[package].completedLevels;
+        }
+
+        public int getBestCurrentLevelScore()
+        {
+            return progress.categoryProgress[category].packProgress[package].levelTopScore[currentLevel];
+        }
+        public bool isCurrentCategoryLocked()
+        {
+            return myLevelCategory[category].isLocked;
+        }
 
         public int getCurrentLevel()
         {
@@ -137,6 +149,11 @@ namespace Flow
         public Color[] getSkin()
         {
             return myLevelCategory[category].packagesData[package].skin.levelColors;
+        }
+
+        public Color getPackColor()
+        {
+            return myLevelCategory[category].categoryColor; ;
         }
 
         public CategoryData[] getCategoryData()

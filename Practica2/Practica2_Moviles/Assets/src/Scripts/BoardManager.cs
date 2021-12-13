@@ -120,7 +120,7 @@ namespace Flow
             //Instanciamos todas las casillas y las inicializamos como vacias
             for (int i = 0; i < sizeX; i++)
             {
-                for (int j = 0; j < sizeX; j++)
+                for (int j = 0; j < sizeY; j++)
                 {
                     _board[i, j] = Instantiate(tilePrefab, new Vector3(i, -j, 0), Quaternion.identity, this.transform);
                     _board[i, j].setTileType(Tile.TileType.voidTile);
@@ -134,7 +134,7 @@ namespace Flow
                 {
                     _board[emptyInfo[i].y, emptyInfo[i].x].setTileType(Tile.TileType.emptyTile);
                 }
-
+               
             //Colocamos las paredes si existen en el nivel
             List<Tuple<Vector2Int, Vector2Int>> wallsInfo = map.getWallsInfo();
             if (wallsInfo != null)
@@ -179,35 +179,35 @@ namespace Flow
         private void putWall(Vector2Int firstTile, Vector2Int secondTile)
         {
             //Si los tiles se encuentran en la misma fila
-            if (firstTile.x == secondTile.x)
+            if (firstTile.y == secondTile.y)
             {
                 //Si el primer tile esta en la izquierda
-                if (firstTile.y < secondTile.y)
+                if (firstTile.x < secondTile.x)
                 {
-                    _board[firstTile.y, firstTile.x].setWall(3, true);
-                    _board[secondTile.y, secondTile.x].setWall(2, true);
+                    _board[firstTile.x, firstTile.y].setWall(3, true);
+                    _board[secondTile.x, secondTile.y].setWall(2, true);
                 }
                 //Si el primer tile esta en la derecha
                 else
                 {
-                    _board[firstTile.y, firstTile.x].setWall(2, true);
-                    _board[secondTile.y, secondTile.x].setWall(3, true);
+                    _board[firstTile.x, firstTile.y].setWall(2, true);
+                    _board[secondTile.x, secondTile.y].setWall(3, true);
                 }
             }
             //Si los tiles se encuentran en la misma columna
             else
             {
                 //Si el primer tile esta arriba
-                if (firstTile.x < secondTile.x)
+                if (firstTile.y < secondTile.y)
                 {
-                    _board[firstTile.y, firstTile.x].setWall(1, true);
-                    _board[secondTile.y, secondTile.x].setWall(0, true);
+                    _board[firstTile.x, firstTile.y].setWall(1, true);
+                    _board[secondTile.x, secondTile.y].setWall(0, true);
                 }
                 //Si el primer tile esta abajo
                 else
                 {
-                    _board[firstTile.y, firstTile.x].setWall(0, true);
-                    _board[secondTile.y, secondTile.x].setWall(1, true);
+                    _board[firstTile.x, firstTile.y].setWall(0, true);
+                    _board[secondTile.x, secondTile.y].setWall(1, true);
                 }
             }
         }
@@ -218,6 +218,29 @@ namespace Flow
         //+-----------------------------------------------------------------------------------------------------------------------+
         //|                                          METODOS PROCESAR INPUT                                                       |
         //+-----------------------------------------------------------------------------------------------------------------------+
+
+        public void restartLevel()
+        {
+            foreach(Pipe p in _levelPipes)
+            {
+                p.clearPipe();
+                p.saveFlow();
+            }
+            for(int i = 0; i < boardSize.x; ++i)
+            {
+                for (int j = 0; j < boardSize.y; ++j)
+                {
+                    if (_board[i, j].getTileType() != Tile.TileType.circleTile && _board[i, j].getTileType() != Tile.TileType.emptyTile)
+                        _board[i, j].setTileType(Tile.TileType.voidTile);
+                    else
+                        _board[i, j].setDirection(0, 0);
+
+                    _board[i, j].setBackGround(false);
+                }
+            }
+
+            updateVisualBoard();
+        }
 
         /// <summary>
         /// Procesa el input del usuario dependiendo de la casilla que ha sido pulsada y el tipo de 
@@ -288,7 +311,9 @@ namespace Flow
                 case TouchPhase.Began:
                     if (touchedTile.getTileType() != Tile.TileType.voidTile)
                     {
-                        //Animacion TileTocado
+                        touchedTile.startAnimation();
+                        Pipe p = pipeWithColor(drawingColor);
+                        _board[p.getSecondTile().x, p.getSecondTile().y].startAnimation();
                     }
                     break;
                 case TouchPhase.Moved:

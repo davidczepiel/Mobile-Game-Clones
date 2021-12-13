@@ -44,6 +44,14 @@ namespace Flow
         {
             return this._lastPipe;
         }
+        public Vector2Int getSecondTile()
+        {
+            if (_currentPipe.Contains(_firstTile))
+                return this._secondTile;
+            else
+                return this._firstTile;
+        }
+
 
         public Color getColor()
         {

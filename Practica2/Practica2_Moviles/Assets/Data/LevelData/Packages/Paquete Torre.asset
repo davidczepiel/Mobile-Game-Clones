@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Paquete Torre
   m_EditorClassIdentifier: 
   levelsCompleted: 0
-  packName: Paquete Adicional
+  packName: Paquete Torre
   maps: {fileID: 4900000, guid: 8e0965e1f6a70564aabd8e10fb3af3fe, type: 3}
   skin: {fileID: 11400000, guid: 62a7f2fee88bf6b419fa7c089382928f, type: 2}
   numLevels: 150

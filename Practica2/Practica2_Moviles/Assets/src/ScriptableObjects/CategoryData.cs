@@ -8,4 +8,6 @@ public class CategoryData : ScriptableObject
     public string categoryName;
     public Color categoryColor;
     public LevelsInfo[] packagesData;
+
+    public bool isLocked;
 }

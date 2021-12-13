@@ -96,7 +96,7 @@ namespace Flow
         /// <returns> Vector2 de la (x) e (y) para un array bidimensional</returns>
         private Vector2Int transformCoord(int x, int size)
         {
-            return new Vector2Int(x / size, x % size);
+            return new Vector2Int(x % size, x / size);
         }
 
         public int getSizeX()

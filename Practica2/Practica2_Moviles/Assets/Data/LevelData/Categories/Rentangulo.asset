@@ -15,5 +15,6 @@ MonoBehaviour:
   categoryName: Rectangulo
   categoryColor: {r: 0.8301887, g: 0.2930301, b: 0, a: 1}
   packagesData:
+  - {fileID: 11400000, guid: b48edb78955c8284581729aa6a747494, type: 2}
   - {fileID: 11400000, guid: ba8da99eb4ab865408ce65ea73a34d86, type: 2}
   - {fileID: 11400000, guid: 8f242b4bd9fa46e4d9dd2d5e159f1094, type: 2}

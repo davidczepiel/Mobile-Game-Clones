@@ -38,7 +38,9 @@ namespace Flow
         LevelButtonBehaviour levelButtonPrefab;
 
         [SerializeField]
-        int defaultPack;
+        int defaultPack = 0;
+        [SerializeField]
+        int lvl = 0;
 
         [SerializeField]
         int numLevelsByGroup=30;
@@ -52,9 +54,9 @@ namespace Flow
         void Start()
         {
 
-#if UNITY_EDITOR
-            GameManager.getInstance().setCurrentPackage(defaultPack,0);
-#endif
+//#if UNITY_EDITOR
+//            GameManager.getInstance().setCurrentPackage(lvl, defaultPack);
+//#endif
 
             LevelsInfo levelData = GameManager.getInstance().getCurrentPackage();
             //Preparo la UI 
@@ -74,8 +76,8 @@ namespace Flow
                 //Preparo el contenedor vertical
                 RectTransform newVer = Instantiate(verticalLayoutPrefab, contentFather.transform);
                 //Meto un titulo
-                //TitleBehaviour groupTitle = Instantiate(levelGroupTitle, newVer.transform);
-                //groupTitle.initData("grupo " + (i + 1).ToString(), levelData.skin.levelColors[i], new Color(0, 0, 0, 0));
+                TitleBehaviour groupTitle = Instantiate(levelGroupTitle, newVer.transform);
+                groupTitle.initData("Grupo " + (i + 1).ToString(), levelData.skin.levelColors[i], new Color(0, 0, 0, 0));
 
                 //Añado de 5 en 5, botones que representen los niveles disponibles en cada subrupo
                 for (int j = 0; j <  numLevelsByGroup/numButtonsRow; j++)
