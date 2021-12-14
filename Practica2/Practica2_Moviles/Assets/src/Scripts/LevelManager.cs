@@ -23,7 +23,7 @@ namespace Flow
         [SerializeField]
         int sideWidth;
 
-        int _bestMoves = 0, _moves = 0;
+        int _moves = 0;
 
 
 
@@ -44,7 +44,7 @@ namespace Flow
                                 GameManager.getInstance().getPackColor(),
                                 map.getSizeX(), map.getSizeY(),
                                 GameManager.getInstance().getHints(),
-                                _bestMoves,
+                                GameManager.getInstance().getBestCurrentLevelScore(),
                                 endedPackage,
                                 nLevel == 0,
                                 nextLvLAvailable);
@@ -56,7 +56,7 @@ namespace Flow
         public void processPlay(int flow, int maxFlow, int perc, int moves)
         {
             _moves = moves;
-            _guiManager.changeMoves(moves, _bestMoves);
+            _guiManager.changeMoves(moves, GameManager.getInstance().getBestCurrentLevelScore());
             _guiManager.changeNFlow(flow, maxFlow);
             _guiManager.changeLvlPercentage(perc);
 

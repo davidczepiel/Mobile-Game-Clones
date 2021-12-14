@@ -38,6 +38,10 @@ namespace Flow
         LevelButtonBehaviour levelButtonPrefab;
 
         [SerializeField]
+        [Tooltip("Prefab que representa un panel vacio")]
+        GameObject panelVacio;
+
+        [SerializeField]
         int defaultPack = 0;
         [SerializeField]
         int lvl = 0;
@@ -60,7 +64,7 @@ namespace Flow
 
             LevelsInfo levelData = GameManager.getInstance().getCurrentPackage();
             //Preparo la UI 
-            uiText.color = levelData.skin.levelColors[0]; //Este color deberia de ser el del paquete al que pertenece este grupo de niveles TODO
+            uiText.color = GameManager.getInstance().getPackColor(); ; //Este color deberia de ser el del paquete al que pertenece este grupo de niveles TODO
             uiText.text = levelData.packName;
 
             //Me hago con el numero de niveles que hay en este fichero
@@ -69,6 +73,8 @@ namespace Flow
             string[] levels = info.Split('\n');
             int numBloquesNiveles = levels.Length / numLevelsByGroup;
 
+
+            Instantiate(panelVacio, contentFather.transform);
             float horizontalSpace = 0;
             //Todos estos niveles se meten en contenedores que tendran un titulo y 30 niveles (agrupados de 5 en 5)
             for (int i = 0; i < numBloquesNiveles; i++)
@@ -89,8 +95,10 @@ namespace Flow
                 extraWidth += horizontalSpace;
             }
 
+            Instantiate(panelVacio, contentFather.transform);
             //Le digo al contenedor de todos estos elementos que se haga mas grande para poder hacer el scroll
             scrollableCanvas.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollableCanvas.sizeDelta.x + extraWidth);
+
         }
 
 

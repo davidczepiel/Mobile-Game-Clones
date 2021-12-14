@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 
 namespace Flow
 {
@@ -34,45 +34,46 @@ namespace Flow
             else
             {
                 string[] size = header[0].Split(':');
-                _sizeX = int.Parse(size[0]);
-                _sizeY = int.Parse(size[1]);
+                string left = new string(size[0].Where(c => char.IsDigit(c)).ToArray());
+                string right = new string(size[1].Where(c => char.IsDigit(c)).ToArray());
+
+                _sizeX = int.Parse(left);
+                _sizeY = int.Parse(right);
             }
 
             _numLevel = int.Parse(header[2]);
             _numPipes = int.Parse(header[3]);
 
             //Si el header contiene mas de 3 campos significa que hay campos opcionales por procesar
-            if(header.Length > 4)
+            //Puentes (indice 4)
+
+            //Celdas huecas
+            if (header.Length > 5 && header[5] != "")
             {
-                //Puentes (indice 4)
-
-                //Celdas huecas
-                if(header[5] != "")
+                _emptySquares = new List<Vector2Int>();
+                string[] emptySquares = header[5].Split(':');
+                for (int i = 0; i < emptySquares.Length; ++i)
                 {
-                    _emptySquares = new List<Vector2Int>();
-                    string[] emptySquares = header[5].Split(':');
-                    for (int i = 0; i < emptySquares.Length; ++i)
-                    {
-                        _emptySquares.Add(transformCoord(int.Parse(emptySquares[i]), _sizeX));
-                    }
-                }
-
-                //Muros y opcionales
-                if(header[6] != "")
-                {
-                    _wallInfo = new List<Tuple<Vector2Int, Vector2Int>>();
-                    string[] walls = header[6].Split(':');
-                    for (int i = 0; i < walls.Length; ++i)
-                    {
-                        string[] wall = walls[i].Split('|');
-                        int firstWall = int.Parse(wall[0]);
-                        int secondWall = int.Parse(wall[1]);
-
-                        _wallInfo.Add(new Tuple<Vector2Int, Vector2Int>(transformCoord(firstWall, _sizeX), transformCoord(secondWall, _sizeX)));
-                    }
+                    _emptySquares.Add(transformCoord(int.Parse(emptySquares[i]), _sizeX));
                 }
             }
-            
+
+            //Muros y opcionales
+            if (header.Length > 6 && header[6] != "")
+            {
+                _wallInfo = new List<Tuple<Vector2Int, Vector2Int>>();
+                string[] walls = header[6].Split(':');
+                for (int i = 0; i < walls.Length; ++i)
+                {
+                    string[] wall = walls[i].Split('|');
+                    int firstWall = int.Parse(wall[0]);
+                    int secondWall = int.Parse(wall[1]);
+
+                    _wallInfo.Add(new Tuple<Vector2Int, Vector2Int>(transformCoord(firstWall, _sizeX), transformCoord(secondWall, _sizeX)));
+                }
+
+            }
+
 
             //Pipes
             for (int i = 0; i < _numPipes; i++)

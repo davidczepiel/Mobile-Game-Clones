@@ -34,6 +34,9 @@ namespace Flow
         [SerializeField]
         Sprite _pipeImage;
 
+        [SerializeField]
+        SpriteRenderer[] grid;
+
         TileType _myType = TileType.voidTile;  //El tipo actual de este tile
         Color _tileColor; //Color de la tuberia/circulo
         Vector2 _direction; //Dir en la que  se esta mostrando este pipe
@@ -74,6 +77,8 @@ namespace Flow
                     changeTileAppearance(_direction.x == 1, _direction.y == 1, false);
                     break;
                 case TileType.emptyTile:
+                    foreach (SpriteRenderer s in grid)
+                        s.enabled = false;
                     changeTileAppearance(false, false, false);
                     break;
             }

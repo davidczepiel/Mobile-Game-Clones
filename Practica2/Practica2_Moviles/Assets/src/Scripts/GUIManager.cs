@@ -42,7 +42,7 @@ public class GUIManager : MonoBehaviour
         hintsText.text = hints + "x";
 
         flowsText.text = "flows: 0/4";
-        moveText.text = "moves:0 best: " + bestMoves;
+        changeMoves(0, bestMoves);
         pipeText.text = "pipe: 0%";
 
         nextLvlButton.SetActive(!nextLvl);

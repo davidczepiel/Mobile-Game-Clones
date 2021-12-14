@@ -32,7 +32,7 @@ namespace Flow
                     string line = "";
                     for (int j = 0; j < _board.GetLength(1); ++j)
                     {
-                        line += _board[j, i].getTileType() + "  ";
+                        line += _board[i, j].getTileType() + "  ";
                     }
                     Debug.Log(line);
                 }
@@ -130,11 +130,16 @@ namespace Flow
             //Colocar casillas vacias si existen
             List<Vector2Int> emptyInfo = map.getEmptySquares();
             if (emptyInfo != null)
+            {
                 for (int i = 0; i < emptyInfo.Count; ++i)
                 {
-                    _board[emptyInfo[i].y, emptyInfo[i].x].setTileType(Tile.TileType.emptyTile);
+                    _board[emptyInfo[i].x, emptyInfo[i].y].setTileType(Tile.TileType.emptyTile);
                 }
-               
+
+                //Poner paredes alrededor de los vacios
+                applyWallsToEmpty(emptyInfo);
+            }
+
             //Colocamos las paredes si existen en el nivel
             List<Tuple<Vector2Int, Vector2Int>> wallsInfo = map.getWallsInfo();
             if (wallsInfo != null)
@@ -221,12 +226,12 @@ namespace Flow
 
         public void restartLevel()
         {
-            foreach(Pipe p in _levelPipes)
+            foreach (Pipe p in _levelPipes)
             {
                 p.clearPipe();
                 p.saveFlow();
             }
-            for(int i = 0; i < boardSize.x; ++i)
+            for (int i = 0; i < boardSize.x; ++i)
             {
                 for (int j = 0; j < boardSize.y; ++j)
                 {
@@ -321,12 +326,15 @@ namespace Flow
                     break;
                 case TouchPhase.Ended:
                     //Terminamos de pintar
-                    drawing = false;
-                    foreach(Vector2Int v in pipeWithColor(drawingColor).getCurrentPipe())
+                    if (drawing)
                     {
-                        Tile t = _board[v.x, v.y];
-                        t.setBackGround(true);
+                        foreach (Vector2Int v in pipeWithColor(drawingColor).getCurrentPipe())
+                        {
+                            Tile t = _board[v.x, v.y];
+                            t.setBackGround(true);
+                        }
                     }
+                    drawing = false;
                     //Guardamos el estado del board
                     foreach (Pipe p in _levelPipes)
                         p.saveFlow();
@@ -581,6 +589,25 @@ namespace Flow
             if (drawingColor != t.getColor())
                 moves++;
             drawingColor = t.getColor();
+        }
+
+
+        private void applyWallsToEmpty(List<Vector2Int> emptyPos)
+        {
+            Vector2Int[] dirs = { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0) };
+            foreach (Vector2Int pos in emptyPos)
+            {
+                foreach (Vector2Int dir in dirs)
+                {
+                    Vector2Int res = pos + dir;
+                    if (res.x < 0 || res.x >= boardSize.x || res.y < 0 || res.y >= boardSize.y) continue;
+
+                    if (_board[res.x, res.y].getTileType() != Tile.TileType.emptyTile)
+                        putWall(pos, res);
+                }
+
+            }
+
         }
 
         /// <summary>
