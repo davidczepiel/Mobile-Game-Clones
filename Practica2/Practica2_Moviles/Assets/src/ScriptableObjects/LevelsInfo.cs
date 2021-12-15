@@ -6,6 +6,5 @@ public class LevelsInfo : ScriptableObject
     public int levelsCompleted;
     public string packName;
     public TextAsset maps;
-    public LevelSkin skin;
     public int numLevels;
 }

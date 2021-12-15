@@ -87,11 +87,19 @@ namespace Flow
             //Vemos si al aplicar la pista hemos cortado otras pipes
             foreach (Vector2Int v in aux.getCurrentPipe())
             {
+                _board[v.x, v.y].setBackGround(true);
                 if (_board[v.x, v.y].getTileType() == Tile.TileType.connectedTile &&  //Si es de tipo conected
                    _board[v.x, v.y].getColor() != aux.getColor())                   //Y no es del color del pipe de la hint
                 {
-                    Pipe p = pipeWithColor(_board[v.x, v.y].getColor());
-                    List<Vector2Int> cutted = p.cut(v);
+                    Pipe cutPipe = pipeWithColor(_board[v.x, v.y].getColor());
+
+                    if (cutPipe.isCompleted() && cutPipe.hasBeenHinted())
+                    {
+                        int lastPos = cutPipe.getCurrentPipe().Count - 1;
+                        _board[cutPipe.getCurrentPipe()[0].x, cutPipe.getCurrentPipe()[0].y].setStar(false);
+                        _board[cutPipe.getCurrentPipe()[lastPos].x, cutPipe.getCurrentPipe()[lastPos].y].setStar(false);
+                    }
+                    List<Vector2Int> cutted = cutPipe.cut(v);
                     if (cutted != null)
                         setVoids(cutted);
                 }
@@ -100,6 +108,7 @@ namespace Flow
             foreach (Pipe p in _levelPipes)
                 p.saveFlow();
             updateVisualBoard();
+            processPlay();
 
         }
 
@@ -377,7 +386,12 @@ namespace Flow
 
                     if (_board[positions[j].x, positions[j].y].getTileType() != Tile.TileType.circleTile)
                         _board[positions[j].x, positions[j].y].setTileType(Tile.TileType.connectedTile);
-
+                    else {
+                        if (p.hasBeenHinted() && p.isCompleted())
+                        {
+                            _board[positions[j].x, positions[j].y].setStar(true);
+                        }
+                    }
                     _board[positions[j].x, positions[j].y].setTileColor(p.getColor());
                 }
             }
@@ -446,6 +460,13 @@ namespace Flow
             {
                 startDrawing(t);
                 p = pipeWithColor(drawingColor);
+                //Si esta completa y tenia pista quitamos la estrella
+                if (p.isCompleted() && p.hasBeenHinted())
+                {
+                    int lastPos = p.getCurrentPipe().Count - 1;
+                    _board[p.getCurrentPipe()[0].x, p.getCurrentPipe()[0].y].setStar(false);
+                    _board[p.getCurrentPipe()[lastPos].x, p.getCurrentPipe()[lastPos].y].setStar(false);
+                }
                 List<Vector2Int> aux = p.cut(pos, 1);
                 if (aux != null) setVoids(aux);
             }
@@ -465,6 +486,12 @@ namespace Flow
 
                     //Corto la tuberia con la que he chocado
                     Pipe cutPipe = pipeWithColor(t.getColor());
+                    if (cutPipe.isCompleted() && cutPipe.hasBeenHinted())
+                    {
+                        int lastPos = cutPipe.getCurrentPipe().Count - 1;
+                        _board[cutPipe.getCurrentPipe()[0].x, cutPipe.getCurrentPipe()[0].y].setStar(false);
+                        _board[cutPipe.getCurrentPipe()[lastPos].x, cutPipe.getCurrentPipe()[lastPos].y].setStar(false);
+                    }
                     List<Vector2Int> aux = cutPipe.cut(pos);
                     if (aux != null) setVoids(aux);
                     p.addTileToPipe(pos);
@@ -511,6 +538,13 @@ namespace Flow
                 if (!p.isEmpty())
                 {
                     setVoids(p.getCurrentPipe());
+
+                    if (p.isCompleted() && p.hasBeenHinted())
+                    {
+                        int lastPos = p.getCurrentPipe().Count - 1;
+                        _board[p.getCurrentPipe()[0].x, p.getCurrentPipe()[0].y].setStar(false);
+                        _board[p.getCurrentPipe()[lastPos].x, p.getCurrentPipe()[lastPos].y].setStar(false);
+                    }
                     p.clearPipe();
                 }
 

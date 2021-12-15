@@ -60,10 +60,10 @@ namespace Flow
             _guiManager.changeNFlow(flow, maxFlow);
             _guiManager.changeLvlPercentage(perc);
 
-            if(flow == maxFlow)
+            if (flow == maxFlow)
             {
-                 _guiManager.activeFinishPane();
-                 GameManager.getInstance().levelCompleted(moves);
+                _guiManager.activeFinishPane();
+                GameManager.getInstance().levelCompleted(moves);
             }
         }
 
@@ -74,6 +74,12 @@ namespace Flow
                 _guiManager.changeHint(GameManager.getInstance().getHints());
                 _board.applyHint();
             }
+        }
+
+        public void AddAHint()
+        {
+            GameManager.getInstance().addHint();
+            _guiManager.changeHint(GameManager.getInstance().getHints());
         }
 
         public void restartLevel()

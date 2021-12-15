@@ -13,7 +13,11 @@ namespace Flow
         CategoryData[] myLevelCategory;
         [SerializeField]
         int startingHints = 3;
-        
+
+        [SerializeField]
+        LevelSkin skin;
+
+
         PlayerProgress progress;
 
         int currentLevel, package, category;
@@ -146,9 +150,14 @@ namespace Flow
             return hints;
         }
 
+        public void addHint()
+        {
+            hints++;
+        }
+
         public Color[] getSkin()
         {
-            return myLevelCategory[category].packagesData[package].skin.levelColors;
+            return skin.levelColors;
         }
 
         public Color getPackColor()

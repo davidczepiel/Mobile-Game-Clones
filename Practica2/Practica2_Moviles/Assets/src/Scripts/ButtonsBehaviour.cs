@@ -17,11 +17,6 @@ namespace Flow{
             lvlManager.getAHint();
         }
 
-        public void WatchVideo()
-        {
-            //
-        }
-
         public void RewindAction()
         {
             //

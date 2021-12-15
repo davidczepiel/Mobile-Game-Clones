@@ -83,7 +83,7 @@ namespace Flow
                 RectTransform newVer = Instantiate(verticalLayoutPrefab, contentFather.transform);
                 //Meto un titulo
                 TitleBehaviour groupTitle = Instantiate(levelGroupTitle, newVer.transform);
-                groupTitle.initData("Grupo " + (i + 1).ToString(), levelData.skin.levelColors[i], new Color(0, 0, 0, 0));
+                groupTitle.initData("Grupo " + (i + 1).ToString(), GameManager.getInstance().getSkin()[i], new Color(0, 0, 0, 0));
 
                 //Añado de 5 en 5, botones que representen los niveles disponibles en cada subrupo
                 for (int j = 0; j <  numLevelsByGroup/numButtonsRow; j++)
@@ -122,7 +122,7 @@ namespace Flow
             {
                 LevelButtonBehaviour newButton = Instantiate(levelButtonPrefab, newHor.transform);
                 if (buttonWidth == 0f) buttonWidth = newButton.getRectTransform().sizeDelta.x;
-                newButton.initData((i).ToString(), i, group, levelData.skin.levelColors[group - 1]);
+                newButton.initData((i).ToString(), i, group, GameManager.getInstance().getSkin()[group - 1]);
 
                 space = space + spacing + buttonWidth;
             }

@@ -17,6 +17,8 @@ namespace Flow
         bool _finished;
         Color _color;
 
+        bool hinted;
+
         /// <summary>
         /// Constructora de clase
         /// </summary>
@@ -32,6 +34,7 @@ namespace Flow
             _currentPipe = new List<Vector2Int>();
             _color = color;
             _solutionPipe = solutionPipe;
+            hinted = false;
         }
 
 
@@ -62,8 +65,14 @@ namespace Flow
         {
             clearPipe();
             _finished = true;
+            hinted = true;
             foreach (Vector2Int v in _solutionPipe)
                 _currentPipe.Add(new Vector2Int(v.x, v.y));
+        }
+
+        public bool hasBeenHinted()
+        {
+            return hinted;
         }
 
         #region Metodos de control
