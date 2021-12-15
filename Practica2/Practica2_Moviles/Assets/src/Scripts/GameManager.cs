@@ -153,6 +153,8 @@ namespace Flow
         public void addHint()
         {
             hints++;
+            progress.availableHints = hints;
+            savePlayerProgress();
         }
 
         public Color[] getSkin()

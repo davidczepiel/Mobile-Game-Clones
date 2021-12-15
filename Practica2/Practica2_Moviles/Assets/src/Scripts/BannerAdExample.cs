@@ -4,8 +4,6 @@ using UnityEngine.Advertisements;
 
 public class BannerAdExample : MonoBehaviour
 {
-
-
     [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
 
     [SerializeField] string _androidAdUnitId = "Banner_Android";
@@ -14,6 +12,11 @@ public class BannerAdExample : MonoBehaviour
 
     void Start()
     {
+#if UNITY_IOS
+		_adUnitId = _iOsAdUnitId;
+#elif UNITY_ANDROID
+        _adUnitId = _androidAdUnitId;
+#endif
         // Set the banner position:
         Advertisement.Banner.SetPosition(_bannerPosition);
         LoadBanner();

@@ -25,8 +25,6 @@ namespace Flow
                 ? _iOSGameId
                 : _androidGameId;
             Advertisement.Initialize(_gameId, _testMode, this);
-
-            Debug.Log("Ads Manager initialization ended.");
         }
 
         public void OnInitializationComplete()

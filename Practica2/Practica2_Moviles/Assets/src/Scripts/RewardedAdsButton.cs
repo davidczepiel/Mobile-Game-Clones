@@ -48,7 +48,7 @@ namespace Flow
             if (adUnitId.Equals(_adUnitId))
             {
                 // Configure the button to call the ShowAd() method when clicked:
-                _showAdButton.onClick.AddListener(ShowAd);
+                //_showAdButton.onClick.AddListener(ShowAd);
                 // Enable the button for users to click:
                 _showAdButton.interactable = true;
             }
