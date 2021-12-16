@@ -70,7 +70,6 @@ namespace Flow
         public void selectLevel()
         {
             GameManager.getInstance().prepareLevel(mylevel);
-            GameManager.getInstance().changeScene("Game");
         }
 
         /// <summary>

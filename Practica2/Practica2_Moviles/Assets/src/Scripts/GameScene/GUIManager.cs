@@ -13,9 +13,6 @@ public class GUIManager : MonoBehaviour
     Text hintsText;     //texto donde aparecen el numero de pistas disponibles
 
     [SerializeField]
-    Button button;      //boton para el anuncio
-
-    [SerializeField]
     Text flowsText;     //texto donde aparecen el numero de tuberias conectadas
     [SerializeField]
     Text moveText;      //texto con el numero de movimientos realizados y la mejor puntuación
@@ -84,10 +81,5 @@ public class GUIManager : MonoBehaviour
     public void activeFinishPane()
     {
         panel.SetActive(true);
-    }
-
-    public void setActiveButton(bool t)
-    {
-        button.interactable = t;
     }
 }

@@ -265,7 +265,6 @@ namespace Flow
                         _board[i, j].setDirection(0, 0);
 
                     _board[i, j].setBackGround(false);
-                    _board[i, j].setStar(false);
                 }
             }
 
