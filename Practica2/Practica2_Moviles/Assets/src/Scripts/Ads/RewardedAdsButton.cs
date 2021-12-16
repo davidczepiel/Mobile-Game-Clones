@@ -21,6 +21,8 @@ namespace Flow
         string _iOSAdUnitId = "Rewarded_iOS";
         string _adUnitId = "Rewarded_Android";
 
+        bool flag = false;
+
         // Get the Ad Unit ID for the current platform:
 
         void Awake()
@@ -53,8 +55,6 @@ namespace Flow
 
             if (adUnitId.Equals(_adUnitId))
             {
-                // Configure the button to call the ShowAd() method when clicked:
-                //_showAdButton.onClick.AddListener(ShowAd);
                 // Enable the button for users to click:
                 _showAdButton.interactable = true;
             }
@@ -65,8 +65,24 @@ namespace Flow
         {
             // Disable the button: 
             _showAdButton.interactable = false;
+
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // Esta condicion es debida a que la actualizacion tiene un error mientras se encuentra en el editor
+            // debido a que hay "cola de listeners". Esto en build no ocurre. Por ello en UNITY EDITOR la primera
+            // vez se le pasa el Listener y luego no.
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#if UNITY_EDITOR
             // Then show the ad:
+            if (!flag)
+            {
+                Advertisement.Show(_adUnitId, this);
+                flag = true;
+            }
+            else 
+                Advertisement.Show(_adUnitId);
+#else
             Advertisement.Show(_adUnitId, this);
+#endif
         }
 
         // Implement the Show Listener's OnUnityAdsShowComplete callback method to determine if the user gets a reward:
