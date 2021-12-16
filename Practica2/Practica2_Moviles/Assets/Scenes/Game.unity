@@ -959,7 +959,6 @@ GameObject:
   - component: {fileID: 387965679}
   - component: {fileID: 387965678}
   - component: {fileID: 387965677}
-  - component: {fileID: 387965680}
   m_Layer: 5
   m_Name: NextLvLButton
   m_TagString: Untagged
@@ -1030,8 +1029,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 387965680}
-        m_TargetAssemblyTypeName: ButtonsBehaviour, Assembly-CSharp
+      - m_Target: {fileID: 1353022093}
+        m_TargetAssemblyTypeName: Flow.ButtonsBehaviour, Assembly-CSharp
         m_MethodName: NextLvl
         m_Mode: 1
         m_Arguments:
@@ -1080,19 +1079,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387965675}
   m_CullTransparentMesh: 1
---- !u!114 &387965680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 387965675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lvlManager: {fileID: 1337091062}
 --- !u!1 &406499413
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,6 +1327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lvlManager: {fileID: 1337091062}
+  inter: {fileID: 0}
 --- !u!1 &549199009
 GameObject:
   m_ObjectHideFlags: 0
@@ -1477,7 +1464,6 @@ GameObject:
   - component: {fileID: 673786089}
   - component: {fileID: 673786088}
   - component: {fileID: 673786087}
-  - component: {fileID: 673786090}
   m_Layer: 5
   m_Name: BackLvLButton
   m_TagString: Untagged
@@ -1548,8 +1534,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 673786090}
-        m_TargetAssemblyTypeName: ButtonsBehaviour, Assembly-CSharp
+      - m_Target: {fileID: 1353022093}
+        m_TargetAssemblyTypeName: Flow.ButtonsBehaviour, Assembly-CSharp
         m_MethodName: PreviousLvl
         m_Mode: 1
         m_Arguments:
@@ -1598,19 +1584,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 673786085}
   m_CullTransparentMesh: 1
---- !u!114 &673786090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 673786085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lvlManager: {fileID: 1337091062}
 --- !u!1 &680054907
 GameObject:
   m_ObjectHideFlags: 0
@@ -1834,6 +1807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lvlManager: {fileID: 0}
+  inter: {fileID: 0}
 --- !u!1 &741144590
 GameObject:
   m_ObjectHideFlags: 0
@@ -2002,11 +1976,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lvlManager: {fileID: 0}
+  inter: {fileID: 0}
 --- !u!1 &804089210 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2416633706166200299, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
   m_PrefabInstance: {fileID: 2416633706692790929}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &804089211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804089210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9895d0412c74e0540b07d67da8414a16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _androidAdUnitId: Interstitial_Android
+  _iOsAdUnitId: Interstitial_iOS
 --- !u!114 &804089213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2599,6 +2588,7 @@ GameObject:
   - component: {fileID: 1353022089}
   - component: {fileID: 1353022088}
   - component: {fileID: 1353022092}
+  - component: {fileID: 1353022093}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2711,6 +2701,20 @@ MonoBehaviour:
   previusLvl: {fileID: 673786085}
   nextLvlButton: {fileID: 387965675}
   finishNextButton: {fileID: 492854609}
+--- !u!114 &1353022093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353022087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lvlManager: {fileID: 1337091062}
+  inter: {fileID: 804089211}
 --- !u!1 &1372067675
 GameObject:
   m_ObjectHideFlags: 0
@@ -3077,7 +3081,6 @@ GameObject:
   - component: {fileID: 1580829304}
   - component: {fileID: 1580829303}
   - component: {fileID: 1580829302}
-  - component: {fileID: 1580829305}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -3148,8 +3151,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1580829305}
-        m_TargetAssemblyTypeName: ButtonsBehaviour, Assembly-CSharp
+      - m_Target: {fileID: 1353022093}
+        m_TargetAssemblyTypeName: Flow.ButtonsBehaviour, Assembly-CSharp
         m_MethodName: RestartLvl
         m_Mode: 1
         m_Arguments:
@@ -3198,19 +3201,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1580829300}
   m_CullTransparentMesh: 1
---- !u!114 &1580829305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1580829300}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lvlManager: {fileID: 1337091062}
 --- !u!1 &1658979703
 GameObject:
   m_ObjectHideFlags: 0
@@ -3320,7 +3310,6 @@ GameObject:
   - component: {fileID: 1731194889}
   - component: {fileID: 1731194888}
   - component: {fileID: 1731194887}
-  - component: {fileID: 1731194890}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -3391,7 +3380,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1731194890}
+      - m_Target: {fileID: 1353022093}
         m_TargetAssemblyTypeName: Flow.ButtonsBehaviour, Assembly-CSharp
         m_MethodName: GoToSelectMenu
         m_Mode: 5
@@ -3441,19 +3430,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1731194885}
   m_CullTransparentMesh: 1
---- !u!114 &1731194890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1731194885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lvlManager: {fileID: 1337091062}
 --- !u!1 &1769969658
 GameObject:
   m_ObjectHideFlags: 0
@@ -3598,7 +3574,6 @@ GameObject:
   - component: {fileID: 1773908481}
   - component: {fileID: 1773908480}
   - component: {fileID: 1773908479}
-  - component: {fileID: 1773908482}
   m_Layer: 5
   m_Name: HintButton
   m_TagString: Untagged
@@ -3669,8 +3644,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1773908482}
-        m_TargetAssemblyTypeName: ButtonsBehaviour, Assembly-CSharp
+      - m_Target: {fileID: 1353022093}
+        m_TargetAssemblyTypeName: Flow.ButtonsBehaviour, Assembly-CSharp
         m_MethodName: GetHint
         m_Mode: 1
         m_Arguments:
@@ -3719,19 +3694,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773908477}
   m_CullTransparentMesh: 1
---- !u!114 &1773908482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1773908477}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lvlManager: {fileID: 1337091062}
 --- !u!1 &1960561993
 GameObject:
   m_ObjectHideFlags: 0

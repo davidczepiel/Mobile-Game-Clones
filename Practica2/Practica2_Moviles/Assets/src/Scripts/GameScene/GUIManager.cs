@@ -75,7 +75,8 @@ public class GUIManager : MonoBehaviour
 
     public void changeHint(int hint)
     {
-        hintsText.text = hint + "x";
+        if(hintsText != null)
+            hintsText.text = hint + "x";
     }
 
     public void activeFinishPane()
