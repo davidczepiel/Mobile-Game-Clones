@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 namespace Flow
 {
-
+    /// <summary>
+    /// Clase encargada de poner botones y agruparlos en la pantalla de seleccion de nivel
+    /// </summary>
     public class LevelDisplayManagement : MonoBehaviour
     {
         [SerializeField]
@@ -52,16 +54,11 @@ namespace Flow
         [SerializeField]
         int numButtonsRow = 5;
 
-        int numFila = 5; //Numero de botones que vamos a tener en cada una de las filas en la seleccion de nivel
-        float extraWidth = 0f; //Variable en la que se acumula el tamaño extra que hay que darle al elemento de la UI que va a hacer scroll
+        int numFila = 5;        //Numero de botones que vamos a tener en cada una de las filas en la seleccion de nivel
+        float extraWidth = 0f;  //Variable en la que se acumula el tamaño extra que hay que darle al elemento de la UI que va a hacer scroll
 
         void Start()
         {
-
-//#if UNITY_EDITOR
-//            GameManager.getInstance().setCurrentPackage(lvl, defaultPack);
-//#endif
-
             LevelsInfo levelData = GameManager.getInstance().getCurrentPackage();
             //Preparo la UI 
             uiText.color = GameManager.getInstance().getPackColor(); ; //Este color deberia de ser el del paquete al que pertenece este grupo de niveles TODO
@@ -122,7 +119,7 @@ namespace Flow
             {
                 LevelButtonBehaviour newButton = Instantiate(levelButtonPrefab, newHor.transform);
                 if (buttonWidth == 0f) buttonWidth = newButton.getRectTransform().sizeDelta.x;
-                newButton.initData((i).ToString(), i, group, GameManager.getInstance().getSkin()[group - 1]);
+                newButton.initData(i, group, GameManager.getInstance().getSkin()[group - 1]);
 
                 space = space + spacing + buttonWidth;
             }

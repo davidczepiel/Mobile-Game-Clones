@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 namespace Flow
 {
+    /// <summary>
+    /// Gamemanager
+    /// </summary>
     public class GameManager : MonoBehaviour
     {
         [SerializeField]
@@ -18,7 +21,7 @@ namespace Flow
         LevelSkin skin;
 
 
-        PlayerProgress progress;
+        PlayerProgress progress;                //Clase encargada de guardar el progreso del jugador
 
         int currentLevel, package, category;
         int hints;
@@ -43,6 +46,9 @@ namespace Flow
                 Destroy(this);
             }
         }
+        /// <summary>
+        /// Carga el progreso del jugador y asigna valores a la estructura de categorias
+        /// </summary>
         private void Start()
         {
             loadPlayerProgress();
@@ -78,6 +84,7 @@ namespace Flow
             //De igual forma ocurre con el numero de niveles completados para el paquete
             if(levelsCompleted <= currentLevel)
             {
+                myLevelCategory[category].packagesData[package].levelsCompleted = currentLevel + 1;
                 progress.categoryProgress[category].packProgress[package].completedLevels = currentLevel + 1;
                 saveRequired = true;
             }
@@ -85,23 +92,36 @@ namespace Flow
             if(saveRequired) savePlayerProgress();
         }
 
+        /// <summary>
+        /// Cambia a la escena con el nombre dado 
+        /// </summary>
+        /// <param name="name"></param>
         public void changeScene(string name)
         {
             SceneManager.LoadScene(name);
         }
 
+        /// <summary>
+        /// Crea el mapa asociado al nivel actual
+        /// </summary>
+        /// <returns></returns>
         public Map createMap()
         {
             Map newMap = new Map(myLevelCategory[category].packagesData[package].maps, currentLevel);
             return newMap;
         }
 
+        /// <summary>
+        /// Guarda la informacion del nivel y realiza el cambio de escena
+        /// </summary>
+        /// <param name="a"></param>
         public void prepareLevel(int a)
         {
             currentLevel = a;
             changeScene("Game");
         }
 
+        //------------------------------------GETTERS/SETTERS------------------------------------------------
         public int getCurrentCompletedLevels()
         {
             return progress.categoryProgress[category].packProgress[package].completedLevels;
@@ -132,6 +152,10 @@ namespace Flow
             return myLevelCategory[category].packagesData[package];
         }
 
+        /// <summary>
+        /// Usa una pista en caso de ser posible
+        /// </summary>
+        /// <returns> Devuelve si ha sido posible usar la pista</returns>
         public bool useHint()
         {
             if(hints > 0)
@@ -143,13 +167,13 @@ namespace Flow
             }
             return false;
         }
-
-
         public int getHints()
         {
             return hints;
         }
-
+        /// <summary>
+        /// Aniade una hint y guarda que se ha aniadido
+        /// </summary>
         public void addHint()
         {
             hints++;
@@ -171,7 +195,8 @@ namespace Flow
         {
             return myLevelCategory;
         }
-
+        //------------------------------------GETTERS------------------------------------------------
+        #region Metodos de carga de progreso
         /// <summary>
         /// Devuelve un objeto player progress que representa una nueva partida
         /// </summary>
@@ -200,6 +225,7 @@ namespace Flow
             return newProgress;
         }
 
+    
         /// <summary>
         /// Lee el progreso del jugador del disco
         /// </summary>
@@ -221,6 +247,7 @@ namespace Flow
         {
             ProgressSerialization.saveProgress(progress);
         }
+        #endregion
     }
 
 }

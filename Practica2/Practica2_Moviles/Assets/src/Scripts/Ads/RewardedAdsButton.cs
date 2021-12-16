@@ -4,10 +4,16 @@ using UnityEngine.Advertisements;
 
 namespace Flow
 {
+
+    /// <summary>
+    /// Clase que representa los ads con recompensas por visualizacion
+    /// </summary>
     public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
     {
+        [Tooltip("Boton para inicializar el video")]
         [SerializeField] 
         Button _showAdButton;
+        [Tooltip("Levelmanager de la escena")]
         [SerializeField]
         LevelManager levelManager;
 

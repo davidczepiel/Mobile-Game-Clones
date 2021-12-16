@@ -4,20 +4,20 @@ using UnityEngine;
 
 namespace Flow
 {
-
+    /// <summary>
+    /// Clase encargada de la gestion de la logica de las tuberias en una partida
+    /// </summary>
     public class Pipe
     {
-        List<Vector2Int> _currentPipe;
-        List<Vector2Int> _lastPipe;
-        List<Vector2Int> _solutionPipe;
+        List<Vector2Int> _currentPipe;          //Estado actual del flow
+        List<Vector2Int> _lastPipe;             //estado del flow en la jugada anterior
+        List<Vector2Int> _solutionPipe;         //Solucion del flow
 
-        Vector2Int _firstTile;
-        Vector2Int _secondTile;
+        Vector2Int _firstTile, _secondTile;     //Extremos de los flows
 
-        bool _finished;
-        Color _color;
-
-        bool hinted;
+        Color _color;                           //Color que tiene el flow
+        bool _finished;                         //Indica si esta completada 
+        bool hinted;                            //Indica si se ha usado una pista
 
         /// <summary>
         /// Constructora de clase
@@ -37,7 +37,24 @@ namespace Flow
             hinted = false;
         }
 
+        /// <summary>
+        /// Metodo que hace que el estado actual del flow sea igual al de su solucion
+        /// </summary>
+        public void useHint()
+        {
+            clearPipe();
+            _finished = true;
+            hinted = true;
+            foreach (Vector2Int v in _solutionPipe)
+                _currentPipe.Add(new Vector2Int(v.x, v.y));
+        }
 
+        //-----------------------------GETTERS--------------------------
+
+        public bool hasBeenHinted()
+        {
+            return hinted;
+        }
         public List<Vector2Int> getCurrentPipe()
         {
             return this._currentPipe;
@@ -55,25 +72,11 @@ namespace Flow
                 return this._firstTile;
         }
 
-
         public Color getColor()
         {
             return _color;
         }
-
-        public void useHint()
-        {
-            clearPipe();
-            _finished = true;
-            hinted = true;
-            foreach (Vector2Int v in _solutionPipe)
-                _currentPipe.Add(new Vector2Int(v.x, v.y));
-        }
-
-        public bool hasBeenHinted()
-        {
-            return hinted;
-        }
+        //-----------------------------GETTERS--------------------------
 
         #region Metodos de control
         /// <summary>
@@ -125,6 +128,10 @@ namespace Flow
             return removeTilesRange(where + offset, _currentPipe.Count);
         }
 
+
+        /// <summary>
+        /// Metodo que guarda el estado actual del flow como el estado anterior
+        /// </summary>
         public void saveFlow()
         {
             _lastPipe.Clear();
@@ -150,6 +157,10 @@ namespace Flow
             return _finished;
         }
 
+        /// <summary>
+        /// Metodo que indica si el flow esta relleno con algo
+        /// </summary>
+        /// <returns>Bool que indica true si esta vacio y false en caso contrario</returns>
         public bool isEmpty()
         {
             return _currentPipe.Count == 0;

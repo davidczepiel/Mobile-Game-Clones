@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Flow
 {
+    /// <summary>
+    /// Clase que se encarga de la inicializacion del boton para que tenga la info necesaria para mandar
+    /// </summary>
     public class ButtonPackageSelectionbehaviour : MonoBehaviour
     {
 

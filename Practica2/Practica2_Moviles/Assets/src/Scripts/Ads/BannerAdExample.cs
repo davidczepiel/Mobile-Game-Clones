@@ -2,12 +2,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Advertisements;
 
+
+/// <summary>
+/// Clase que controla los ads de tipo Banner
+/// </summary>
 public class BannerAdExample : MonoBehaviour
 {
-    [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
+    [Tooltip("Posicion en la que se quiere situar al banner")]
+    [SerializeField] 
+    BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
 
-    [SerializeField] string _androidAdUnitId = "Banner_Android";
-    [SerializeField] string _iOsAdUnitId = "Banner_iOS";
+
+    string _androidAdUnitId = "Banner_Android";
+    string _iOsAdUnitId = "Banner_iOS";
     string _adUnitId;
 
     void Start()

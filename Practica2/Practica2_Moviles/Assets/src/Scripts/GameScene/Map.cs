@@ -1,19 +1,23 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
 namespace Flow
 {
+
+    /// <summary>
+    /// Clase que guarda la informacion de un archivo de mapa
+    /// </summary>
     public class Map
     {
-        List<List<Vector2Int>> _pipesSolution;
-        List<Vector2Int> _emptySquares;
-        List<Tuple<Vector2Int, Vector2Int>> _wallInfo;
+        List<List<Vector2Int>> _pipesSolution;              //Solucion al mapa
+        List<Vector2Int> _emptySquares;                     //Lista de posiciones vacias en el mapa 
+        List<Tuple<Vector2Int, Vector2Int>> _wallInfo;      //Lista de los muros en el mapa
 
-        int _sizeX, _sizeY;
-        int _numLevel, _numPipes;
+        int _sizeX, _sizeY;             //Dimensiones del mapa
+        int _numLevel, _numPipes;       //Numero del nivel actual y numero de pipes en este
+        bool borders;                   //Bool que indica si este mapa debe tener bordes
 
         public Map(TextAsset map, int level)
         {
@@ -23,17 +27,23 @@ namespace Flow
             string[] levels = info.Split('\n');
             levels = levels[level].Split(';');
             string[] header = levels[0].Split(',');
+            borders = false;
 
+            if (header[0].Contains("+B"))
+                borders = true;
             //En caso de que sea un cuadrado
             if (!header[0].Contains(":"))
             {
                 _sizeX = int.Parse(header[0]);
                 _sizeY = int.Parse(header[0]);
+
+
             }
             //Caso rectangulo
             else
             {
                 string[] size = header[0].Split(':');
+
                 string left = new string(size[0].Where(c => char.IsDigit(c)).ToArray());
                 string right = new string(size[1].Where(c => char.IsDigit(c)).ToArray());
 
@@ -100,6 +110,9 @@ namespace Flow
             return new Vector2Int(x % size, x / size);
         }
 
+
+        //---------------------------------------GETTERS---------------------------------
+
         public int getSizeX()
         {
             return _sizeX;
@@ -134,5 +147,11 @@ namespace Flow
         {
             return _emptySquares;
         }
+
+        public bool hasBorders()
+        {
+            return borders;
+        }
+        //---------------------------------------GETTERS---------------------------------
     }
 }

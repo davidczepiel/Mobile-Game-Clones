@@ -6,10 +6,16 @@ using UnityEngine;
 
 namespace Flow
 {
+
+    /// <summary>
+    /// Manager que administra todo lo relacionado con el tablero y el mostrado de este en pantalla
+    /// </summary>
     public class BoardManager : MonoBehaviour
     {
+        [Tooltip("Prefab de los tiles")]
         [SerializeField]
         Tile tilePrefab;      //prefab del tile
+        [Tooltip("Levelmanager")]
         [SerializeField]
         LevelManager levelManager;  //level manager
 
@@ -23,6 +29,7 @@ namespace Flow
         bool drawing;       //si el jugador esta dibujando actualmente en el tablero
         int moves;          //movimientos que ha realizado el jugador
 
+#if UNITY_EDITOR    
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.S))
@@ -45,6 +52,7 @@ namespace Flow
                 }
             }
         }
+#endif
 
         #region Metodos de creacion
         /// <summary>
@@ -149,6 +157,7 @@ namespace Flow
                 applyWallsToEmpty(emptyInfo);
             }
 
+
             //Colocamos las paredes si existen en el nivel
             List<Tuple<Vector2Int, Vector2Int>> wallsInfo = map.getWallsInfo();
             if (wallsInfo != null)
@@ -183,6 +192,9 @@ namespace Flow
                                          skin[i],
                                          pipeSol));
             }
+            //Poner bordes al mapa
+            if (map.hasBorders())
+                applyWallsToBorders();
         }
 
         /// <summary>
@@ -233,6 +245,9 @@ namespace Flow
         //|                                          METODOS PROCESAR INPUT                                                       |
         //+-----------------------------------------------------------------------------------------------------------------------+
 
+        /// <summary>
+        /// Metodo que reinicia el nivel, eliminando todas las pipes y quitando backgrounds en caso de haberlos
+        /// </summary>
         public void restartLevel()
         {
             foreach (Pipe p in _levelPipes)
@@ -372,6 +387,9 @@ namespace Flow
             return null;
         }
 
+        /// <summary>
+        /// Metodo que muestra en pantalla el estado actual del tablero
+        /// </summary>
         private void updateVisualBoard()
         {
             foreach (Pipe p in _levelPipes)
@@ -386,7 +404,8 @@ namespace Flow
 
                     if (_board[positions[j].x, positions[j].y].getTileType() != Tile.TileType.circleTile)
                         _board[positions[j].x, positions[j].y].setTileType(Tile.TileType.connectedTile);
-                    else {
+                    else
+                    {
                         if (p.hasBeenHinted() && p.isCompleted())
                         {
                             _board[positions[j].x, positions[j].y].setStar(true);
@@ -395,7 +414,6 @@ namespace Flow
                     _board[positions[j].x, positions[j].y].setTileColor(p.getColor());
                 }
             }
-            //_board[(int)lastPosProcessed.x, (int)lastPosProcessed.y].setHead(true);
         }
 
         /// <summary>
@@ -554,6 +572,11 @@ namespace Flow
                 lastPosProcessed = pos;
             }
         }
+
+        /// <summary>
+        /// Dada una lista de posiciones en el tablero en caso de que no haya un circulo en cada posicion la pone a vacio
+        /// </summary>
+        /// <param name="pos">Lista de posiciones a poner los tiles como vacios</param>
         void setVoids(List<Vector2Int> pos)
         {
             foreach (Vector2Int p in pos)
@@ -585,13 +608,13 @@ namespace Flow
             else if (dir.x == -1)
             {
                 _board[currentPos.x, currentPos.y].setDirection(0, 0);
-                _board[lastPos.x, lastPos.y].setHorizontalConnection(true);
+                _board[lastPos.x, lastPos.y].setDirection(1, _board[lastPos.x, lastPos.y].getDirection().y);
             }
             //Arriba
             else if (dir.y == -1)
             {
                 _board[currentPos.x, currentPos.y].setDirection(0, 0);
-                _board[lastPos.x, lastPos.y].setVerticalConnection(true);
+                _board[lastPos.x, lastPos.y].setDirection(_board[lastPos.x, lastPos.y].getDirection().x, 1);
             }
             //Abajo
             else if (dir.y == 1)
@@ -601,6 +624,9 @@ namespace Flow
 
         }
 
+        /// <summary>
+        /// Realiza calculos (num de tuberias finalizadas...)y envia la informacion necesaria al levelmanager
+        /// </summary>
         private void processPlay()
         {
             float numFinish = 0, numTiles = 0;
@@ -617,6 +643,11 @@ namespace Flow
 
         }
 
+
+        /// <summary>
+        /// Metodo que comienza el dibujado logico a partir de un tile dado
+        /// </summary>
+        /// <param name="t">Tile a partir del que se empieza a dibujar</param>
         private void startDrawing(Tile t)
         {
             drawing = true;
@@ -626,6 +657,10 @@ namespace Flow
         }
 
 
+        /// <summary>
+        /// Metodo que recibe un alista de posiciones, y dada esta lista calcula donde en dichas posiciones deberian haber muros
+        /// </summary>
+        /// <param name="emptyPos"> Lista de posiciones a tratar</param>
         private void applyWallsToEmpty(List<Vector2Int> emptyPos)
         {
             Vector2Int[] dirs = { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0) };
@@ -643,6 +678,32 @@ namespace Flow
             }
 
         }
+
+
+
+        /// <summary>
+        /// Metodo que pone muros en los bordes del tablero, menos en aquellas casillas que sean vacias
+        /// </summary>
+        private void applyWallsToBorders()
+        {
+            for (int i = 0; i < boardSize.x; i++)
+            {
+                if (_board[i, 0].getTileType() != Tile.TileType.emptyTile)
+                    _board[i, 0].setWall(0, true);
+                if (_board[i, (int)boardSize.y - 1].getTileType() != Tile.TileType.emptyTile)
+                    _board[i, (int)boardSize.y - 1].setWall(1, true);
+            }
+            for (int i = 0; i < boardSize.y; i++)
+            {
+                if (_board[0, i].getTileType() != Tile.TileType.emptyTile)
+                    _board[0, i].setWall(2, true);
+                if (_board[(int)boardSize.x - 1, i].getTileType() != Tile.TileType.emptyTile)
+                    _board[(int)boardSize.x - 1, i].setWall(3, true);
+            }
+
+        }
+
+
 
         /// <summary>
         /// Comprueba si existe una pared entre los dos tiles dados
