@@ -26,6 +26,9 @@ namespace Flow
         [Tooltip("Encargado de lo relacionado con los cambios en la UI")]
         [SerializeField]
         GUIManager _guiManager;
+        [Tooltip("Encargado de lo relacionado con los ads")]
+        [SerializeField]
+        AddsManager _adsManager;
 
         [Tooltip("Tamaño del panel que ocupa la UI en la parte superior de la pantalla")]
         [SerializeField]
@@ -38,6 +41,13 @@ namespace Flow
         // Start is called before the first frame update
         void Start()
         {
+            System.Action<bool> printAction = new System.Action<bool>(AddAHint);
+            System.Action printAction2 = new System.Action(rewardLoaded);
+            System.Action printAction3 = new System.Action(Change);
+            _adsManager.setCallBack(printAction, printAction2, printAction3);
+            _adsManager.setType();
+            _adsManager.loadAds();
+
             //Crea el mapa e instancia los objetos en la escena
             Map map = GameManager.getInstance().createMap();
 
@@ -61,8 +71,6 @@ namespace Flow
             locateObjects(map);
         }
 
-
-
         /// <summary>
         /// Dada una jugada envia info al gamemanager y a la UI para que se actualice
         /// </summary>
@@ -83,7 +91,6 @@ namespace Flow
             }
         }
 
-
         /// <summary>
         /// Metodo que aplica una pista al tablero actual
         /// </summary>
@@ -96,16 +103,17 @@ namespace Flow
             }
         }
 
-
         /// <summary>
         /// Metodo que aniade una pista 
         /// </summary>
-        public void AddAHint()
+        public void AddAHint(bool t)
         {
-            GameManager.getInstance().addHint();
-            _guiManager.changeHint(GameManager.getInstance().getHints());
+            if (t)
+            {
+                GameManager.getInstance().addHint();
+                _guiManager.changeHint(GameManager.getInstance().getHints());
+            }
         }
-
 
         /// <summary>
         /// Metodo que le comunica al board que se reinicie el nivel
@@ -114,7 +122,6 @@ namespace Flow
         {
             _board.restartLevel();
         }
-
 
         /// <summary>
         /// Metodo que le indica a cada elemento del juego que se situe en la posicion que le corresponde 
@@ -134,7 +141,27 @@ namespace Flow
             _inputManager.setData(_screenPlacer.getPos(), _screenPlacer.getScale(), _cameraPlacer.getOrthographicSize());
         }
 
+        public void LevelHasEnded()
+        {
+            _adsManager.setType("Interstitial_Android");
+            _adsManager.loadAds();
+        }
 
+        public void Change()
+        {
+            GameManager.getInstance().changeScene("Game");
+        }
+
+        public void showRewardVideo()
+        {
+            _guiManager.setActiveButton(false);
+            _adsManager.ShowAd();
+        }
+
+        public void rewardLoaded()
+        {
+            _guiManager.setActiveButton(true);
+        }
 
     }
 

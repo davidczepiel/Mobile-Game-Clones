@@ -91,7 +91,7 @@ namespace Flow
             if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
             {
                 // Grant a reward.
-                levelManager.AddAHint();
+                //levelManager.AddAHint();
 
                 // Load another ad:
                 Advertisement.Load(_adUnitId, this);

@@ -2002,25 +2002,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lvlManager: {fileID: 0}
---- !u!1 &804089210 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2416633706166200299, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-  m_PrefabInstance: {fileID: 2416633706692790929}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &804089213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 804089210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8aa6e092da1cad449d4d52fa4b325d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _showAdButton: {fileID: 1153246897}
-  levelManager: {fileID: 1337091062}
 --- !u!1 &848873058
 GameObject:
   m_ObjectHideFlags: 0
@@ -2257,6 +2238,7 @@ GameObject:
   - component: {fileID: 1153246899}
   - component: {fileID: 1153246898}
   - component: {fileID: 1153246897}
+  - component: {fileID: 1153246900}
   m_Layer: 5
   m_Name: VideoButton
   m_TagString: Untagged
@@ -2328,9 +2310,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 804089213}
-        m_TargetAssemblyTypeName: Flow.RewardedAdsButton, Assembly-CSharp
-        m_MethodName: ShowAd
+      - m_Target: {fileID: 1153246900}
+        m_TargetAssemblyTypeName: Flow.ButtonsBehaviour, Assembly-CSharp
+        m_MethodName: WatchVideo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2378,6 +2360,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1153246895}
   m_CullTransparentMesh: 1
+--- !u!114 &1153246900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153246895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a747ba3d80a9ffd4fa15a925be9b4f56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lvlManager: {fileID: 1337091062}
 --- !u!1 &1179587905
 GameObject:
   m_ObjectHideFlags: 0
@@ -2570,6 +2565,7 @@ MonoBehaviour:
   _inputManager: {fileID: 605622344}
   _cameraPlacer: {fileID: 1658979707}
   _guiManager: {fileID: 1353022092}
+  _adsManager: {fileID: 0}
   topSideOffset: 280
   sideWidth: 1080
 --- !u!4 &1337091064
@@ -2704,6 +2700,7 @@ MonoBehaviour:
   lvlText: {fileID: 1257083643}
   sizeText: {fileID: 368755802}
   hintsText: {fileID: 1179587907}
+  button: {fileID: 0}
   flowsText: {fileID: 549199011}
   moveText: {fileID: 1960561995}
   pipeText: {fileID: 36142200}
@@ -3811,64 +3808,3 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960561993}
   m_CullTransparentMesh: 1
---- !u!1001 &2416633706692790929
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2416633706166200298, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200299, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_Name
-      value: AdsManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 126.42706
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 52.476326
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2416633706166200301, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a6ab55bec3eb2e3499c587f06d3bb4bb, type: 3}

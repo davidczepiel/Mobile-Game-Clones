@@ -22,14 +22,21 @@ namespace Flow{
             //
         }
 
+        public void WatchVideo()
+        {
+            lvlManager.showRewardVideo();
+        }
+
         public void NextLvl()
         {
             GameManager.getInstance().prepareLevel(GameManager.getInstance().getCurrentLevel() + 1);
+            lvlManager.LevelHasEnded();
         }
 
         public void PreviousLvl()
         {
             GameManager.getInstance().prepareLevel(GameManager.getInstance().getCurrentLevel() - 1);
+            lvlManager.LevelHasEnded();
         }
 
         public void RestartLvl()

@@ -118,7 +118,6 @@ namespace Flow
         public void prepareLevel(int a)
         {
             currentLevel = a;
-            changeScene("Game");
         }
 
         //------------------------------------GETTERS/SETTERS------------------------------------------------
