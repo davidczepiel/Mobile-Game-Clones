@@ -21,9 +21,6 @@ namespace Flow
         [SerializeField]
         RectTransform scrollableCanvas;
 
-        [SerializeField]
-        GameObject emptyCanvas;
-
         void Start()
         {
             CategoryData[] categoriesData = GameManager.getInstance().getCategoryData();
