@@ -7,9 +7,6 @@ namespace Flow
     public class InputManager : MonoBehaviour
     {
         [SerializeField]
-        private GameObject _debugCircle;
-
-        [SerializeField]
         private BoardManager boardManager;
 
         Vector2 initUnitPos;
@@ -26,12 +23,13 @@ namespace Flow
         {
             foreach(Touch touch in Input.touches) //Todo get touches
             {
+                Vector2 posToUnit = transformToUnit(touch.position);
                 Vector2 tranformatedPos = transformCoord(touch.position);
 
                 //Si la pulsacion no entra dentro del tablero no la procesamos
                 if (tranformatedPos.x == -1) return;
 
-                boardManager.processTouch(touch, tranformatedPos);
+                boardManager.processTouch(touch, tranformatedPos, posToUnit);
             }
 
 #if UNITY_EDITOR    //Procesamiento del raton en el editor de Unity
@@ -56,12 +54,14 @@ namespace Flow
             if (flag)
             {
                 touch1.position = Input.mousePosition;
+
+                Vector2 posToUnit = transformToUnit(touch1.position);
                 Vector2 boardPosition = transformCoord(touch1.position);
                 
                 //Si la pulsacion no entra dentro del tablero no la procesamos
                 if (boardPosition.x == -1) return;
 
-                boardManager.processTouch(touch1, boardPosition);
+                boardManager.processTouch(touch1, boardPosition, posToUnit);
             }
 #endif
         }
@@ -92,6 +92,13 @@ namespace Flow
                 return new Vector2(Mathf.Abs(posInt.x), Mathf.Abs(posInt.y));
             }
             else return new Vector2(-1, -1);
+        }
+
+        private Vector2 transformToUnit(Vector2 pos)
+        {
+            Vector2 newPos = new Vector2((pos.x * cameraUnit * 2.0f) / (float)Screen.height,
+                                         (pos.y * cameraUnit * 2.0f) / (float)Screen.height);
+            return newPos;
         }
     }
 }

@@ -14,10 +14,13 @@ namespace Flow
     {
         [Tooltip("Prefab de los tiles")]
         [SerializeField]
-        Tile tilePrefab;      //prefab del tile
+        Tile tilePrefab;                //prefab del tile
         [Tooltip("Levelmanager")]
         [SerializeField]
-        LevelManager levelManager;  //level manager
+        LevelManager levelManager;      //level manager
+        [Tooltip("TouchFeedBack")]
+        [SerializeField]
+        TouchFeedback _touchFeedBack;   //touch feedback
 
         Tile[,] _board;             //tablero que guarda los tiles
         List<Pipe> _levelPipes;     //tuberias del juego
@@ -276,15 +279,18 @@ namespace Flow
         /// evento que recibe
         /// </summary>
         /// <param name="touch"> Evento realizado</param>
-        public void processTouch(Touch touch, Vector2 pos)
+        public void processTouch(Touch touch, Vector2 posBoard, Vector2 screenPos)
         {
             //Obtener el tile correspondiente a la pulsacion
-            if (pos.x < 0 || pos.x >= boardSize.x || pos.y < 0 || pos.y >= boardSize.y)
+            if (posBoard.x < 0 || posBoard.x >= boardSize.x || posBoard.y < 0 || posBoard.y >= boardSize.y)
                 return;
-            Tile touchedTile = _board[(int)pos.x, (int)pos.y];
+            Tile touchedTile = _board[(int)posBoard.x, (int)posBoard.y];
+            Vector2Int posInt = new Vector2Int((int)posBoard.x, (int)posBoard.y);
+
+            updateTouchingFeedback(touchedTile, posInt, screenPos);
 
             //Acciones a hacer segun el tipo de tile pulsado
-            checkTileType(touchedTile, new Vector2Int((int)pos.x, (int)pos.y));
+            checkTileType(touchedTile, posInt);
             //Acciones a hacer segun el tipo de evento producido
             checkEventType(touch, touchedTile);
 
@@ -362,6 +368,8 @@ namespace Flow
                     //Guardamos el estado del board
                     foreach (Pipe p in _levelPipes)
                         p.saveFlow();
+
+                    _touchFeedBack.Disable();
                     break;
             }
 
@@ -655,7 +663,24 @@ namespace Flow
                 moves++;
             drawingColor = t.getColor();
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="pos"></param>
+        private void updateTouchingFeedback(Tile t, Vector2Int pos, Vector2 screenPos)
+        {
+            if (drawing)
+            {
+                bool cantDraw = t.getTileType() == Tile.TileType.emptyTile ||
+                                t.getTileType() == Tile.TileType.circleTile && drawingColor != t.getColor() ||
+                                isWallBetween(pos, lastPosProcessed);
 
+                _touchFeedBack.ChangeColor(drawingColor, !cantDraw);
+            }
+            _touchFeedBack.ChangePos(screenPos);
+        
+        }
 
         /// <summary>
         /// Metodo que recibe un alista de posiciones, y dada esta lista calcula donde en dichas posiciones deberian haber muros
