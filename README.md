@@ -40,8 +40,12 @@ To achieve this we had to separate the game into three sub-projects:
 [![AndroidStudio][AndroidStudio.com]][AndroidStudio-url]
 </div>
 <div align="center">
-<video src="OhNoGamePlay.mp4" height="500" controls="false" title="Animal Cooking Trailer"></video>
+
+  https://github.com/davidczepiel/Mobile-Game-Clones/assets/48888283/a76f1cfb-bc04-4ee1-aaf5-8ff6a97b0792
 </div>
+
+
+
 
 
 ## "Flow Free" clone 
@@ -64,7 +68,10 @@ To add content to the clone, levels were stripped from the original game (these 
 [![Unity][Unity.com]][Unity-url]
 </div>
 <div align="center">
-<video src="FlowFreeGameplay.mp4" height="500" controls="false" title="Animal Cooking Trailer"></video>
+
+  
+
+https://github.com/davidczepiel/Mobile-Game-Clones/assets/48888283/8cc4b830-f7b6-4ef6-8ce3-730af4d5ecc7
 </div>
 
 
