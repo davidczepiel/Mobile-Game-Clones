@@ -8,7 +8,7 @@
   <a href="https://github.com/ArmynC/ArminC-AutoExec/archive/master.zip"><img src="AndroidBanner.png" alt="ArminC AutoExec"></a>
 
 <!-- What is your project about??? -->
-# About The Project
+# About the repo
 In this repository are stored the projects of the subject "Video Games for Mobile Devices" of the Complutense University of Madrid. 
 
 In it, a group of three students got together to develop 2 videogames. The first one is a clone of the game "Oh nO", which was developed in Java using Android Studio and the second one is another clone of the game "Flow Free", written in C# using Unity. 
