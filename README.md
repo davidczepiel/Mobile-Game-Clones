@@ -8,17 +8,16 @@
   <a href="https://github.com/ArmynC/ArminC-AutoExec/archive/master.zip"><img src="AndroidBanner.png" alt="ArminC AutoExec"></a>
 
 <!-- What is your project about??? -->
-# About the repo
-In this repository are stored the projects of the subject "Video Games for Mobile Devices" of the Complutense University of Madrid. 
+# About The Project
+In this repository are stored the projects of the subject "Video Games for Mobile Devices" of the Complutense University of Madrid. In it, a group of three students got together to develop 2 videogames. The first one is a clone of the game "Oh nO", which was developed in Java using Android Studio and the second one is another clone of the game "Flow Free", written in C# using Unity. 
 
-In it, a group of three students got together to develop 2 videogames. The first one is a clone of the game "Oh nO", which was developed in Java using Android Studio and the second one is another clone of the game "Flow Free", written in C# using Unity. 
+  <div align="center"><img src="GamesIcons.png" height="125" alt="ArminC AutoExec"></div>
+
 
 <!-- Tell the world what are the main technologies/libraries behind this project -->
 ## Cross-platform "Oh nO" clone 
 
-This game was written in Java, and thanks to the advantages provided by the language, it also serves as an example of cross-platform development, being able to be played on both PC and Android devices.
-
-To achieve this we had to separate the game into three sub-projects:
+This game was written in Java, and thanks to the advantages provided by the language, it also serves as an example of cross-platform development, being able to be played on both PC and Android devices. To achieve this we had to separate the game into three sub-projects:
 
 - **Logic:** This project contains all the code related to the game's logic, from the different submenus through which the player can navigate, to everything related to the gameplay such as: the creation of the game's board, endgame checks... (Logica)
 
@@ -43,10 +42,6 @@ To achieve this we had to separate the game into three sub-projects:
 
   https://github.com/davidczepiel/Mobile-Game-Clones/assets/48888283/a76f1cfb-bc04-4ee1-aaf5-8ff6a97b0792
 </div>
-
-
-
-
 
 ## "Flow Free" clone 
 The purpose of this second game is to compare what it is like to develop projects natively, versus using third party tools that "make development easier", to achieve this, this game is written in C# using the Unity engine. In order to simplify the project, some features of the original game such as the settings screen or the shop have been omitted, resulting in a clone that contains the following:
