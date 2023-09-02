@@ -3,9 +3,6 @@
 
   [![MIT License][license-shield]][license-url]
 </div>
-  
-  <!-- Make your project stand out with a banner -->
-  <a href="https://github.com/ArmynC/ArminC-AutoExec/archive/master.zip"><img src="AndroidBanner.png" alt="ArminC AutoExec"></a>
 
 <!-- What is your project about??? -->
 # About the repository
